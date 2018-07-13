@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Inject } from '@angular/core';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
@@ -11,6 +11,10 @@ import { ValidationService } from './services/validation.service';
 
 import { map } from 'rxjs/operators/map';
 
+
+import { ProductSchema } from './schema';
+
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -19,7 +23,7 @@ import { map } from 'rxjs/operators/map';
 export class AppComponent implements OnInit {
 
     public view: Observable<GridDataResult>;
-
+    
     public gridState: State = {
         sort: [],
         skip: 0,
@@ -27,19 +31,23 @@ export class AppComponent implements OnInit {
     };
 
     public changes: any = {};
+    public schema = new ProductSchema();
+
+    public ಠ_ಠ = 'ಠ_ಠ';    
 
     constructor(
         private formBuilder: FormBuilder,
         public editService: EditService,
         private validationService: ValidationService
     ) {
+        console.log(this.ಠ_ಠ);
     }
-
+    
     public ngOnInit(): void {
         this.view = this.editService.pipe(map(data => process(data, this.gridState)));
         this.editService.read();
     }
-
+    
     public onStateChange(state: State) {
         this.gridState = state;
         this.editService.read();
@@ -82,7 +90,7 @@ export class AppComponent implements OnInit {
     public removeHandler({ sender, dataItem }) {
         this.editService.remove(dataItem);
         sender.cancelCell();
-    }
+    }  
 
     public saveChanges(grid: any): void {
         grid.closeCell();
@@ -101,6 +109,7 @@ export class AppComponent implements OnInit {
     }
 
     public createFormGroup(dataItem: any): FormGroup {
+        
         return this.formBuilder.group({
             'ProductID': dataItem.ProductID,
             'ProductName': [dataItem.ProductName, Validators.required],
@@ -109,4 +118,15 @@ export class AppComponent implements OnInit {
             'Discontinued': dataItem.Discontinued
         });
     }
+
+    public newCreateFormGroup(schema: ProductSchema): FormGroup {
+        let controls: FormControl[];
+        for (const field of schema.fields) {
+            controls.push(new FormControl());
+        }
+
+        return null;
+    }
+
 }
+
