@@ -1,3 +1,4 @@
+
 export class Product {
     public ProductID: number;
     public ProductName = '';

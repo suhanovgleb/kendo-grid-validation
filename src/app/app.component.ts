@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Inject } from '@angular/core';
-import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup, FormControl, ValidationErrors } from '@angular/forms';
 
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
@@ -11,8 +11,7 @@ import { ValidationService } from './services/validation.service';
 
 import { map } from 'rxjs/operators/map';
 
-
-import { ProductSchema } from './schema';
+import { ProductSchema, Field } from './schema';
 
 
 @Component({
@@ -54,8 +53,9 @@ export class AppComponent implements OnInit {
     }
 
     public cellClickHandler({ sender, rowIndex, columnIndex, dataItem, isEdited }) {
+        // this.validatorsMapping(this.schema.fields[columnIndex + 1]);
         if (!isEdited) {
-            sender.editCell(rowIndex, columnIndex, this.createFormGroup(dataItem));
+            sender.editCell(rowIndex, columnIndex, this.createFormGroup(this.schema, dataItem));
         }
     }
 
@@ -73,7 +73,7 @@ export class AppComponent implements OnInit {
     }
 
     public addHandler({ sender }) {
-        sender.addRow(this.createFormGroup(new Product()));
+        sender.addRow(this.createFormGroup(this.schema, new Product()));
     }
 
     public cancelHandler({ sender, rowIndex }) {
@@ -108,7 +108,7 @@ export class AppComponent implements OnInit {
         console.log('here must be validation');
     }
 
-    public createFormGroup(dataItem: any): FormGroup {
+    public oldCreateFormGroup(dataItem: any): FormGroup {
         
         return this.formBuilder.group({
             'ProductID': dataItem.ProductID,
@@ -119,13 +119,57 @@ export class AppComponent implements OnInit {
         });
     }
 
-    public newCreateFormGroup(schema: ProductSchema): FormGroup {
-        let controls: FormControl[];
+    private validatorsMapping(field: Field) {
+        const schemaValidators = field.validatiors;
+        
+        let angularValidators: any[] = [];
+
+        for (const validator in schemaValidators) {
+            if (validator !== undefined) {
+                switch (validator) {
+                    case 'max': {
+                        // console.log(schemaValidators['max']);
+                        // console.log('max');
+                        angularValidators.push(Validators.max(schemaValidators.max));
+                        break;
+                    }
+                    case 'min': {
+                        // console.log(schemaValidators['min']);
+                        // console.log('min');
+                        angularValidators.push(Validators.min(schemaValidators.min));
+                        break;
+                    }
+                    case 'required': {
+                        // console.log('required');
+                        if (schemaValidators.required) {
+                            angularValidators.push(Validators.required);
+                        }
+                        break;
+                    }
+                    default: { 
+                        console.log('default');
+                        break; 
+                     } 
+                }
+            }
+        }
+        return angularValidators;
+        // console.log('angular.validators: ' + angularValidators);
+    }
+
+    public createFormGroup(schema: ProductSchema, currentData): FormGroup {
+
+        let formGroup: FormGroup = new FormGroup({});
+
         for (const field of schema.fields) {
-            controls.push(new FormControl());
+            if (!(Object.keys(field.validatiors).length === 0 && field.validatiors.constructor === Object)) {
+
+            }
+            const control = new FormControl(currentData[field.name], Validators.compose(this.validatorsMapping(field)));
+            formGroup.addControl(field.name, control);
         }
 
-        return null;
+        return formGroup;
     }
 
 }
