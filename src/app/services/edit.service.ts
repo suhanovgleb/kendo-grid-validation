@@ -26,11 +26,11 @@ const cloneData = (data: any[]) => data.map(item => Object.assign({}, item));
   providedIn: 'root'
 })
 export class EditService extends BehaviorSubject<any[]> {
-  private data: any[] = [];
-  private originalData: any[] = [];
-  private createdItems: any[] = [];
-  private updatedItems: any[] = [];
-  private deletedItems: any[] = [];
+  public data: any[] = [];
+  public originalData: any[] = [];
+  public createdItems: any[] = [];
+  public updatedItems: any[] = [];
+  public deletedItems: any[] = [];
 
   constructor(private http: HttpClient) {
       super([]);
@@ -52,7 +52,6 @@ export class EditService extends BehaviorSubject<any[]> {
   public create(item: any): void {
       this.createdItems.push(item);
       this.data.unshift(item);
-
       super.next(this.data);
   }
 
@@ -122,7 +121,6 @@ export class EditService extends BehaviorSubject<any[]> {
 
   public cancelChanges(): void {
       this.reset();
-
       this.data = this.originalData;
       this.originalData = cloneData(this.originalData);
       super.next(this.data);

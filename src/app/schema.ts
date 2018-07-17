@@ -1,3 +1,4 @@
+import { Validators } from '@angular/forms';
 
 export interface Schema {
     fields: Field[];
@@ -15,7 +16,6 @@ export class Field {
     }
 }
 
-
 export class ProductSchema implements Schema {
 
     public fields = [
@@ -24,7 +24,7 @@ export class ProductSchema implements Schema {
             editable: false,
             type: 'number',
             validatiors: {
-                required: true
+                required: false
             }
         }),
         new Field({
@@ -62,5 +62,43 @@ export class ProductSchema implements Schema {
             }
         }),
     ];
+
     public uniqueConstraints = ['ProductName'];
+
+    public getFormValidators(field: Field) {
+        const schemaValidators = field.validatiors;
+
+        const formValidators: any[] = [];
+
+        for (const validator in schemaValidators) {
+            if (validator !== undefined) {
+                switch (validator) {
+                    case 'max': {
+                        // console.log(schemaValidators['max']);
+                        // console.log('max');
+                        formValidators.push(Validators.max(schemaValidators.max));
+                        break;
+                    }
+                    case 'min': {
+                        // console.log(schemaValidators['min']);
+                        // console.log('min');
+                        formValidators.push(Validators.min(schemaValidators.min));
+                        break;
+                    }
+                    case 'required': {
+                        // console.log('required');
+                        if (schemaValidators.required) {
+                            formValidators.push(Validators.required);
+                        }
+                        break;
+                    }
+                    default: {
+                        console.log('default');
+                        break;
+                    }
+                }
+            }
+        }
+        return formValidators;
+    }
 }
