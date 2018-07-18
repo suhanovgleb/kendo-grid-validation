@@ -11,7 +11,7 @@ import { ValidationService } from './services/validation.service';
 
 import { map } from 'rxjs/operators/map';
 
-import { ProductSchema, Field } from './schema';
+import { ProductSchema } from './schema';
 
 
 @Component({
@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
     public changes: any = {};
     public schema = new ProductSchema();
 
-    public ಠ_ಠ = 'ಠ_ಠ';    
+    public ಠ_ಠ = '୧((#Φ益Φ#))୨';    
 
     constructor(
         public editService: EditService,
@@ -52,7 +52,6 @@ export class AppComponent implements OnInit {
     }
 
     public cellClickHandler({ sender, rowIndex, columnIndex, dataItem, isEdited }) {
-        // this.validatorsMapping(this.schema.fields[columnIndex + 1]);
         if (!isEdited) {
             sender.editCell(rowIndex, columnIndex, this.createFormGroup(dataItem));
         }
@@ -65,7 +64,6 @@ export class AppComponent implements OnInit {
             // prevent closing the edited cell if there are invalid values.
             args.preventDefault();
         } else if (formGroup.dirty) {
-            // тут можно записывать изменнённые ячейки в массив для валидации (!!!)
             this.editService.assignValues(dataItem, formGroup.value);
             this.editService.update(dataItem);
         }
@@ -94,7 +92,7 @@ export class AppComponent implements OnInit {
     public saveChanges(grid: any): void {
         grid.closeCell();
         grid.cancelCell();
-        this.validationService.validate();
+        this.validationService.validate(this.schema);
         this.editService.saveChanges();
     }
 
@@ -103,12 +101,25 @@ export class AppComponent implements OnInit {
         this.editService.cancelChanges();
     }
 
-    public createFormGroup(currentData): FormGroup {
-        let formGroup: FormGroup = new FormGroup({});
+    // MAIN FORM GROUP CREATOR
+    public MAINcreateFormGroup(currentData): FormGroup {
+        const formGroup: FormGroup = new FormGroup({});
 
         for (const field of this.schema.fields) {
             const validators = this.schema.getFormValidators(field);
             const control = new FormControl(currentData[field.name], Validators.compose(validators));
+            formGroup.addControl(field.name, control);
+        }
+        return formGroup;
+    }
+
+    // WITHOUT FORM VALIDATION, USE ONLY FOR VALIDATION SERVICE TESTING
+    public createFormGroup(currentData): FormGroup {
+        const formGroup: FormGroup = new FormGroup({});
+
+        for (const field of this.schema.fields) {
+            const validators = this.schema.getFormValidators(field);
+            const control = new FormControl(currentData[field.name]);
             formGroup.addControl(field.name, control);
         }
         return formGroup;

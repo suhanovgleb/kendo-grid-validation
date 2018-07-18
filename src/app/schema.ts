@@ -74,19 +74,14 @@ export class ProductSchema implements Schema {
             if (validator !== undefined) {
                 switch (validator) {
                     case 'max': {
-                        // console.log(schemaValidators['max']);
-                        // console.log('max');
                         formValidators.push(Validators.max(schemaValidators.max));
                         break;
                     }
                     case 'min': {
-                        // console.log(schemaValidators['min']);
-                        // console.log('min');
                         formValidators.push(Validators.min(schemaValidators.min));
                         break;
                     }
                     case 'required': {
-                        // console.log('required');
                         if (schemaValidators.required) {
                             formValidators.push(Validators.required);
                         }
