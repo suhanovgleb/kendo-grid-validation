@@ -44,6 +44,11 @@ export class AppComponent implements OnInit {
     public ngOnInit(): void {
         this.view = this.editService.pipe(map(data => process(data, this.gridState)));
         this.editService.read();
+
+        // this.validationService.validate(this.schema);
+        // let temp = new ValidationService();
+        // temp.Register(this.customValidator) 
+
     }
     
     public onStateChange(state: State) {
@@ -92,7 +97,9 @@ export class AppComponent implements OnInit {
     public saveChanges(grid: any): void {
         grid.closeCell();
         grid.cancelCell();
+        
         this.validationService.validate(this.schema);
+        
         this.editService.saveChanges();
     }
 
@@ -125,4 +132,7 @@ export class AppComponent implements OnInit {
         return formGroup;
     }
 
+    public customValidatorCol2_3() {
+
+    }
 }

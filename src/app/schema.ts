@@ -63,7 +63,7 @@ export class ProductSchema implements Schema {
         }),
     ];
 
-    public uniqueConstraints = ['ProductName'];
+    public uniqueConstraints = ['ProductName', 'Discontinued'];
 
     public getFormValidators(field: Field) {
         const schemaValidators = field.validatiors;
