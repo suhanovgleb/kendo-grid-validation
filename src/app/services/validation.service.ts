@@ -11,7 +11,7 @@ export class ValidationService {
 
   constructor(private editService: EditService) { }
 
-  public getHashName(item, uniqueConstraints): string {
+  public getNameHash(item, uniqueConstraints): string {
     let name = '';
     for (const constraint of uniqueConstraints) {
       if (uniqueConstraints[0] === constraint) {
@@ -23,33 +23,14 @@ export class ValidationService {
     return name;
   }
 
-  public getHashNames(data, uniqueConstraints: string[]) {
-
-    const hashNames: string[] = [];
-
-    for (const item of data) {
-      let name = '';
-      for (const constraint of uniqueConstraints) {
-        if (uniqueConstraints[0] === constraint) {
-          name = name.concat(item[constraint]);
-        } else {
-          name = name.concat(':', item[constraint]);
-        }
-      }
-
-      hashNames.push(name);
-    }
-    return hashNames;
-  }
-
   public validate(schema: ProductSchema): ValidationError[] {
-    const changedItems = this.editService.updatedItems
-      .concat(this.editService.createdItems);
-
-    const allItems = this.editService.data;
 
     const errors: ValidationError[] = [];
 
+    const changedItems = this.editService.updatedItems
+      .concat(this.editService.createdItems);
+
+    // in this cycle are processing basic validators: required, max, min
     for (const item of changedItems) {
       for (const field of schema.fields) {
         // Check if we have any validators in schema field
@@ -85,59 +66,45 @@ export class ValidationService {
       }
     }
 
-    const constraintHashTable: ConstraintHash[] = [];
-    const hashNames: string[];
+    // here we starting processing unique contstraints
+    const allItems = this.editService.data;
+    const hashTable: object = {};
 
+    // fill hashtable with keys-constraints and count number of matches
     for (const item of allItems) {
-      hashNames.push(this.getHashName(item, schema.uniqueConstraints));
-    }
-    
-    for (const name of hashNames) {
-      if (constraintHashTable.includes(ConstraintHash(name, 23))) {
-        constraintHash.matches++;
-        isAdded = true;
+      if (!hashTable.hasOwnProperty(this.getNameHash(item, schema.uniqueConstraints))) {
+        hashTable[this.getNameHash(item, schema.uniqueConstraints)] = 1;
+      } else {
+        hashTable[this.getNameHash(item, schema.uniqueConstraints)]++;
       }
     }
-    if (!isAdded) {
-      constraintHashTable.push(new ConstraintHash(name, 1));
+
+    // here we delete all non-repeating items from hashtable
+    for (const key in hashTable) {
+      if (hashTable[key] === 1) {
+        delete hashTable[key];
+      }
     }
 
-
-    // const constraintHashTable: ConstraintHash[] = [];
-    // const hashNames: string[];
-    // for (const item of allItems) {
-    //   hashNames
-    // }
-    // const hashNames = this.getHashNames(allItems, schema.uniqueConstraints);
-    // for (const name of hashNames) {
-    //   let isAdded = false;
-    //   for (const constraintHash of constraintHashTable) { 
-    //     if (constraintHash.name === name) {
-    //       constraintHash.matches++;
-    //       isAdded = true;
-    //     }
-    //   }
-    //   if (!isAdded) {
-    //     constraintHashTable.push(new ConstraintHash(name, 1));
-    //   }
-    // }
-
-
-
+    
+    for (const item of allItems) {
+      const hashName = this.getNameHash(item, schema.uniqueConstraints);
+      if (hashTable.hasOwnProperty(hashName) && hashTable[hashName] !== 0) {
+        const errMessageConstraints = schema.uniqueConstraints.join(', ');
+        errors.push(
+          new ValidationError(
+            null, 
+            item, 
+            'unique', 
+            'This entry must be unique in the following fields: ' + errMessageConstraints + '.', 
+            schema.uniqueConstraints)
+        );
+        hashTable[hashName]--;
+      }
+    }
 
     return errors;
   }
-}
-
-class ConstraintHash {
-
-  constructor(name: string, matches: number) {
-    this.name = name;
-    this.matches = matches;
-  }
-
-  name: string;
-  matches: number;
 }
 
 class ValidationError {
@@ -195,39 +162,3 @@ module Validators {
   }
 
 }
-
-
-    // for (const hash of constraintHashTable) {
-    //   if (hash.matches > 1) {
-    //     console.log(hash);
-    //   }
-    // }
-
-
-      // let xx = [
-      //   {name:"Chai:true", matches: ++},
-      //   {name:"Ani", matches: 1},
-      //   {name:"nsdf:true", matches: 1},
-      // ]
-
-      // form key, compoare with key above
-
-
-    // for (let compareItem = 0; compareItem < allItems.length; compareItem++) {
-    //   let isUnique = true;
-    //   for (let item = compareItem + 1; item < allItems.length; item++) {
-    //     let constraintCounter = 0;
-    //     for (const constraint of schema.uniqueConstraints) {
-    //       if (allItems[item][constraint] === allItems[compareItem][constraint]) {
-    //         constraintCounter++;
-    //       }
-    //     }
-    //     if (constraintCounter === schema.uniqueConstraints.length) {
-    //       errors.push(new ValidationError(null, item, 'uniqueConstraint', 'Not unique', schema.uniqueConstraints));
-    //       isUnique = false;
-    //     }
-    //   }
-    //   if (!isUnique) {
-    //     errors.push(new ValidationError(null, compareItem, 'uniqueConstraint', 'Not unique', schema.uniqueConstraints));
-    //   }
-    // }

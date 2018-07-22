@@ -108,7 +108,7 @@ export class AppComponent implements OnInit {
         this.editService.cancelChanges();
     }
 
-    // MAIN FORM GROUP CREATOR
+    // MAIN FORM GROUP CREATOR WITH IN-FORM VALIDATION
     public MAINcreateFormGroup(currentData): FormGroup {
         const formGroup: FormGroup = new FormGroup({});
 
@@ -132,7 +132,7 @@ export class AppComponent implements OnInit {
         return formGroup;
     }
 
-    public customValidatorCol2_3() {
+    // public customValidatorCol2_3() {
 
-    }
+    // }
 }
