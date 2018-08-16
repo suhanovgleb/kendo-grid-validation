@@ -1,4 +1,5 @@
 import { Validators } from '@angular/forms';
+import { ValidationError } from './ValidationError';
 
 export interface Schema {
     fields: Field[];
@@ -96,4 +97,36 @@ export class ProductSchema implements Schema {
         }
         return formValidators;
     }
+}
+
+
+export class ProductValidators {
+
+    readonly item;
+
+    constructor(item) {
+        this.item = item;
+    }
+
+    public price_to_units_validator(): ValidationError {
+        if (this.item.UnitPrice > 30 && this.item.UnitsInStock === 0) {
+            return new ValidationError(
+                null, 
+                this.item, 
+                'price_to_units', 
+                'If units are out of stock then price cannot be higher than 30', 
+                ['UnitPrice', 'UnitsInStock']
+            );
+        }
+    }
+
+    public other_validator() {
+        if (false) {
+            // ...
+        }
+    }
+}
+
+export interface IValidators {
+    readonly item;
 }

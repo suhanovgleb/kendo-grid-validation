@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { EditService } from './edit.service';
-import { ProductSchema } from '../schema';
+import { Schema } from '../schema';
+import { ValidationError } from '../ValidationError';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class ValidationService {
     return name;
   }
 
-  public validate(schema: ProductSchema): ValidationError[] {
+  public validate(schema: Schema): ValidationError[] {
 
     const errors: ValidationError[] = [];
 
@@ -105,22 +106,6 @@ export class ValidationService {
 
     return errors;
   }
-}
-
-class ValidationError {
-  constructor(fieldName: string, item, errType: string, errMessage: string, uniqueFieldNames?: string[]) {
-    this.fieldName = fieldName;
-    this.item = item;
-    this.errType = errType;
-    this.errMessage = errMessage;
-    this.uniqueFieldNames = uniqueFieldNames;
-  }
-
-  public fieldName: string;
-  public item;
-  public errType: string;
-  public errMessage: string;
-  public uniqueFieldNames: string[];
 }
 
 class Cell {

@@ -11,7 +11,7 @@ import { ValidationService } from './services/validation.service';
 
 import { map } from 'rxjs/operators/map';
 
-import { ProductSchema } from './schema';
+import { ProductSchema, ProductValidators } from './schema';
 
 
 @Component({
