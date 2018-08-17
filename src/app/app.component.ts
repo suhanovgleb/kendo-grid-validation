@@ -5,13 +5,14 @@ import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
 
-import { Product } from './model';
+import { Product } from './models/model';
 import { EditService } from './services/edit.service';
 import { ValidationService } from './services/validation.service';
 
 import { map } from 'rxjs/operators/map';
 
-import { ProductSchema, ProductValidators } from './schema';
+import { ProductSchema } from './schemes/schema';
+import { IValidator } from './validation/validator-interface';
 
 
 @Component({
@@ -50,7 +51,12 @@ export class AppComponent implements OnInit {
         // temp.Register(this.customValidator) 
 
     }
-    
+
+    getValidators(): IValidator[] {
+        // ...
+        return null;
+    } 
+
     public onStateChange(state: State) {
         this.gridState = state;
         this.editService.read();
@@ -98,7 +104,7 @@ export class AppComponent implements OnInit {
         grid.closeCell();
         grid.cancelCell();
         
-        this.validationService.validate(this.schema);
+        this.validationService.validate(this.schema, this.getValidators());
         
         this.editService.saveChanges();
     }
