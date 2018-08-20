@@ -5,14 +5,13 @@ import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
 
-import { Product } from './models/model';
+import { Product } from './models/product';
 import { EditService } from './services/edit.service';
 import { ValidationService } from './services/validation.service';
 
 import { map } from 'rxjs/operators/map';
 
-import { ProductSchema } from './schemes/schema';
-import { IValidator } from './validation/validator-interface';
+import { ProductSchema } from './schemes/schema-product';
 
 
 @Component({
@@ -45,17 +44,7 @@ export class AppComponent implements OnInit {
     public ngOnInit(): void {
         this.view = this.editService.pipe(map(data => process(data, this.gridState)));
         this.editService.read();
-
-        // this.validationService.validate(this.schema);
-        // let temp = new ValidationService();
-        // temp.Register(this.customValidator) 
-
     }
-
-    getValidators(): IValidator[] {
-        // ...
-        return null;
-    } 
 
     public onStateChange(state: State) {
         this.gridState = state;
@@ -103,8 +92,9 @@ export class AppComponent implements OnInit {
     public saveChanges(grid: any): void {
         grid.closeCell();
         grid.cancelCell();
-        
-        this.validationService.validate(this.schema, this.getValidators());
+
+        // I THINK YOU ARE LOOKING FOR THIS, GLEB
+        this.validationService.validate(this.schema);
         
         this.editService.saveChanges();
     }
@@ -138,7 +128,4 @@ export class AppComponent implements OnInit {
         return formGroup;
     }
 
-    // public customValidatorCol2_3() {
-
-    // }
 }

@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { concat } from 'lodash';
 import { EditService } from './edit.service';
-import { Schema } from '../schemes/schema';
-import { ValidationError } from '../validation/validation-error';
-import { IValidator } from '../validation/validator-interface';
+import { ISchema } from '../schemes/schema';
+import { IValidator, BaseValidator, ValidationError, UniqueConstraintsValidator } from '../validation';
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,34 +11,46 @@ export class ValidationService {
 
   constructor(private editService: EditService) { }
 
-  private getNameHash(item, uniqueConstraints): string {
-    let name = '';
-    for (const constraint of uniqueConstraints) {
-      if (uniqueConstraints[0] === constraint) {
-        name = name.concat(item[constraint]);
-      } else {
-        name = name.concat(':', item[constraint]);
-      }
-    }
-    return name;
-  }
+  //#region getNameHash
+  // private getNameHash(item, uniqueConstraints): string {
+  //   let name = '';
+  //   for (const constraint of uniqueConstraints) {
+  //     if (uniqueConstraints[0] === constraint) {
+  //       name = name.concat(item[constraint]);
+  //     } else {
+  //       name = name.concat(':', item[constraint]);
+  //     }
+  //   }
+  //   return name;
+  // }
+  //#endregion
 
-  public validate(schema: Schema, validators: IValidator[]): ValidationError[] {
+  public validate(schema: ISchema): ValidationError[] {
 
     let errors: ValidationError[] = [];
 
     const changedItems = this.editService
                              .updatedItems
                              .concat(this.editService.createdItems);
-    
-    for (const item of changedItems) {
-      for (const valid of validators) {
-        const validationErrors = valid.Assert(item, schema, changedItems);
-        errors = concat(errors, validationErrors);
-      }
-    }
 
-    // // in this cycle are processing basic validators: required, max, min
+    const validators: IValidator[] = this.GetAllValidators();
+    
+    for (const validator of validators) {
+      const validationErrors = validator.Assert(schema, changedItems);
+      errors = errors.concat(errors, validationErrors);
+    }
+    
+    return errors;
+
+    //#region "commented code, may be useful"
+    // // for (const item of changedItems) {
+    // //   for (const valid of validators) {
+    // //     const validationErrors = valid.Assert(item, schema, changedItems);
+    // //     errors = concat(errors, validationErrors);
+    // //   }
+    // // }
+
+      // // in this cycle are processing basic validators: required, max, min
     // for (const item of changedItems) {
     //   for (const field of schema.fields) {
     //     // Check if we have any validators in schema field
@@ -112,6 +123,16 @@ export class ValidationService {
     //   }
     // }
 
-    return errors;
+    // return errors;
+    //#endregion
+  }
+
+  public GetAllValidators(...validatorsOptions): IValidator[] {
+    for (const option of validatorsOptions) {
+      if (option.validatiors.hasOwnProperty('required')) {
+
+      }
+    }
+    return <IValidator[]>[new BaseValidator(), new UniqueConstraintsValidator()];
   }
 }
