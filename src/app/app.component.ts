@@ -104,7 +104,7 @@ export class AppComponent implements OnInit {
         this.editService.cancelChanges();
     }
 
-    // MAIN FORM GROUP CREATOR WITH IN-FORM VALIDATION
+    // Main FormGroup validation with in-form validaton
     public MAINcreateFormGroup(currentData): FormGroup {
         const formGroup: FormGroup = new FormGroup({});
 
@@ -116,7 +116,7 @@ export class AppComponent implements OnInit {
         return formGroup;
     }
 
-    // WITHOUT FORM VALIDATION, USE ONLY FOR VALIDATION SERVICE TESTING
+    // FormGroup without form validation, (!!!) USE ONLY FOR VALIDATION SERVICE TESTING
     public createFormGroup(currentData): FormGroup {
         const formGroup: FormGroup = new FormGroup({});
 
@@ -126,6 +126,14 @@ export class AppComponent implements OnInit {
             formGroup.addControl(field.name, control);
         }
         return formGroup;
+    }
+
+    public createValidatorHandler(data: any) {
+        if (data) {
+
+        } else {
+            console.error('nothing to process');
+        }
     }
 
 }

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { EditService } from './edit.service';
 import { ISchema } from '../schemes/schema';
-import { IValidator, BaseValidator, ValidationError, UniqueConstraintsValidator } from '../validation';
-
+import { BaseValidator, ValidationError, UniqueConstraintsValidator, IValidator } from '../validation';
+import { share } from 'rxjs/operators';
+import { RequiredValidator } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -33,16 +34,18 @@ export class ValidationService {
                              .updatedItems
                              .concat(this.editService.createdItems);
 
-    const validators: IValidator[] = this.GetAllValidators();
+    const validators: IValidator[] = this.GetAllValidators(schema);
+
     
+
     for (const validator of validators) {
-      const validationErrors = validator.Assert(schema, changedItems);
+      const validationErrors = validator.Assert(changedItems, schema);
       errors = errors.concat(errors, validationErrors);
     }
     
     return errors;
 
-    //#region "commented code, may be useful"
+    //#region "commented code, can be useful"
     // // for (const item of changedItems) {
     // //   for (const valid of validators) {
     // //     const validationErrors = valid.Assert(item, schema, changedItems);
@@ -127,12 +130,16 @@ export class ValidationService {
     //#endregion
   }
 
-  public GetAllValidators(...validatorsOptions): IValidator[] {
-    for (const option of validatorsOptions) {
-      if (option.validatiors.hasOwnProperty('required')) {
-
+  public GetAllValidators(schema: ISchema): IValidator[] {
+    for (const field of schema.fields) {
+      const validators = field.validators;
+      if (validators.hasOwnProperty('required')) {
+        if (validators.required === true) {
+          
+        }
       }
     }
-    return <IValidator[]>[new BaseValidator(), new UniqueConstraintsValidator()];
+    
+    return <IValidator[]>[new BaseValidator(), new UniqueConstraintsValidator(), new RequiredValidator()];
   }
 }

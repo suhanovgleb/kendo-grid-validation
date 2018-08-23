@@ -1,9 +1,10 @@
-import { IValidator } from './validator-interface';
-import { ISchema } from '../schemes/schema';
-import { ValidationError } from './validation-error';
 
-export class PriceToUnitValidator implements IValidator {
-    Assert(schema?: ISchema, ): ValidationError[] {
+import { ISchema } from '../../schemes/schema';
+import { ValidationError } from '../validation-error';
+import { AbstractValidator } from '../abstract-validator';
+
+export class PriceToUnitValidator extends AbstractValidator {
+    Assert(schema?: ISchema): ValidationError[] {
         const errors: ValidationError[] = [];
         // if (gridRowItem.UnitPrice > 30 && gridRowItem.UnitsInStock === 0) {
         //     errors.push( new ValidationError(

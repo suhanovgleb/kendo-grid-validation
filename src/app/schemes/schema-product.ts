@@ -1,7 +1,6 @@
 import { ISchema, Field } from './schema';
 import { Validators } from '@angular/forms';
 
-
 export class ProductSchema implements ISchema {
 
     public fields = [
@@ -49,34 +48,38 @@ export class ProductSchema implements ISchema {
         }),
     ];
 
+    // Fields that will validate as primary key
     public uniqueConstraints = ['ProductName', 'Discontinued'];
 
+    // Validators that depends on more than one field
     public multiFieldValidators = {
         'PriceToUnitValidator': true,
         'OtherValidator': 'yes'
     };
 
-    public getValidatorsParams() {
+    public GetSingleFieldValidators() {
         
-        // Take validators from schema fields
-        for (const field of this.fields) {
-            for (const validator of field.validators) {
-                // ...
-            }
-        }
-
-        // Take validators from multiFieldValidators()
-        for (const validator in this.multiFieldValidators) {
-            if (this.multiFieldValidators.hasOwnProperty(validator)) {
-                // ...
-            }
-        }
-        
-        // Take uniqueConstraints validator
-        
-
-        return null;
     }
+
+    //#region Get multiFieldValidators
+    // // Get multiFieldValidators
+    // public getValidatorsParams() {
+        
+    //     const validators: object = {};
+
+    //     // Take validators from multiFieldValidators()
+    //     for (const validator in this.multiFieldValidators) {
+    //         if (this.multiFieldValidators.hasOwnProperty(validator)) {
+    //             // ...
+    //         }
+    //     }
+        
+    //     // Take uniqueConstraints validator
+        
+
+    //     return null;
+    // }
+    //#endregion
 
     // Get Angular on-form validators from scheme
     public getFormValidators(field: Field) {
