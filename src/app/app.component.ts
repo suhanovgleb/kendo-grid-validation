@@ -11,7 +11,7 @@ import { ValidationService } from './services/validation.service';
 
 import { map } from 'rxjs/operators/map';
 
-import { ProductSchema } from './schemes/schema-product';
+import { ProductSchema } from './schemes/product-schema';
 
 
 @Component({
@@ -92,8 +92,7 @@ export class AppComponent implements OnInit {
     public saveChanges(grid: any): void {
         grid.closeCell();
         grid.cancelCell();
-
-        // I THINK YOU ARE LOOKING FOR THIS, GLEB
+        
         this.validationService.validate(this.schema);
         
         this.editService.saveChanges();
@@ -109,7 +108,7 @@ export class AppComponent implements OnInit {
         const formGroup: FormGroup = new FormGroup({});
 
         for (const field of this.schema.fields) {
-            const validators = this.schema.getFormValidators(field);
+            const validators = this.schema.getFieldFormValidators(field);
             const control = new FormControl(currentData[field.name], Validators.compose(validators));
             formGroup.addControl(field.name, control);
         }
@@ -121,19 +120,11 @@ export class AppComponent implements OnInit {
         const formGroup: FormGroup = new FormGroup({});
 
         for (const field of this.schema.fields) {
-            const validators = this.schema.getFormValidators(field);
+            const validators = this.schema.getFieldFormValidators(field);
             const control = new FormControl(currentData[field.name]);
             formGroup.addControl(field.name, control);
         }
         return formGroup;
-    }
-
-    public createValidatorHandler(data: any) {
-        if (data) {
-
-        } else {
-            console.error('nothing to process');
-        }
     }
 
 }

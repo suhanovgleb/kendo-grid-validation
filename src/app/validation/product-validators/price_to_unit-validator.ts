@@ -1,8 +1,9 @@
+
 import { ValidationError } from '../validation-error';
 import { ISchema } from '../../schemes/schema';
-import { AbstractValidator } from '../abstract-validator';
+import { IValidator } from '../interface-validator';
 
-export class PriceToUnitValidator extends AbstractValidator {
+export class PriceToUnitValidator implements IValidator {
 
     Assert(changedItems: any[], schema): ValidationError[] {
         const errors: ValidationError[] = [];

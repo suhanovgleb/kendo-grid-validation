@@ -1,9 +1,11 @@
+
 import { ValidationErrors, ValidatorFn } from '@angular/forms';
+import { IValidator } from '../validation';
 
 export interface ISchema {
     fields: Field[];
-    uniqueConstraints?: string[];
-    multiFieldValidators: object;
+    multiFieldValidators: any;
+    getValidators(): IValidator[];
     getFormValidators?(field: Field): (ValidatorFn | ValidationErrors)[];
 }
 

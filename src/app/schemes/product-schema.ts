@@ -1,5 +1,15 @@
+
 import { ISchema, Field } from './schema';
 import { Validators } from '@angular/forms';
+import {
+    MaxValidator, 
+    MinValidator, 
+    RequiredValidator, 
+    UniqueConstraintsValidator, 
+    PriceToUnitValidator,
+    IValidator
+} from '../validation';
+
 
 export class ProductSchema implements ISchema {
 
@@ -25,7 +35,7 @@ export class ProductSchema implements ISchema {
             editable: true,
             type: 'number',
             validators: {
-                required: false,
+                required: true,
                 min: 3
             }
         }),
@@ -48,41 +58,26 @@ export class ProductSchema implements ISchema {
         }),
     ];
 
-    // Fields that will validate as primary key
-    public uniqueConstraints = ['ProductName', 'Discontinued'];
 
     // Validators that depends on more than one field
     public multiFieldValidators = {
-        'PriceToUnitValidator': true,
-        'OtherValidator': 'yes'
+        uniqueConstraints: ['ProductName', 'Discontinued'],
+        priceToUnitValidator: true,
     };
 
-    public GetSingleFieldValidators() {
-        
+    // Get service validators
+    public getValidators(): IValidator[] {
+        return [
+            new RequiredValidator(), 
+            new MaxValidator(), 
+            new MinValidator(), 
+            new PriceToUnitValidator(), 
+            new UniqueConstraintsValidator()
+        ];
     }
 
-    //#region Get multiFieldValidators
-    // // Get multiFieldValidators
-    // public getValidatorsParams() {
-        
-    //     const validators: object = {};
-
-    //     // Take validators from multiFieldValidators()
-    //     for (const validator in this.multiFieldValidators) {
-    //         if (this.multiFieldValidators.hasOwnProperty(validator)) {
-    //             // ...
-    //         }
-    //     }
-        
-    //     // Take uniqueConstraints validator
-        
-
-    //     return null;
-    // }
-    //#endregion
-
     // Get Angular on-form validators from scheme
-    public getFormValidators(field: Field) {
+    public getFieldFormValidators(field: Field) {
         const schemaValidators = field.validators;
 
         const formValidators: any[] = [];
