@@ -17,11 +17,8 @@ export class RequiredValidator implements IValidator {
                             item[field.name] === null ||
                             item[field.name] === undefined
                         ) {
-                            errors.push(new ValidationError(
-                                [field.name],
-                                item,
-                                'required',
-                                field.name + ' can\'t be empty.')
+                            errors.push(
+                                new ValidationError([field.name], item, 'required', field.name + ' can\'t be empty.')
                             );
                         }
                     }

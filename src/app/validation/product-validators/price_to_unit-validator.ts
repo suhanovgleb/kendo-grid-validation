@@ -1,6 +1,5 @@
 
 import { ValidationError } from '../validation-error';
-import { ISchema } from '../../schemes/schema';
 import { IValidator } from '../interface-validator';
 
 export class PriceToUnitValidator implements IValidator {

@@ -1,6 +1,5 @@
 
 import { Injectable } from '@angular/core';
-import { EditService } from './edit.service';
 import { ISchema } from '../schemes/schema';
 import { ValidationError } from '../validation';
 
@@ -9,26 +8,19 @@ import { ValidationError } from '../validation';
 })
 export class ValidationService {
 
-  constructor(private editService: EditService) { }
-
-  public validate(schema: ISchema): ValidationError[] {
+  public validate(schema: ISchema, datasets: any): ValidationError[] {
 
     let errors: ValidationError[] = [];
 
-    const changedItems = this.editService
-                             .updatedItems
-                             .concat(this.editService.createdItems);
-
     for (const validator of schema.getValidators()) {
-      // Not the best practice to compare ctor name with constant string, if we gonna use uglificators or so
+      // Could be a problem if uglificators will be used
       if (validator.constructor.name === 'UniqueConstraintsValidator') {
-        errors = errors.concat(validator.Assert(this.editService.data, schema));
+        errors = errors.concat(validator.Assert(datasets.allItems, schema));
       } else {
-        errors = errors.concat(validator.Assert(changedItems, schema));
+        errors = errors.concat(validator.Assert(datasets.changedItems, schema));
       }
     }
-    
+
     return errors;
   }
-
 }

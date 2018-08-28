@@ -11,7 +11,7 @@ export class UniqueConstraintsValidator implements IValidator {
 
         const uniqueConstraints = schema.multiFieldValidators.uniqueConstraints;
 
-        const hashTable: object = {};
+        let hashTable: object = {};
 
         // fill hashtable with keys-constraints and count number of matches
         for (const item of items) {
@@ -23,13 +23,20 @@ export class UniqueConstraintsValidator implements IValidator {
         }
 
         // here we delete all non-repeating items from hashtable
+        const tempHashTable: any = {};
+
         for (const key in hashTable) {
-            if (hashTable[key] === 1) {
-                delete hashTable[key];
+            if (hashTable.hasOwnProperty(key)) {
+
+                if (!(hashTable[key] === 1)) {
+                    tempHashTable[key] = hashTable[key];
+                }
             }
         }
 
+        hashTable = tempHashTable;
 
+        // filling errors: ValidationError[] with ValidatonError
         for (const item of items) {
             const hashName = this.getNameHash(item, uniqueConstraints);
             if (hashTable.hasOwnProperty(hashName) && hashTable[hashName] !== 0) {

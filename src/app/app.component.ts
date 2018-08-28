@@ -1,3 +1,4 @@
+
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
@@ -93,7 +94,12 @@ export class AppComponent implements OnInit {
         grid.closeCell();
         grid.cancelCell();
         
-        this.validationService.validate(this.schema);
+        const datasets: object = {
+            changedItems: this.editService.updatedItems.concat(this.editService.createdItems),
+            allItems: this.editService.data
+        };
+
+        this.validationService.validate(this.schema, datasets);
         
         this.editService.saveChanges();
     }
