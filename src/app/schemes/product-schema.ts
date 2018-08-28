@@ -71,8 +71,8 @@ export class ProductSchema implements ISchema {
             new RequiredValidator(), 
             new MaxValidator(), 
             new MinValidator(), 
-            new PriceToUnitValidator(), 
-            new UniqueConstraintsValidator()
+            new UniqueConstraintsValidator(),
+            new PriceToUnitValidator()
         ];
     }
 
