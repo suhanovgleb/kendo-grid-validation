@@ -8,6 +8,7 @@
           [sortable]="true"
           [navigable]="true"
           [reorderable]="true"
+          [rowClass]="rowCallback"
           (dataStateChange)="onStateChange($event)"
           (cellClick)="cellClickHandler($event)"
           (cellClose)="cellCloseHandler($event)"
@@ -19,11 +20,12 @@
         <ng-template kendoGridToolbarTemplate>
             <button kendoGridAddCommand>Add new</button>
             <button class='k-button' [disabled]="!editService.hasChanges()" (click)="saveChanges(grid);">Save Changes</button>
-            <button class='k-button' [disabled]="!editService.hasChanges()" (click)="cancelChanges(grid);">Cancel Changes</button>        </ng-template>
-        <kendo-grid-column field="ProductName" title="Product Name"></kendo-grid-column>
-        <kendo-grid-column field="UnitPrice" editor="numeric" title="Price"></kendo-grid-column>
-        <kendo-grid-column field="Discontinued" editor="boolean" title="Discontinued"></kendo-grid-column>
-        <kendo-grid-column field="UnitsInStock" editor="numeric" title="Units In Stock"></kendo-grid-column>
+            <button class='k-button' [disabled]="!editService.hasChanges()" (click)="cancelChanges(grid);">Cancel Changes</button>
+        </ng-template>
+        <kendo-grid-column field="ProductName" title="Product Name" [class]="{'product-name-column': true}"></kendo-grid-column>
+        <kendo-grid-column field="UnitPrice" editor="numeric" title="Price" [class]="{'unit-price-column': true}"></kendo-grid-column>
+        <kendo-grid-column field="Discontinued" editor="boolean" title="Discontinued" [class]="{'discontinued-column': true}"></kendo-grid-column>
+        <kendo-grid-column field="UnitsInStock" editor="numeric" title="Units In Stock" [class]="{'units-in-stock-column': true}"></kendo-grid-column>
         <kendo-grid-command-column title="command" width="220">
             <ng-template kendoGridCellTemplate let-isNew="isNew">
                 <button kendoGridRemoveCommand>Remove</button>

@@ -1,9 +1,9 @@
 
 import { Observable } from 'rxjs/Observable';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { GridDataResult, RowClassArgs } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
 
 import { Product } from './models/product';
@@ -13,10 +13,13 @@ import { ValidationService } from './services/validation.service';
 import { map } from 'rxjs/operators/map';
 
 import { ProductSchema } from './schemes/product-schema';
+import { MarkupService } from './services/markup.service';
+import { filter } from 'rxjs/operators';
 
 
 @Component({
   selector: 'app-root',
+  encapsulation: ViewEncapsulation.None,
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
@@ -36,8 +39,9 @@ export class AppComponent implements OnInit {
     public ಠ_ಠ = '୧((#Φ益Φ#))୨';    
 
     constructor(
-        public editService: EditService,
-        private validationService: ValidationService
+        private editService: EditService,
+        private validationService: ValidationService,
+        private markupService: MarkupService
     ) {
         console.log(this.ಠ_ಠ);
     }
@@ -99,9 +103,20 @@ export class AppComponent implements OnInit {
             allItems: this.editService.data
         };
 
-        this.validationService.validate(this.schema, datasets);
+        const validationErrors = this.validationService.validate(this.schema, datasets);
+        this.markupService.doMarkup(validationErrors);
+        
         
         this.editService.saveChanges();
+    }
+
+    public rowCallback = (context: RowClassArgs) => {
+        switch (context.dataItem.Discontinued) {
+            case true:
+                return {error: true, discontinued-column: true};
+            default:
+                return {};
+        }
     }
 
     public cancelChanges(grid: any): void {
@@ -113,7 +128,11 @@ export class AppComponent implements OnInit {
     public MAINcreateFormGroup(currentData): FormGroup {
         const formGroup: FormGroup = new FormGroup({});
 
-        for (const field of this.schema.fields) {
+        const editableFields = this.schema.fields.filter(field => {
+            if (field.editable) { return field; }
+        });
+
+        for (const field of editableFields) {
             const validators = this.schema.getFieldFormValidators(field);
             const control = new FormControl(currentData[field.name], Validators.compose(validators));
             formGroup.addControl(field.name, control);
@@ -125,7 +144,11 @@ export class AppComponent implements OnInit {
     public createFormGroup(currentData): FormGroup {
         const formGroup: FormGroup = new FormGroup({});
 
-        for (const field of this.schema.fields) {
+        const editableFields = this.schema.fields.filter(field => {
+            if (field.editable) { return field; }
+        });
+
+        for (const field of editableFields) {
             const validators = this.schema.getFieldFormValidators(field);
             const control = new FormControl(currentData[field.name]);
             formGroup.addControl(field.name, control);
