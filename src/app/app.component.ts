@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 
-import { GridDataResult, RowClassArgs } from '@progress/kendo-angular-grid';
+import { GridDataResult, RowClassArgs, ColumnComponent } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
 
 import { Product } from './models/product';
@@ -15,6 +15,8 @@ import { map } from 'rxjs/operators/map';
 import { ProductSchema } from './schemes/product-schema';
 import { MarkupService } from './services/markup.service';
 import { filter } from 'rxjs/operators';
+import { DomSanitizer } from '@angular/platform-browser';
+import { IfStmt } from '@angular/compiler';
 
 
 @Component({
@@ -41,7 +43,8 @@ export class AppComponent implements OnInit {
     constructor(
         private editService: EditService,
         private validationService: ValidationService,
-        private markupService: MarkupService
+        private markupService: MarkupService,
+        private sanitizer: DomSanitizer
     ) {
         console.log(this.ಠ_ಠ);
     }
@@ -110,13 +113,28 @@ export class AppComponent implements OnInit {
         this.editService.saveChanges();
     }
 
-    public rowCallback = (context: RowClassArgs) => {
-        switch (context.dataItem.Discontinued) {
-            case true:
-                return {error: true, discontinued-column: true};
-            default:
-                return {};
+    public markup(dataItem: any, columnInfo: ColumnComponent) {
+        const result = '#FFBA80';
+
+        if ((dataItem.ProductName === '1') && (columnInfo.field === 'ProductName')) {
+            return this.sanitizer.bypassSecurityTrustStyle(result);
         }
+        // TODO: Определять, какая ячейка сейчас обрабатывается и применять стиль только к ней
+        
+
+    //  switch (dataItem.ProductName) {
+    //   case '1' :
+    //     result = '#FFBA80';
+    //     break;
+    //   case '2' :
+    //     result = '#B2F699';
+    //     break;
+    //   default:
+    //     result = 'transparent';
+    //     break;
+    //  }
+
+    //  return this.sanitizer.bypassSecurityTrustStyle(result);
     }
 
     public cancelChanges(grid: any): void {
