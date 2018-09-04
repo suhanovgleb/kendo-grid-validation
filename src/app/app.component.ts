@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 
-import { GridDataResult, RowClassArgs, ColumnComponent } from '@progress/kendo-angular-grid';
+import { GridDataResult, ColumnComponent } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
 
 import { Product } from './models/product';
@@ -14,9 +14,7 @@ import { map } from 'rxjs/operators/map';
 
 import { ProductSchema } from './schemes/product-schema';
 import { MarkupService } from './services/markup.service';
-import { filter } from 'rxjs/operators';
-import { DomSanitizer } from '@angular/platform-browser';
-import { IfStmt } from '@angular/compiler';
+import { ValidationError } from './validation';
 
 
 @Component({
@@ -36,15 +34,16 @@ export class AppComponent implements OnInit {
     };
 
     public changes: any = {};
-    public schema = new ProductSchema();
+    private schema = new ProductSchema();
+
+    private validationErrors: ValidationError[] = [];
 
     public ಠ_ಠ = '୧((#Φ益Φ#))୨';    
 
     constructor(
         private editService: EditService,
         private validationService: ValidationService,
-        private markupService: MarkupService,
-        private sanitizer: DomSanitizer
+        private markupService: MarkupService
     ) {
         console.log(this.ಠ_ಠ);
     }
@@ -106,35 +105,13 @@ export class AppComponent implements OnInit {
             allItems: this.editService.data
         };
 
-        const validationErrors = this.validationService.validate(this.schema, datasets);
-        this.markupService.doMarkup(validationErrors);
-        
+        this.validationErrors = this.validationService.validate(this.schema, datasets);
         
         this.editService.saveChanges();
     }
 
     public markup(dataItem: any, columnInfo: ColumnComponent) {
-        const result = '#FFBA80';
-
-        if ((dataItem.ProductName === '1') && (columnInfo.field === 'ProductName')) {
-            return this.sanitizer.bypassSecurityTrustStyle(result);
-        }
-        // TODO: Определять, какая ячейка сейчас обрабатывается и применять стиль только к ней
-        
-
-    //  switch (dataItem.ProductName) {
-    //   case '1' :
-    //     result = '#FFBA80';
-    //     break;
-    //   case '2' :
-    //     result = '#B2F699';
-    //     break;
-    //   default:
-    //     result = 'transparent';
-    //     break;
-    //  }
-
-    //  return this.sanitizer.bypassSecurityTrustStyle(result);
+        return this.markupService.doMarkup(dataItem, columnInfo, this.validationErrors);
     }
 
     public cancelChanges(grid: any): void {
