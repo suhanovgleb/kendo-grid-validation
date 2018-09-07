@@ -40,15 +40,6 @@ export class ProductSchema implements ISchema {
             }
         }),
         new Field({
-            name: 'UnitsInStock',
-            editable: true,
-            type: 'number',
-            validators: {
-                required: false,
-                max: 9999
-            }
-        }),
-        new Field({
             name: 'Discontinued',
             editable: true,
             type: 'boolean',
@@ -56,6 +47,15 @@ export class ProductSchema implements ISchema {
                 required: false
             }
         }),
+        new Field({
+            name: 'UnitsInStock',
+            editable: true,
+            type: 'number',
+            validators: {
+                required: false,
+                max: 9999
+            }
+        })
     ];
 
 

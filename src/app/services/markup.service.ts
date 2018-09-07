@@ -12,11 +12,11 @@ export class MarkupService {
     private sanitizer: DomSanitizer
   ) { }
 
-  public doMarkup(dataItem: any, columnInfo: ColumnComponent, validationErrors: ValidationError[]) {
+  public doMarkup(dataItems: any[], validationErrors: ValidationError[]) {
     const result = '#FFBA80';
 
-    if ((dataItem.ProductName === '1') && (columnInfo.field === 'ProductName')) {
-      return this.sanitizer.bypassSecurityTrustStyle(result);
-    }
+    // if ((dataItem.ProductName === '1') && (columnInfo.field === 'ProductName')) {
+    //   return this.sanitizer.bypassSecurityTrustStyle(result);
+    // }
   }
 }

@@ -1,9 +1,9 @@
 
 import { Observable } from 'rxjs/Observable';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 
-import { GridDataResult, ColumnComponent } from '@progress/kendo-angular-grid';
+import { GridDataResult, GridComponent } from '@progress/kendo-angular-grid';
 import { State, process } from '@progress/kendo-data-query';
 
 import { Product } from './models/product';
@@ -33,17 +33,21 @@ export class AppComponent implements OnInit {
         take: 10
     };
 
+    @ViewChild(GridComponent) grid: GridComponent;
+
     public changes: any = {};
     private schema = new ProductSchema();
 
     private validationErrors: ValidationError[] = [];
 
-    public ಠ_ಠ = '୧((#Φ益Φ#))୨';    
+    public ಠ_ಠ = 'ಠ_ಠ';    
 
     constructor(
         private editService: EditService,
         private validationService: ValidationService,
-        private markupService: MarkupService
+        private markupService: MarkupService,
+        private elementRef: ElementRef,
+        private renderer: Renderer2
     ) {
         console.log(this.ಠ_ಠ);
     }
@@ -75,10 +79,17 @@ export class AppComponent implements OnInit {
             this.editService.update(dataItem);
         }
     }
-
+    
     public addHandler({ sender }) {
+        
+        // tslint:disable-next-line:max-line-length
+        const w = this.renderer.setStyle(this.elementRef.nativeElement.children[0].children[1].children[1].children[0].children[0].children[0].children[1].children[0].cells[0], 'backgroundColor', 'lightsalmon');
+        const e = this.renderer.setStyle(this.elementRef.nativeElement.children[0].children[1]
+            .children[1].children[0].children[0].children[0].children[1].children[2].cells[2], 'backgroundColor', 'lightsalmon');
         sender.addRow(this.createFormGroup(new Product()));
+        
     }
+    // nativeElement.children[""0""].children[1].children[1].children[""0""].children[""0""].children[""0""].children[1]
 
     public cancelHandler({ sender, rowIndex }) {
         sender.closeRow(rowIndex);
@@ -89,6 +100,8 @@ export class AppComponent implements OnInit {
             this.editService.create(formGroup.value);
             sender.closeRow(rowIndex);
         }
+
+        this.markupService.doMarkup(this.editService.data, this.validationErrors);
     }
 
     public removeHandler({ sender, dataItem }) {
@@ -108,10 +121,6 @@ export class AppComponent implements OnInit {
         this.validationErrors = this.validationService.validate(this.schema, datasets);
         
         this.editService.saveChanges();
-    }
-
-    public markup(dataItem: any, columnInfo: ColumnComponent) {
-        return this.markupService.doMarkup(dataItem, columnInfo, this.validationErrors);
     }
 
     public cancelChanges(grid: any): void {
