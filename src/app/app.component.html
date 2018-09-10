@@ -20,8 +20,9 @@
             <button kendoGridAddCommand>Add new</button>
             <button class='k-button' [disabled]="!editService.hasChanges()" (click)="saveChanges(grid);">Save Changes</button>
             <button class='k-button' [disabled]="!editService.hasChanges()" (click)="cancelChanges(grid);">Cancel Changes</button>
-            <button class='k-button' (click)="addSomeItems(grid);">Add {{ numberOfAdditionalItems !== undefined ? numberOfAdditionalItems : 'some' }} random items</button>
+            <button class='k-button' [disabled]="!numberOfAdditionalItems" (click)="addSomeItems(grid);">Add {{ numberOfAdditionalItems !== undefined ? numberOfAdditionalItems : 'some' }} random items</button>
         </ng-template>
+        <kendo-grid-column field="ProductID" title="HIDDEN" [hidden]=true></kendo-grid-column>
         <kendo-grid-column field="ProductName" title="Product Name">
             <ng-template kendoGridCellTemplate let-dataItem let-columnInfo="column">
                 <span [style.backgroundColor]="markup(dataItem, columnInfo)">

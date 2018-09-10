@@ -124,17 +124,15 @@ export class AppComponent implements OnInit {
     }
 
     public addSomeItems(grid: GridComponent) {
-
         const chance = new Chance();
         for (let i = 0; i < this.numberOfAdditionalItems; i++) {
             const item = new Product();
             item.ProductName = chance.street();
-            item.UnitPrice = Math.abs(chance.integer());
+            item.UnitPrice = chance.floating({ fixed: 2, min: 4, max: 200 });
             item.Discontinued = chance.integer() % 3 === 0 ? true : false;
-            item.UnitsInStock = Math.abs(chance.integer());
+            item.UnitsInStock = chance.integer({ min: 0, max: 9999 });
             this.editService.create(item);
         }
-        
     }
 
     // must return by sanitizer
@@ -152,6 +150,9 @@ export class AppComponent implements OnInit {
             return 'lightcoral';
         }
         if (dataItem.ProductName[0] === 'E' && (columnInfo.field === 'ProductName')) {
+            return 'lightcoral';
+        }
+        if (dataItem.UnitPrice >= 100 && (columnInfo.field === 'UnitPrice')) {
             return 'lightcoral';
         }
     }
