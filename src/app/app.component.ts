@@ -17,6 +17,8 @@ import { MarkupService } from './services/markup.service';
 import { ValidationError } from './validation';
 
 import { Chance } from 'chance';
+import { ValueTemplateDirective } from '@progress/kendo-angular-dropdowns';
+import { SafeStyle } from '@angular/platform-browser';
 
 
 @Component({
@@ -41,6 +43,8 @@ export class AppComponent implements OnInit {
     private schema = new ProductSchema();
 
     private validationErrors: ValidationError[] = [];
+
+    private markupMap = {};
 
     public ಠ_ಠ = 'ಠ_ಠ';    
 
@@ -93,10 +97,6 @@ export class AppComponent implements OnInit {
             this.editService.create(formGroup.value);
             sender.closeRow(rowIndex);
         }
-
-        // Maybe this must be in the other place, pay attention when formValidation will be enabled
-        this.markupService.doMarkup(this.editService.data, this.validationErrors);
-        
     }
 
     public removeHandler({ sender, dataItem }) {
@@ -114,6 +114,7 @@ export class AppComponent implements OnInit {
         };
 
         this.validationErrors = this.validationService.validate(this.schema, datasets);
+        this.markupMap = this.markupService.doMarkup()
 
         this.editService.saveChanges();
     }
@@ -135,26 +136,34 @@ export class AppComponent implements OnInit {
         }
     }
 
+
+    // tslint:disable-next-line:member-ordering
+    // private counter = 0;
+
     // must return by sanitizer
-    markup(dataItem: any, columnInfo: ColumnComponent) {
-        if (dataItem.ProductName[0] === 'A' && (columnInfo.field === 'ProductName')) {
-            return 'lightcoral';
-        }
-        if (dataItem.ProductName[0] === 'B' && (columnInfo.field === 'ProductName')) {
-            return 'lightcoral';
-        }
-        if (dataItem.ProductName[0] === 'C' && (columnInfo.field === 'ProductName')) {
-            return 'lightcoral';
-        }
-        if (dataItem.ProductName[0] === 'D' && (columnInfo.field === 'ProductName')) {
-            return 'lightcoral';
-        }
-        if (dataItem.ProductName[0] === 'E' && (columnInfo.field === 'ProductName')) {
-            return 'lightcoral';
-        }
-        if (dataItem.UnitPrice >= 100 && (columnInfo.field === 'UnitPrice')) {
-            return 'lightcoral';
-        }
+    markup(dataItem: any, columnInfo: ColumnComponent): SafeStyle {
+        // if (dataItem.ProductName[0] === 'A' && (columnInfo.field === 'ProductName')) {
+        //     return 'lightcoral';
+        // }
+        // if (dataItem.ProductName[0] === 'B' && (columnInfo.field === 'ProductName')) {
+        //     return 'lightcoral';
+        // }
+        // if (dataItem.ProductName[0] === 'C' && (columnInfo.field === 'ProductName')) {
+        //     return 'lightcoral';
+        // }
+        // if (dataItem.ProductName[0] === 'D' && (columnInfo.field === 'ProductName')) {
+        //     return 'lightcoral';
+        // }
+        // if (dataItem.ProductName[0] === 'E' && (columnInfo.field === 'ProductName')) {
+        //     return 'lightcoral';
+        // }
+        // if (dataItem.UnitPrice >= 100 && (columnInfo.field === 'UnitPrice')) {
+        //     return 'lightcoral';
+        // }
+
+
+        // console.log(this.counter);
+        return this.markupService.doMarkup(dataItem, columnInfo, this.validationErrors);
     }
 
     // Main FormGroup validation with in-form validaton
