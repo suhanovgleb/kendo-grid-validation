@@ -17,7 +17,6 @@ import { MarkupService } from './services/markup.service';
 import { ValidationError } from './validation';
 
 import { Chance } from 'chance';
-import { ValueTemplateDirective } from '@progress/kendo-angular-dropdowns';
 import { SafeStyle } from '@angular/platform-browser';
 
 
@@ -34,17 +33,17 @@ export class AppComponent implements OnInit {
     public gridState: State = {
         sort: [],
         skip: 0,
-        take: 10
+        take: 100
     };
 
-    private numberOfAdditionalItems = 10000;
+    private numberOfAdditionalItems = 1000;
 
     public changes: any = {};
     private schema = new ProductSchema();
 
     private validationErrors: ValidationError[] = [];
 
-    private markupMap = {};
+    private markupMap = [];
 
     public ಠ_ಠ = 'ಠ_ಠ';    
 
@@ -88,6 +87,8 @@ export class AppComponent implements OnInit {
         sender.addRow(this.createFormGroup(new Product()));
     }
 
+    
+
     public cancelHandler({ sender, rowIndex }) {
         sender.closeRow(rowIndex);
     }
@@ -114,7 +115,9 @@ export class AppComponent implements OnInit {
         };
 
         this.validationErrors = this.validationService.validate(this.schema, datasets);
-        this.markupMap = this.markupService.doMarkup()
+        
+        
+        // this.markupMap = this.markupService.doMarkup()
 
         this.editService.saveChanges();
     }
@@ -163,7 +166,7 @@ export class AppComponent implements OnInit {
 
 
         // console.log(this.counter);
-        return this.markupService.doMarkup(dataItem, columnInfo, this.validationErrors);
+        return this.markupService.doMarkup(dataItem, columnInfo, this.validationErrors);   
     }
 
     // Main FormGroup validation with in-form validaton
