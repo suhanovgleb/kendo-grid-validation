@@ -1,7 +1,7 @@
 
 export class Product {
-    public ProductID: number;
-    public ProductName = '';
+    public Id: number;
+    public Name = '';
     public Discontinued = false;
     public UnitsInStock: number;
     public UnitPrice = 0;

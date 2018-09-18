@@ -15,7 +15,7 @@ export class ProductSchema implements ISchema {
 
     public fields = [
         new Field({
-            name: 'ProductID',
+            name: 'Id',
             editable: false,
             type: 'number',
             validators: {
@@ -23,7 +23,7 @@ export class ProductSchema implements ISchema {
             }
         }),
         new Field({
-            name: 'ProductName',
+            name: 'Name',
             editable: true,
             type: 'string',
             validators: {
@@ -61,7 +61,7 @@ export class ProductSchema implements ISchema {
 
     // Validators that depends on more than one field
     public multiFieldValidators = {
-        uniqueConstraints: ['ProductName', 'Discontinued'],
+        uniqueConstraints: ['Name', 'Discontinued'],
         priceToUnitValidator: true,
     };
 

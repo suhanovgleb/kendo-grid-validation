@@ -21,9 +21,13 @@ export class MarkupService {
         // console.log('hooray!', columnInfo.title, error.item.ProductID);
         for (const fieldName of error.fieldNames) {
           if (columnInfo.field === fieldName) {
-            return this.sanitizer.bypassSecurityTrustStyle(result);
+            if (error.item[fieldName] === dataItem[fieldName]) {
+              return this.sanitizer.bypassSecurityTrustStyle(result);
+            }
           }
         }
+      } else {
+        
       }
     }
 
@@ -85,4 +89,5 @@ export class MarkupService {
   //         }
   //       }
   // }
-}
+// }
+

@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
     public gridState: State = {
         sort: [],
         skip: 0,
-        take: 100
+        take: 1
     };
 
     private numberOfAdditionalItems = 1000;
@@ -87,8 +87,6 @@ export class AppComponent implements OnInit {
         sender.addRow(this.createFormGroup(new Product()));
     }
 
-    
-
     public cancelHandler({ sender, rowIndex }) {
         sender.closeRow(rowIndex);
     }
@@ -116,10 +114,9 @@ export class AppComponent implements OnInit {
 
         this.validationErrors = this.validationService.validate(this.schema, datasets);
         
-        
-        // this.markupMap = this.markupService.doMarkup()
-
-        this.editService.saveChanges();
+        if (!this.validationErrors) {
+            this.editService.saveChanges();
+        }
     }
 
     public cancelChanges(grid: GridComponent): void {
@@ -131,7 +128,7 @@ export class AppComponent implements OnInit {
         const chance = new Chance();
         for (let i = 0; i < this.numberOfAdditionalItems; i++) {
             const item = new Product();
-            item.ProductName = chance.street();
+            item.Name = chance.street();
             item.UnitPrice = chance.floating({ fixed: 2, min: 4, max: 200 });
             item.Discontinued = chance.integer() % 3 === 0 ? true : false;
             item.UnitsInStock = chance.integer({ min: 0, max: 9999 });
