@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { zip } from 'rxjs/observable/zip';
 import { map } from 'rxjs/operators';
+import { Product } from '../models/product';
 
 const CREATE_ACTION = 'create';
 const UPDATE_ACTION = 'update';
@@ -13,7 +14,7 @@ const REMOVE_ACTION = 'destroy';
 
 const itemIndex = (item: any, data: any[]): number => {
   for (let idx = 0; idx < data.length; idx++) {
-      if (data[idx].ProductID === item.ProductID) {
+      if (data[idx].Id === item.Id) {
           return idx;
       }
   }
@@ -90,7 +91,7 @@ export class EditService extends BehaviorSubject<any[]> {
   }
 
   public isNew(item: any): boolean {
-      return !item.ProductID;
+      return !item.Id;
   }
 
   public hasChanges(): boolean {
@@ -115,6 +116,22 @@ export class EditService extends BehaviorSubject<any[]> {
           completed.push(this.fetch(CREATE_ACTION, this.createdItems));
       }
 
+      // THIS IS JUST DIRTY HACK, DON'T KEEP IT
+      for (const el of completed) {
+        for (const field in el) {
+            if (el.hasOwnProperty(field)) {
+                if (field === 'Id') {
+                    el.ProductID = el.Id;
+                    delete el.Id;
+                }
+                if (field === 'Name') {
+                    el.ProductName = el.Name;
+                    delete el.Name;
+                }
+            }
+        }
+    }
+
       this.reset();
 
       zip(...completed).subscribe(() => this.read());
@@ -138,11 +155,34 @@ export class EditService extends BehaviorSubject<any[]> {
       this.createdItems = [];
   }
 
-  private fetch(action: string = '', data?: any): Observable<any[]> {
-      return this.http
-          .jsonp(`https://demos.telerik.com/kendo-ui/service/Products/${action}?${this.serializeModels(data)}`, 'callback')
-          .pipe(map(res => <any[]>res));
-  }
+//   private fetch(action: string = '', data?: any): Observable<any[]> {
+//       return this.http
+//           .jsonp(`https://demos.telerik.com/kendo-ui/service/Products/${action}?${this.serializeModels(data)}`, 'callback')
+//           .pipe(map(res => <any[]>res));
+//   }
+
+    private fetch(action: string = '', data?: any): Observable<any[]> {
+        return this.http
+            .jsonp(`https://demos.telerik.com/kendo-ui/service/Products/${action}?${this.serializeModels(data)}`, 'callback')
+            .pipe(map(res => {
+                // THIS IS JUST DIRTY HACK, DON'T KEEP IT
+                for (const el of <any[]>res) {
+                    for (const field in el) {
+                        if (el.hasOwnProperty(field)) {
+                            if (field === 'ProductID') {
+                                el.Id = el.ProductID;
+                                delete el.ProductID;
+                            }
+                            if (field === 'ProductName') {
+                                el.Name = el.ProductName;
+                                delete el.ProductName;
+                            }
+                        }
+                    }
+                }
+                return <any[]>res;
+            }));
+    }
 
   private serializeModels(data?: any): string {
       return data ? `&models=${JSON.stringify(data)}` : '';

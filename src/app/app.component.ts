@@ -43,8 +43,6 @@ export class AppComponent implements OnInit {
 
     private validationErrors: ValidationError[] = [];
 
-    private markupMap = [];
-
     public ಠ_ಠ = 'ಠ_ಠ';    
 
     constructor(
@@ -114,7 +112,7 @@ export class AppComponent implements OnInit {
 
         this.validationErrors = this.validationService.validate(this.schema, datasets);
         
-        if (!this.validationErrors) {
+        if (this.validationErrors.length === 0) {
             this.editService.saveChanges();
         }
     }

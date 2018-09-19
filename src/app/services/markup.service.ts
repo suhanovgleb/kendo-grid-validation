@@ -17,17 +17,16 @@ export class MarkupService {
     const result = '#FFBA80';
 
     for (const error of validationErrors) {
-      if (dataItem === error.item) {
-        // console.log('hooray!', columnInfo.title, error.item.ProductID);
+      if (dataItem.Id === error.item.Id) {
         for (const fieldName of error.fieldNames) {
           if (columnInfo.field === fieldName) {
             if (error.item[fieldName] === dataItem[fieldName]) {
+              const index = validationErrors.indexOf(error);
+              validationErrors.splice(index, 1);
               return this.sanitizer.bypassSecurityTrustStyle(result);
             }
           }
         }
-      } else {
-        
       }
     }
 
