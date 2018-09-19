@@ -126,7 +126,7 @@ export class AppComponent implements OnInit {
         const chance = new Chance();
         for (let i = 0; i < this.numberOfAdditionalItems; i++) {
             const item = new Product();
-            item.Name = chance.street();
+            item.ProductName = chance.street();
             item.UnitPrice = chance.floating({ fixed: 2, min: 4, max: 200 });
             item.Discontinued = chance.integer() % 3 === 0 ? true : false;
             item.UnitsInStock = chance.integer({ min: 0, max: 9999 });

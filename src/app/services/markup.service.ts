@@ -17,7 +17,7 @@ export class MarkupService {
     const result = '#FFBA80';
 
     for (const error of validationErrors) {
-      if (dataItem.Id === error.item.Id) {
+      if (dataItem.ProductId === error.item.ProductId) {
         for (const fieldName of error.fieldNames) {
           if (columnInfo.field === fieldName) {
             if (error.item[fieldName] === dataItem[fieldName]) {
