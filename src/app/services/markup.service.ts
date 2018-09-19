@@ -17,12 +17,10 @@ export class MarkupService {
     const result = '#FFBA80';
 
     for (const error of validationErrors) {
-      if (dataItem.ProductId === error.item.ProductId) {
+      if (dataItem.ProductID === error.item.ProductID) {
         for (const fieldName of error.fieldNames) {
           if (columnInfo.field === fieldName) {
             if (error.item[fieldName] === dataItem[fieldName]) {
-              const index = validationErrors.indexOf(error);
-              validationErrors.splice(index, 1);
               return this.sanitizer.bypassSecurityTrustStyle(result);
             }
           }

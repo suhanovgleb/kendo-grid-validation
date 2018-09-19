@@ -23,30 +23,30 @@
             <button class='k-button' [disabled]="!numberOfAdditionalItems" (click)="addSomeItems(grid);">Add {{ numberOfAdditionalItems !== undefined ? numberOfAdditionalItems : 'some' }} random items</button>
         </ng-template>
         <kendo-grid-column field="ProductID" title="HIDDEN" [hidden]=true></kendo-grid-column>
-        <kendo-grid-column field="ProductName" title="Product Name">
+        <kendo-grid-column field="ProductName" title="Product Name" class="no-padding">
             <ng-template kendoGridCellTemplate let-dataItem let-columnInfo="column">
-                <span [style.backgroundColor]="markup(dataItem, columnInfo)">
+                <span [style.backgroundColor]="markup(dataItem, columnInfo)" class="whole-cell">
                     {{ dataItem.ProductName }}
                 </span>
             </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="UnitPrice" editor="numeric" title="Price">
+        <kendo-grid-column field="UnitPrice" editor="numeric" title="Price" class="no-padding">
             <ng-template kendoGridCellTemplate let-dataItem let-columnInfo="column">
-                <span [style.backgroundColor]="markup(dataItem, columnInfo)">
+                <span [style.backgroundColor]="markup(dataItem, columnInfo)" class="whole-cell">
                     {{ dataItem.UnitPrice }}
                 </span>
             </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="Discontinued" editor="boolean" title="Discontinued">
+        <kendo-grid-column field="Discontinued" editor="boolean" title="Discontinued" class="no-padding">
             <ng-template kendoGridCellTemplate let-dataItem let-columnInfo="column">
-                <span [style.backgroundColor]="markup(dataItem, columnInfo)">
+                <span [style.backgroundColor]="markup(dataItem, columnInfo)" class="whole-cell">
                     {{ dataItem.Discontinued }}
                 </span>
             </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="UnitsInStock" editor="numeric" title="Units In Stock">
+        <kendo-grid-column field="UnitsInStock" editor="numeric" title="Units In Stock" class="no-padding">
             <ng-template kendoGridCellTemplate let-dataItem let-columnInfo="column">
-                <span [style.backgroundColor]="markup(dataItem, columnInfo)">
+                <span [style.backgroundColor]="markup(dataItem, columnInfo)" class="whole-cell">
                     {{ dataItem.UnitsInStock }}
                 </span>
             </ng-template>

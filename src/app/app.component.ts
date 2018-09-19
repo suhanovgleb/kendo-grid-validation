@@ -33,10 +33,10 @@ export class AppComponent implements OnInit {
     public gridState: State = {
         sort: [],
         skip: 0,
-        take: 1
+        take: 10
     };
 
-    private numberOfAdditionalItems = 1000;
+    private numberOfAdditionalItems = 1;
 
     public changes: any = {};
     private schema = new ProductSchema();
@@ -71,13 +71,20 @@ export class AppComponent implements OnInit {
 
     public cellCloseHandler(args: any) {
         const { formGroup, dataItem } = args;
-
+        
         if (!formGroup.valid) {
             // prevent closing the edited cell if there are invalid values.
             args.preventDefault();
         } else if (formGroup.dirty) {
             this.editService.assignValues(dataItem, formGroup.value);
             this.editService.update(dataItem);
+
+            for (const error of this.validationErrors) {
+                if (error.item.ProductID === dataItem.ProductID) {
+                    const index = this.validationErrors.indexOf(error);
+                    this.validationErrors.splice(index, 1);
+                }
+            }
         }
     }
     
