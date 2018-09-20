@@ -81,8 +81,15 @@ export class AppComponent implements OnInit {
 
             for (const error of this.validationErrors) {
                 if (error.item.ProductID === dataItem.ProductID) {
-                    const index = this.validationErrors.indexOf(error);
-                    this.validationErrors.splice(index, 1);
+                    for (const field in dataItem) {
+                        if (dataItem.hasOwnProperty(field)) {
+                            if ((dataItem[field] !== error.item[field]) && (error.fieldNames.includes(field)))  {
+                                const index = this.validationErrors.indexOf(error);
+                                this.validationErrors.splice(index, 1);
+                            }
+                        }
+                    }
+                    
                 }
             }
         }
@@ -117,7 +124,14 @@ export class AppComponent implements OnInit {
             allItems: this.editService.data
         };
 
+        this.validationErrors = [];
+
         this.validationErrors = this.validationService.validate(this.schema, datasets);
+
+        // Prevents items from changing in the validationError array
+        for (const error of this.validationErrors) {
+            error.item = Object.assign({}, error.item);
+        }
         
         if (this.validationErrors.length === 0) {
             this.editService.saveChanges();
@@ -127,6 +141,8 @@ export class AppComponent implements OnInit {
     public cancelChanges(grid: GridComponent): void {
         grid.cancelCell();
         this.editService.cancelChanges();
+
+        this.validationErrors = [];
     }
 
     public addSomeItems(grid: GridComponent) {
