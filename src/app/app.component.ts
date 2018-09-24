@@ -157,33 +157,7 @@ export class AppComponent implements OnInit {
         }
     }
 
-
-    // tslint:disable-next-line:member-ordering
-    // private counter = 0;
-
-    // must return by sanitizer
     markup(dataItem: any, columnInfo: ColumnComponent): SafeStyle {
-        // if (dataItem.ProductName[0] === 'A' && (columnInfo.field === 'ProductName')) {
-        //     return 'lightcoral';
-        // }
-        // if (dataItem.ProductName[0] === 'B' && (columnInfo.field === 'ProductName')) {
-        //     return 'lightcoral';
-        // }
-        // if (dataItem.ProductName[0] === 'C' && (columnInfo.field === 'ProductName')) {
-        //     return 'lightcoral';
-        // }
-        // if (dataItem.ProductName[0] === 'D' && (columnInfo.field === 'ProductName')) {
-        //     return 'lightcoral';
-        // }
-        // if (dataItem.ProductName[0] === 'E' && (columnInfo.field === 'ProductName')) {
-        //     return 'lightcoral';
-        // }
-        // if (dataItem.UnitPrice >= 100 && (columnInfo.field === 'UnitPrice')) {
-        //     return 'lightcoral';
-        // }
-
-
-        // console.log(this.counter);
         return this.markupService.doMarkup(dataItem, columnInfo, this.validationErrors);   
     }
 

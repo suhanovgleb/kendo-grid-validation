@@ -21,12 +21,6 @@ export class ValidationService {
       }
     }
 
-
-    // for (const error of errors) {
-    //   const item = JSON.parse(JSON.stringify(error.item));
-    //   error.item = item;
-    // }
-
     return errors;
   }
 }
