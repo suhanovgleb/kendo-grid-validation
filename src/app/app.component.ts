@@ -19,6 +19,10 @@ import { ValidationError } from './validation';
 import { Chance } from 'chance';
 import { SafeStyle } from '@angular/platform-browser';
 
+import { DialogService, DialogRef } from '@progress/kendo-angular-dialog';
+import { IdGeneratorService } from './services/id-generator.service';
+import { controlNameBinding } from '@angular/forms/src/directives/reactive_directives/form_control_name';
+
 
 @Component({
   selector: 'app-root',
@@ -48,7 +52,9 @@ export class AppComponent implements OnInit {
     constructor(
         private editService: EditService,
         private validationService: ValidationService,
-        private markupService: MarkupService
+        private markupService: MarkupService,
+        private dialogService: DialogService,
+        private idGeneratorService: IdGeneratorService
     ) {
         console.log(this.ಠ_ಠ);
     }
@@ -71,7 +77,7 @@ export class AppComponent implements OnInit {
 
     public cellCloseHandler(args: any) {
         const { formGroup, dataItem } = args;
-        
+
         if (!formGroup.valid) {
             // prevent closing the edited cell if there are invalid values.
             args.preventDefault();
@@ -83,20 +89,19 @@ export class AppComponent implements OnInit {
                 if (error.item.ProductID === dataItem.ProductID) {
                     for (const field in dataItem) {
                         if (dataItem.hasOwnProperty(field)) {
-                            if ((dataItem[field] !== error.item[field]) && (error.fieldNames.includes(field)))  {
+                            if ((dataItem[field] !== error.item[field]) && (error.fieldNames.includes(field))) {
                                 const index = this.validationErrors.indexOf(error);
                                 this.validationErrors.splice(index, 1);
                             }
                         }
                     }
-                    
                 }
             }
         }
     }
     
     public addHandler({ sender }) {
-        sender.addRow(this.createFormGroup(new Product()));
+        sender.addRow(this.createFormGroup(new Product(this.idGeneratorService.getId())));
     }
 
     public cancelHandler({ sender, rowIndex }) {
@@ -105,7 +110,11 @@ export class AppComponent implements OnInit {
 
     public saveHandler({ sender, formGroup, rowIndex }) {
         if (formGroup.valid) {
-            this.editService.create(formGroup.value);
+            const dataItem = formGroup.value;
+            if (!dataItem.hasOwnProperty(this.schema.idField)) {
+                dataItem[this.schema.idField] = this.idGeneratorService.getId();
+            }
+            this.editService.create(dataItem);
             sender.closeRow(rowIndex);
         }
     }
@@ -135,6 +144,7 @@ export class AppComponent implements OnInit {
         
         if (this.validationErrors.length === 0) {
             this.editService.saveChanges();
+            this.idGeneratorService.reset();
         }
     }
 
@@ -143,12 +153,15 @@ export class AppComponent implements OnInit {
         this.editService.cancelChanges();
 
         this.validationErrors = [];
+        this.idGeneratorService.reset();
     }
+
+
 
     public addSomeItems(grid: GridComponent) {
         const chance = new Chance();
         for (let i = 0; i < this.numberOfAdditionalItems; i++) {
-            const item = new Product();
+            const item = new Product(this.idGeneratorService.getId());
             item.ProductName = chance.street();
             item.UnitPrice = chance.floating({ fixed: 2, min: 4, max: 200 });
             item.Discontinued = chance.integer() % 3 === 0 ? true : false;
@@ -159,6 +172,23 @@ export class AppComponent implements OnInit {
 
     markup(dataItem: any, columnInfo: ColumnComponent): SafeStyle {
         return this.markupService.doMarkup(dataItem, columnInfo, this.validationErrors);   
+    }
+
+    public showErrorsDialog() {
+        let content: string;
+        
+        if (this.validationErrors.length) {
+            content = 'There are ' + this.validationErrors.length + (this.validationErrors.length === 1 ? 'error' : ' errors' + 'left.');
+        } else {
+            return;
+        }
+        const dialog: DialogRef = this.dialogService.open({
+            title: 'Errors list',
+            content: content,
+            width: 450,
+            height: 200,
+            minWidth: 250
+        });
     }
 
     // Main FormGroup validation with in-form validaton
@@ -190,6 +220,11 @@ export class AppComponent implements OnInit {
             const control = new FormControl(currentData[field.name]);
             formGroup.addControl(field.name, control);
         }
+
+        // if (!formGroup.controls.hasOwnProperty('ProductID')) {
+        //     formGroup.addControl('ProductID', new FormControl(currentData.ProductID));
+        //     formGroup.controls.ProductID.setValue(currentData.ProductID);
+        // }
         return formGroup;
     }
 

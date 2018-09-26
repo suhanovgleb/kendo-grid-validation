@@ -5,4 +5,10 @@ export class Product {
     public Discontinued = false;
     public UnitsInStock: number;
     public UnitPrice = 0;
+
+    constructor(Id: number) {
+        this.ProductID = Id;
+    }
 }
+
+

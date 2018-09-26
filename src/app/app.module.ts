@@ -5,6 +5,8 @@ import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { GridModule } from '@progress/kendo-angular-grid';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DialogsModule } from '@progress/kendo-angular-dialog';
+
 
 
 
@@ -17,7 +19,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     GridModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    HttpClientJsonpModule
+    HttpClientJsonpModule,
+    DialogsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

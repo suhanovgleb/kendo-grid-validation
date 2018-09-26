@@ -13,6 +13,8 @@ import {
 
 export class ProductSchema implements ISchema {
 
+    public idField = 'ProductID';
+
     public fields = [
         new Field({
             name: 'ProductID',
@@ -52,7 +54,7 @@ export class ProductSchema implements ISchema {
             editable: true,
             type: 'number',
             validators: {
-                required: false,
+                required: true, // Previously, it was false. Changed because of backend constraint
                 max: 9999
             }
         })
