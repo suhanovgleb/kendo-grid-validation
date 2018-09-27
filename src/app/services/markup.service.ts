@@ -13,7 +13,7 @@ export class MarkupService {
     private sanitizer: DomSanitizer
   ) { }
 
-  public doMarkup(dataItem: any, columnInfo: ColumnComponent, validationErrors: ValidationError[]/*, schema: ISchema*/): SafeStyle {
+  public doMarkup(dataItem: any, columnInfo: ColumnComponent, validationErrors: ValidationError[], schema: ISchema): SafeStyle {
 
     const result = '#FFBA80';
 

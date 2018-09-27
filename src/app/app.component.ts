@@ -19,9 +19,9 @@ import { ValidationError } from './validation';
 import { Chance } from 'chance';
 import { SafeStyle } from '@angular/platform-browser';
 
-import { DialogService, DialogRef } from '@progress/kendo-angular-dialog';
 import { IdGeneratorService } from './services/id-generator.service';
-import { controlNameBinding } from '@angular/forms/src/directives/reactive_directives/form_control_name';
+import { DialogCustomService } from './services/dialog-custom.service';
+
 
 
 @Component({
@@ -44,6 +44,7 @@ export class AppComponent implements OnInit {
 
     public changes: any = {};
     private schema = new ProductSchema();
+    private id = this.schema.idField;
 
     private validationErrors: ValidationError[] = [];
 
@@ -53,8 +54,8 @@ export class AppComponent implements OnInit {
         private editService: EditService,
         private validationService: ValidationService,
         private markupService: MarkupService,
-        private dialogService: DialogService,
-        private idGeneratorService: IdGeneratorService
+        private idGeneratorService: IdGeneratorService,
+        private dialogService: DialogCustomService
     ) {
         console.log(this.ಠ_ಠ);
     }
@@ -85,8 +86,10 @@ export class AppComponent implements OnInit {
             this.editService.assignValues(dataItem, formGroup.value);
             this.editService.update(dataItem);
 
+            
+
             for (const error of this.validationErrors) {
-                if (error.item.ProductID === dataItem.ProductID) {
+                if (error.item[this.id] === dataItem[this.id]) {
                     for (const field in dataItem) {
                         if (dataItem.hasOwnProperty(field)) {
                             if ((dataItem[field] !== error.item[field]) && (error.fieldNames.includes(field))) {
@@ -171,24 +174,18 @@ export class AppComponent implements OnInit {
     }
 
     markup(dataItem: any, columnInfo: ColumnComponent): SafeStyle {
-        return this.markupService.doMarkup(dataItem, columnInfo, this.validationErrors);   
+        // const metadata = { 
+        //     dataItem: dataItem,
+        //     columnInfo: columnInfo,
+        //     validationErrors: this.validationErrors,
+        //     schema: this.schema 
+        // };
+        return this.markupService.doMarkup(dataItem, columnInfo, this.validationErrors, this.schema);   
     }
 
     public showErrorsDialog() {
-        let content: string;
-        
-        if (this.validationErrors.length) {
-            content = 'There are ' + this.validationErrors.length + (this.validationErrors.length === 1 ? 'error' : ' errors' + 'left.');
-        } else {
-            return;
-        }
-        const dialog: DialogRef = this.dialogService.open({
-            title: 'Errors list',
-            content: content,
-            width: 450,
-            height: 200,
-            minWidth: 250
-        });
+        // this.dialogService.showErrorsCount(this.validationErrors);
+        this.dialogService.showErrorsList(this.validationErrors, 5);
     }
 
     // Main FormGroup validation with in-form validaton
