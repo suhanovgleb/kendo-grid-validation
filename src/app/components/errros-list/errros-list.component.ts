@@ -9,12 +9,18 @@ import { ValidationError } from '../../validation';
 export class ErrrosListComponent implements OnInit {
 
   @Input() public validationErrors: ValidationError[];
-  @Input() public displayItems: number;
+  @Input() public numberErrorsToTake: number;
+
+  public displayedErrors: ValidationError[] = [];
 
   ngOnInit(): void {
-    if (this.displayItems > this.validationErrors.length) {
-      this.displayItems = this.validationErrors.length;
+    if (this.numberErrorsToTake > this.validationErrors.length) {
+      this.numberErrorsToTake = this.validationErrors.length;
     }
+
+    this.displayedErrors = this.validationErrors.slice(0, this.numberErrorsToTake);
   }
+
+  
 
 }
