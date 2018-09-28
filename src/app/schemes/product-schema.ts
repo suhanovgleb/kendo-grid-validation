@@ -62,6 +62,8 @@ export class ProductSchema implements ISchema {
 
 
     // Validators that depends on more than one field
+
+    //TODO:rename to row
     public multiFieldValidators = {
         uniqueConstraints: ['ProductName', 'Discontinued'],
         priceToUnitValidator: true,

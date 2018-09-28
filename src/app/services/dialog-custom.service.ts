@@ -3,6 +3,7 @@ import { DialogRef, DialogService } from '@progress/kendo-angular-dialog';
 import { ValidationError } from '../validation';
 
 import { ErrrosListComponent } from '../components/errros-list/errros-list.component';
+import { ISchema } from '../schemes/schema';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +39,7 @@ export class DialogCustomService {
         this.showDialog('Error!', content);
   }
 
-  public showErrorsList(validationErrors: ValidationError[], numberErrorsToTake: number = 5) {
+  public showErrorsList(validationErrors: ValidationError[], schema: ISchema, numberErrorsToTake: number = 5) {
 
     if (validationErrors.length) {
       const dialogRef = this.dialogService.open({

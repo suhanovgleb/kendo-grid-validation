@@ -16,11 +16,9 @@ export class MarkupService {
   public doMarkup(dataItem: any, columnInfo: ColumnComponent, validationErrors: ValidationError[], schema: ISchema): SafeStyle {
 
     const result = '#FFBA80';
-
     
-
     for (const error of validationErrors) {
-      if (dataItem.ProductID === error.item.ProductID) {
+      if (dataItem[schema.idField] === error.item[schema.idField]) {
         for (const fieldName of error.fieldNames) {
           if (columnInfo.field === fieldName && error.item[fieldName] === dataItem[fieldName]) {
               return this.sanitizer.bypassSecurityTrustStyle(result);
