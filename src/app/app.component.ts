@@ -185,7 +185,7 @@ export class AppComponent implements OnInit {
 
     public showErrorsDialog() {
         // this.dialogService.showErrorsCount(this.validationErrors);
-        this.dialogService.showErrorsList(this.validationErrors, 3);
+        this.dialogService.showErrorsList(this.validationErrors);
     }
 
     // Main FormGroup validation with in-form validaton

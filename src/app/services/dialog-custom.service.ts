@@ -38,7 +38,7 @@ export class DialogCustomService {
         this.showDialog('Error!', content);
   }
 
-  public showErrorsList(validationErrors: ValidationError[], numberErrorsToTake: number) {
+  public showErrorsList(validationErrors: ValidationError[], numberErrorsToTake: number = 5) {
 
     if (validationErrors.length) {
       const dialogRef = this.dialogService.open({
