@@ -7,6 +7,8 @@ import { GridModule } from '@progress/kendo-angular-grid';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DialogsModule } from '@progress/kendo-angular-dialog';
 import { ErrrosListComponent } from './components/errros-list/errros-list.component';
+import { TooltipModule } from '@progress/kendo-angular-tooltip';
+
 
 
 
@@ -22,7 +24,8 @@ import { ErrrosListComponent } from './components/errros-list/errros-list.compon
     BrowserAnimationsModule,
     HttpClientModule,
     HttpClientJsonpModule,
-    DialogsModule
+    DialogsModule,
+    TooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent],
