@@ -188,6 +188,19 @@ export class AppComponent implements OnInit {
         this.dialogService.showErrorsList(this.validationErrors, this.schema);
     }
 
+    public tooltipHandler(validationErrors: ValidationError[], columnInfo: ColumnComponent, dataItem: any) {
+        const idField = this.schema.idField;
+        let tooltipMessage = '';
+        validationErrors.filter((error) => {
+            if (error.item[idField] === dataItem[idField]) {
+                if (error.fieldNames.includes(columnInfo.field)) {
+                    tooltipMessage += error.errMessage + '\n';
+                }
+            }
+        });
+        return tooltipMessage;
+    }
+
     // Main FormGroup validation with in-form validaton
     public MAINcreateFormGroup(currentData): FormGroup {
         const formGroup: FormGroup = new FormGroup({});
