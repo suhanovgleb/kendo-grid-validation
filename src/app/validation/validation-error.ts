@@ -1,7 +1,12 @@
 
-export class ValidationError {
-  constructor (public fieldNames: string[], 
+export interface ErrorInfo {
+  errorName: string;
+  errorMessage: string;
+  errorType: string;
+}
+
+export class ValidationError implements ValidationError {
+  constructor (public errorInfo: ErrorInfo,
                public item: any,
-               public errType: string,
-               public errMessage: string) {}
+               public fieldNames: string | string[]) {}
 }

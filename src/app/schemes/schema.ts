@@ -5,9 +5,14 @@ import { IValidator } from '../validation';
 export interface ISchema {
     idField: string;
     fields: Field[];
-    multiFieldValidators: any;
+    rowValidators: RowValidators;
     getValidators(): IValidator[];
     getFormValidators?(field: Field): (ValidatorFn | ValidationErrors)[];
+}
+
+export interface RowValidators {
+    singleRowValidators: any;
+    multiRowValidators: any;
 }
 
 export class Field {

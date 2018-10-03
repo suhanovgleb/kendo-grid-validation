@@ -1,5 +1,5 @@
 
-import { ISchema, Field } from './schema';
+import { ISchema, Field, RowValidators } from './schema';
 import { Validators } from '@angular/forms';
 import {
     MaxValidator, 
@@ -63,11 +63,25 @@ export class ProductSchema implements ISchema {
 
     // Validators that depends on more than one field
 
-    //TODO:rename to row
-    public multiFieldValidators = {
-        uniqueConstraints: ['ProductName', 'Discontinued'],
-        priceToUnitValidator: true,
+    // TODO: rename to row (Nope, because some validators can consist on one row, but multiFields)
+    // But multiFieldValidatiors is bad too, because e.g. uniqueConstraints can be single field
+
+    public rowValidators: RowValidators = {
+        multiRowValidators: {
+            uniqueConstraints: ['ProductName', 'Discontinued']
+        },
+        singleRowValidators: {
+            priceToUnitValidator: true
+        }
     };
+    
+    
+
+
+    // public multiRowValidators = {
+    //     uniqueConstraints: ['ProductName', 'Discontinued'],
+    //     priceToUnitValidator: true,
+    // };
 
     // Get service validators
     public getValidators(): IValidator[] {

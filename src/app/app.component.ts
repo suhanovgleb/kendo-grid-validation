@@ -194,7 +194,7 @@ export class AppComponent implements OnInit {
         validationErrors.filter((error) => {
             if (error.item[idField] === dataItem[idField]) {
                 if (error.fieldNames.includes(columnInfo.field)) {
-                    tooltipMessage += error.errMessage + '\n';
+                    tooltipMessage += error.errorInfo.errorMessage + '\n';
                 }
             }
         });
