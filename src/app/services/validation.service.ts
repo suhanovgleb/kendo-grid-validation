@@ -11,9 +11,10 @@ export class ValidationService {
   public validate(schema: ISchema, datasets: any): ValidationError[] {
 
     let errors: ValidationError[] = [];
+    const validators = schema.getServiceValidators();
+    
 
-    for (const validator of schema.getValidators()) {
-      // Could be a problem if uglificators will be used
+    for (const validator of validators) {
       if (validator.constructor.name === 'UniqueConstraintsValidator') {
         errors = errors.concat(validator.Assert(datasets.allItems, schema));
       } else {

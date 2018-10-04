@@ -1,9 +1,8 @@
 
   <p>There {{ validationErrors.length === 1 ? 'is ' : 'are ' }} {{ validationErrors.length }} {{ validationErrors.length === 1 ? 'error' : 'errors' }}:</p>
-
   <ul>
     <li *ngFor="let error of displayedErrors">
-      {{ error.errMessage }}
+      {{ error.errorInfo.errorMessage }}
     </li>
     <p *ngIf="validationErrors.length > displayedErrors.length">and {{validationErrors.length - displayedErrors.length}} more...</p>
   </ul>

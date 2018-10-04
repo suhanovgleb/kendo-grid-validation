@@ -13,15 +13,16 @@ export class MarkupService {
     private sanitizer: DomSanitizer
   ) { }
 
+  // Changes the background color of cells with errors
   public doMarkup(dataItem: any, columnInfo: ColumnComponent, validationErrors: ValidationError[], schema: ISchema): SafeStyle {
 
-    const result = '#FFBA80';
+    const errorBgColor = '#FFBA80';
     
     for (const error of validationErrors) {
       if (dataItem[schema.idField] === error.item[schema.idField]) {
         for (const fieldName of error.fieldNames) {
           if (columnInfo.field === fieldName && error.item[fieldName] === dataItem[fieldName]) {
-              return this.sanitizer.bypassSecurityTrustStyle(result);
+              return this.sanitizer.bypassSecurityTrustStyle(errorBgColor);
           }
         }
       }

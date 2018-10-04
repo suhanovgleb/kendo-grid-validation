@@ -20,7 +20,4 @@ export class ErrrosListComponent implements OnInit {
 
     this.displayedErrors = this.validationErrors.slice(0, this.numberErrorsToTake);
   }
-
-  
-
 }

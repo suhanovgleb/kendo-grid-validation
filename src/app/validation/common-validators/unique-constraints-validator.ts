@@ -9,7 +9,7 @@ export class UniqueConstraintsValidator implements IValidator {
     Assert(items: any[], schema: ISchema): ValidationError[] {
         const errors: ValidationError[] = [];
 
-        const uniqueConstraints = schema.multiFieldValidators.uniqueConstraints;
+        const uniqueConstraints = schema.rowValidators.multiRowValidators.uniqueConstraints;
 
         let hashTable: object = {};
 

@@ -1,5 +1,5 @@
 
-import { ISchema, Field, RowValidators } from './schema';
+import { ISchema, Field, RowValidators, RowValidator } from './schema';
 import { Validators } from '@angular/forms';
 import {
     MaxValidator, 
@@ -60,31 +60,32 @@ export class ProductSchema implements ISchema {
         })
     ];
 
-
-    // Validators that depends on more than one field
-
-    // TODO: rename to row (Nope, because some validators can consist on one row, but multiFields)
-    // But multiFieldValidatiors is bad too, because e.g. uniqueConstraints can be single field
-
     public rowValidators: RowValidators = {
-        multiRowValidators: {
-            uniqueConstraints: ['ProductName', 'Discontinued']
-        },
-        singleRowValidators: {
-            priceToUnitValidator: true
-        }
+        // Validators that depend on more than one row, e.g. unique constraint validator
+        multiRowValidators: [
+            new RowValidator({
+                name: 'uniqueConstraints',
+                option: ['ProductName', 'Discontinued'],
+                validatorRef: new UniqueConstraintsValidator()
+            })
+        ],
+        // Validators that depend on only one row, but on several fields
+        singleRowValidators: [
+            new RowValidator({
+                name: 'priceToUnitValidator',
+                option: true, // This isnt checking
+                validatorRef: new PriceToUnitValidator()
+            })
+        ]
     };
     
-    
-
-
     // public multiRowValidators = {
     //     uniqueConstraints: ['ProductName', 'Discontinued'],
     //     priceToUnitValidator: true,
     // };
 
-    // Get service validators
-    public getValidators(): IValidator[] {
+    // Get validators for validation service
+    public getServiceValidators(): IValidator[] {
         return [
             new RequiredValidator(), 
             new MaxValidator(), 
@@ -94,8 +95,8 @@ export class ProductSchema implements ISchema {
         ];
     }
 
-    // Get Angular on-form validators from scheme
-    public getFieldFormValidators(field: Field) {
+    // Get Angular on-form validators
+    public getFormValidators(field: Field) {
         const schemaValidators = field.validators;
 
         const formValidators: any[] = [];
