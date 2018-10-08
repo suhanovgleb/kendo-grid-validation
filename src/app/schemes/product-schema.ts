@@ -1,5 +1,5 @@
 
-import { ISchema, Field, RowValidators, RowValidator, Schema } from './schema';
+import { ISchema, Field, RowValidators, RowValidator } from './schema';
 import { Validators } from '@angular/forms';
 import {
     MaxValidator, 
@@ -11,7 +11,7 @@ import {
 } from '../validation';
 
 
-export class ProductSchema extends Schema {
+export class ProductSchema implements ISchema {
 
     public idField = 'ProductID';
 
@@ -87,9 +87,9 @@ export class ProductSchema extends Schema {
     // Get validators for validation service
     public getServiceValidators(): IValidator[] {
         return [
-            new RequiredValidator(), 
-            new MaxValidator(), 
-            new MinValidator(), 
+            new RequiredValidator(),
+            new MaxValidator(),
+            new MinValidator(),
             new UniqueConstraintsValidator(),
             new PriceToUnitValidator()
         ];

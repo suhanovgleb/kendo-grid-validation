@@ -7,29 +7,29 @@ export interface ISchema {
     fields: Field[];
     rowValidators: RowValidators;
     // Get validators for validation service
-    getServiceValidators(fieldValidators: IValidator[]): IValidator[]; // реализовать метод тут
+    getServiceValidators(/*fieldValidators: IValidator[]*/): IValidator[];
     // Get Angular on-form validators
     getFormValidators?(field: Field): (ValidatorFn | ValidationErrors)[];
 }
 
-export abstract class Schema implements ISchema {
-    idField: string;
-    fields: Field[];
-    rowValidators: RowValidators;
-    // Get validators for validation service
-    getServiceValidators(fieldValidators: IValidator[]): IValidator[] {
-        const serviceValidators: IValidator[] = [];
-        const allRowValidators: RowValidator[] = this.rowValidators.multiRowValidators
-            .concat(this.rowValidators.singleRowValidators);
-        for (const validator of allRowValidators) {
-            serviceValidators.push(validator.validatorRef);
-        }
-        serviceValidators.push(...fieldValidators);
-        return serviceValidators;
-    }
-    // Get Angular on-form validators
-    getFormValidators?(field: Field): (ValidatorFn | ValidationErrors)[];
-}
+// export abstract class Schema implements ISchema {
+//     idField: string;
+//     fields: Field[];
+//     rowValidators: RowValidators;
+//     // Get validators for validation service
+//     getServiceValidators(fieldValidators: IValidator[]): IValidator[] {
+//         const serviceValidators: IValidator[] = [];
+//         const allRowValidators: RowValidator[] = this.rowValidators.multiRowValidators
+//             .concat(this.rowValidators.singleRowValidators);
+//         for (const validator of allRowValidators) {
+//             serviceValidators.push(validator.validatorRef);
+//         }
+//         serviceValidators.push(...fieldValidators);
+//         return serviceValidators;
+//     }
+//     // Get Angular on-form validators
+//     getFormValidators?(field: Field): (ValidatorFn | ValidationErrors)[];
+// }
 
 export interface RowValidators {
     // Validators that depend on more than one row, e.g. unique constraint validator

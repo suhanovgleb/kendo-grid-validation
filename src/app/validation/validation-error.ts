@@ -1,8 +1,11 @@
+import { ValidatorType } from './validator-type';
 
-export interface ErrorInfo {
-  errorName: string;
-  errorMessage: string;
-  errorType: string;
+export class ErrorInfo {
+  constructor(
+    public errorName: string,
+    public errorMessage: string,
+    public errorType: ValidatorType,
+    ) {}
 }
 
 export class ValidationError implements ValidationError {

@@ -210,7 +210,7 @@ export class AppComponent implements OnInit {
         });
 
         for (const field of editableFields) {
-            const validators = this.schema.getFieldFormValidators(field);
+            const validators = this.schema.getFormValidators(field);
             const control = new FormControl(currentData[field.name], Validators.compose(validators));
             formGroup.addControl(field.name, control);
         }
