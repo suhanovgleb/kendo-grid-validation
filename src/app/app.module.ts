@@ -8,6 +8,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DialogsModule } from '@progress/kendo-angular-dialog';
 import { ErrrosListComponent } from './components/errros-list/errros-list.component';
 import { TooltipModule } from '@progress/kendo-angular-tooltip';
+import { NotificationModule } from '@progress/kendo-angular-notification';
+
 
 
 
@@ -25,7 +27,8 @@ import { TooltipModule } from '@progress/kendo-angular-tooltip';
     HttpClientModule,
     HttpClientJsonpModule,
     DialogsModule,
-    TooltipModule
+    TooltipModule,
+    NotificationModule
   ],
   providers: [],
   bootstrap: [AppComponent],

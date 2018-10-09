@@ -25,6 +25,7 @@ import { DialogCustomService } from './services/dialog-custom.service';
 import { ValidatorType } from './validation/validator-type';
 
 import { union } from 'lodash';
+import { NotificationCustomService } from './services/notification-custom.service';
 
 
 @Component({
@@ -58,7 +59,8 @@ export class AppComponent implements OnInit {
         private validationService: ValidationService,
         private markupService: MarkupService,
         private idGeneratorService: IdGeneratorService,
-        private dialogService: DialogCustomService
+        private dialogService: DialogCustomService,
+        private notificationService: NotificationCustomService
     ) {
         console.log(this.ಠ_ಠ);
     }
@@ -152,7 +154,6 @@ export class AppComponent implements OnInit {
         grid.closeCell();
         grid.cancelCell();
         
-        
         const datasets: object = {
             changedItems: union(this.editService.updatedItems, this.editService.createdItems),
             allItems: this.editService.data
@@ -169,6 +170,7 @@ export class AppComponent implements OnInit {
         
         if (this.validationErrors.length === 0) {
             this.editService.saveChanges();
+            this.notificationService.saveSuccessfully();
             this.idGeneratorService.reset();
         }
     }
