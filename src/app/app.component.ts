@@ -1,4 +1,5 @@
 
+
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
@@ -23,6 +24,7 @@ import { IdGeneratorService } from './services/id-generator.service';
 import { DialogCustomService } from './services/dialog-custom.service';
 import { ValidatorType } from './validation/validator-type';
 
+import { union } from 'lodash';
 
 
 @Component({
@@ -150,8 +152,9 @@ export class AppComponent implements OnInit {
         grid.closeCell();
         grid.cancelCell();
         
+        
         const datasets: object = {
-            changedItems: this.editService.updatedItems.concat(this.editService.createdItems),
+            changedItems: union(this.editService.updatedItems, this.editService.createdItems),
             allItems: this.editService.data
         };
 
