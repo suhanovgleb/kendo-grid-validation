@@ -1,7 +1,15 @@
+import { ValidatorType } from './validator-type';
 
-export class ValidationError {
-  constructor (public fieldNames: string[], 
+export class ErrorInfo {
+  constructor(
+    public errorName: string,
+    public errorMessage: string,
+    public errorType: ValidatorType,
+    ) {}
+}
+
+export class ValidationError implements ValidationError {
+  constructor (public errorInfo: ErrorInfo,
                public item: any,
-               public errType: string,
-               public errMessage: string) {}
+               public fieldNames: string[]) {}
 }

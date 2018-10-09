@@ -1,4 +1,5 @@
 
+
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
@@ -21,7 +22,9 @@ import { SafeStyle } from '@angular/platform-browser';
 
 import { IdGeneratorService } from './services/id-generator.service';
 import { DialogCustomService } from './services/dialog-custom.service';
+import { ValidatorType } from './validation/validator-type';
 
+import { union } from 'lodash';
 
 
 @Component({
@@ -44,7 +47,7 @@ export class AppComponent implements OnInit {
 
     public changes: any = {};
     private schema = new ProductSchema();
-    private id = this.schema.idField;
+    private idField = this.schema.idField;
 
     private validationErrors: ValidationError[] = [];
 
@@ -87,14 +90,32 @@ export class AppComponent implements OnInit {
             this.editService.update(dataItem);
 
             
-
+            // if any field of row with error has changed we repaint it
             for (const error of this.validationErrors) {
-                if (error.item[this.id] === dataItem[this.id]) {
+                if (error.item[this.idField] === dataItem[this.idField]) {
                     for (const field in dataItem) {
                         if (dataItem.hasOwnProperty(field)) {
+                            // check if cell was changed then delete error
                             if ((dataItem[field] !== error.item[field]) && (error.fieldNames.includes(field))) {
-                                const index = this.validationErrors.indexOf(error);
-                                this.validationErrors.splice(index, 1);
+                                if (error.errorInfo.errorType === ValidatorType.UniqueConstraint) {
+                                    const sameConstraintErrors = this.validationErrors.filter((e) => {
+                                        if (e.errorInfo.errorType === ValidatorType.UniqueConstraint) {
+                                            return e;
+                                        }
+                                    });
+                                    if (sameConstraintErrors.length === 2) {
+                                        for (const err of sameConstraintErrors) {
+                                            const idx = this.validationErrors.indexOf(error);
+                                            this.validationErrors.splice(idx, 1);
+                                        }
+                                    } else { 
+                                        const index = this.validationErrors.indexOf(error);
+                                        this.validationErrors.splice(index, 1);
+                                    }
+                                } else {
+                                    const index = this.validationErrors.indexOf(error);
+                                    this.validationErrors.splice(index, 1);
+                                }
                             }
                         }
                     }
@@ -131,8 +152,9 @@ export class AppComponent implements OnInit {
         grid.closeCell();
         grid.cancelCell();
         
+        
         const datasets: object = {
-            changedItems: this.editService.updatedItems.concat(this.editService.createdItems),
+            changedItems: union(this.editService.updatedItems, this.editService.createdItems),
             allItems: this.editService.data
         };
 
@@ -188,6 +210,19 @@ export class AppComponent implements OnInit {
         this.dialogService.showErrorsList(this.validationErrors, this.schema);
     }
 
+    public tooltipHandler(validationErrors: ValidationError[], columnInfo: ColumnComponent, dataItem: any) {
+        const idField = this.schema.idField;
+        let tooltipMessage = '';
+        validationErrors.filter((error) => {
+            if (error.item[idField] === dataItem[idField]) {
+                if (error.fieldNames.includes(columnInfo.field)) {
+                    tooltipMessage += error.errorInfo.errorMessage + '\n';
+                }
+            }
+        });
+        return tooltipMessage;
+    }
+
     // Main FormGroup validation with in-form validaton
     public MAINcreateFormGroup(currentData): FormGroup {
         const formGroup: FormGroup = new FormGroup({});
@@ -197,7 +232,7 @@ export class AppComponent implements OnInit {
         });
 
         for (const field of editableFields) {
-            const validators = this.schema.getFieldFormValidators(field);
+            const validators = this.schema.getFormValidators(field);
             const control = new FormControl(currentData[field.name], Validators.compose(validators));
             formGroup.addControl(field.name, control);
         }

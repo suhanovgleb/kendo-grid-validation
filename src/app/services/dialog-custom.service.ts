@@ -26,7 +26,6 @@ export class DialogCustomService {
 
   public showErrorsCount(validationErrors: ValidationError[]) {
     let content: string;
-        
         if (validationErrors.length) {
             content = 'There ' 
                 + (validationErrors.length === 1 ? 'is ' : 'are ') 
@@ -40,7 +39,6 @@ export class DialogCustomService {
   }
 
   public showErrorsList(validationErrors: ValidationError[], schema: ISchema, numberErrorsToTake: number = 5) {
-
     if (validationErrors.length) {
       const dialogRef = this.dialogService.open({
         title: 'Error!',

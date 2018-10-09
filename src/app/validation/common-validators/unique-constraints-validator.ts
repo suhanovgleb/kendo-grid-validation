@@ -1,15 +1,23 @@
 
 import { ISchema } from '../../schemes/schema';
-import { ValidationError } from '../validation-error';
+import { ValidationError, ErrorInfo } from '../validation-error';
 import { IValidator } from '..';
+import { ValidatorType } from '../validator-type';
 
 
 // Вот тут спорно, валидатор проверяет на уникальность только среди изменённых, это неправильно
 export class UniqueConstraintsValidator implements IValidator {
+    validatorType = ValidatorType.UniqueConstraint;
+
     Assert(items: any[], schema: ISchema): ValidationError[] {
         const errors: ValidationError[] = [];
 
-        const uniqueConstraints = schema.multiFieldValidators.uniqueConstraints;
+        const errorName = 'unique';
+        let errorMessage = '';
+
+        const uniqueConstraints = schema.rowValidators.multiRowValidators.find(
+            validator => validator.name === 'uniqueConstraints'
+        ).option;
 
         let hashTable: object = {};
 
@@ -41,14 +49,17 @@ export class UniqueConstraintsValidator implements IValidator {
             const hashName = this.getNameHash(item, uniqueConstraints);
             if (hashTable.hasOwnProperty(hashName) && hashTable[hashName] !== 0) {
                 const errMessageConstraints = uniqueConstraints.join(', ');
-                errors.push(
-                    new ValidationError(
-                        uniqueConstraints,
-                        item,
-                        'unique',
-                        'This entry must be unique in the following fields: ' + errMessageConstraints + '.',
-                    )
-                );
+                errorMessage = 'This entry must be unique in the following fields: ' + errMessageConstraints + '.';
+                const errorInfo = new ErrorInfo(errorName, errorMessage, this.validatorType);
+                errors.push(new ValidationError(errorInfo, item, uniqueConstraints));
+                // errors.push(
+                //     new ValidationError(
+                //         uniqueConstraints,
+                //         item,
+                //         'unique',
+                //         'This entry must be unique in the following fields: ' + errMessageConstraints + '.',
+                //     )
+                // );
                 hashTable[hashName]--;
             }
         }
