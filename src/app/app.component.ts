@@ -21,6 +21,7 @@ import { SafeStyle } from '@angular/platform-browser';
 
 import { IdGeneratorService } from './services/id-generator.service';
 import { DialogCustomService } from './services/dialog-custom.service';
+import { ValidatorType } from './validation/validator-type';
 
 
 
@@ -44,7 +45,7 @@ export class AppComponent implements OnInit {
 
     public changes: any = {};
     private schema = new ProductSchema();
-    private id = this.schema.idField;
+    private idField = this.schema.idField;
 
     private validationErrors: ValidationError[] = [];
 
@@ -87,14 +88,32 @@ export class AppComponent implements OnInit {
             this.editService.update(dataItem);
 
             
-
+            // if any field of row with error has changed we repaint it
             for (const error of this.validationErrors) {
-                if (error.item[this.id] === dataItem[this.id]) {
+                if (error.item[this.idField] === dataItem[this.idField]) {
                     for (const field in dataItem) {
                         if (dataItem.hasOwnProperty(field)) {
+                            // check if cell was changed then delete error
                             if ((dataItem[field] !== error.item[field]) && (error.fieldNames.includes(field))) {
-                                const index = this.validationErrors.indexOf(error);
-                                this.validationErrors.splice(index, 1);
+                                if (error.errorInfo.errorType === ValidatorType.UniqueConstraint) {
+                                    const sameConstraintErrors = this.validationErrors.filter((e) => {
+                                        if (e.errorInfo.errorType === ValidatorType.UniqueConstraint) {
+                                            return e;
+                                        }
+                                    });
+                                    if (sameConstraintErrors.length === 2) {
+                                        for (const err of sameConstraintErrors) {
+                                            const idx = this.validationErrors.indexOf(error);
+                                            this.validationErrors.splice(idx, 1);
+                                        }
+                                    } else { 
+                                        const index = this.validationErrors.indexOf(error);
+                                        this.validationErrors.splice(index, 1);
+                                    }
+                                } else {
+                                    const index = this.validationErrors.indexOf(error);
+                                    this.validationErrors.splice(index, 1);
+                                }
                             }
                         }
                     }

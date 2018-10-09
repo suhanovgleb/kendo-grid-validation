@@ -11,5 +11,5 @@ export class ErrorInfo {
 export class ValidationError implements ValidationError {
   constructor (public errorInfo: ErrorInfo,
                public item: any,
-               public fieldNames: string | string[]) {}
+               public fieldNames: string[]) {}
 }

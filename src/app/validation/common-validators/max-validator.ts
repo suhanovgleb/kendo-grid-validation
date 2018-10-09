@@ -22,7 +22,7 @@ export class MaxValidator implements IValidator {
                     if (item[field.name] > maxValue) {
                         errorMessage = field.name + ' can\'t be higher than ' + maxValue + '.';
                         const errorInfo = new ErrorInfo(errorName, errorMessage, this.validatorType);
-                        errors.push(new ValidationError(errorInfo, item, field.name));
+                        errors.push(new ValidationError(errorInfo, item, [field.name]));
                         // errors.push(new ValidationError(
                         //     [field.name], 
                         //     item, 
