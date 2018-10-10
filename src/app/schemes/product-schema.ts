@@ -54,7 +54,7 @@ export class ProductSchema implements ISchema {
             editable: true,
             type: 'number',
             validators: {
-                required: true, // Previously, it was false. Changed because of backend constraint
+                required: true,
                 max: 9999
             }
         })
@@ -78,11 +78,6 @@ export class ProductSchema implements ISchema {
             })
         ]
     };
-    
-    // public multiRowValidators = {
-    //     uniqueConstraints: ['ProductName', 'Discontinued'],
-    //     priceToUnitValidator: true,
-    // };
 
     // Get validators for validation service
     public getServiceValidators(): IValidator[] {
@@ -95,33 +90,22 @@ export class ProductSchema implements ISchema {
         ];
     }
 
-    // Get Angular on-form validators
-    public getFormValidators(field: Field) {
+    // Get Angular on-form validators for one field 
+    public getFieldFormValidators(field: Field) {
         const schemaValidators = field.validators;
 
         const formValidators: any[] = [];
 
         for (const validator in schemaValidators) {
             if (validator !== undefined) {
-                switch (validator) {
-                    case 'max': {
-                        formValidators.push(Validators.max(schemaValidators.max));
-                        break;
-                    }
-                    case 'min': {
-                        formValidators.push(Validators.min(schemaValidators.min));
-                        break;
-                    }
-                    case 'required': {
-                        if (schemaValidators.required) {
-                            formValidators.push(Validators.required);
-                        }
-                        break;
-                    }
-                    default: {
-                        console.log('default');
-                        break;
-                    }
+                if (validator === 'max') {
+                    formValidators.push(Validators.max(schemaValidators.max));
+                }
+                if (validator === 'min') {
+                    formValidators.push(Validators.min(schemaValidators.min));
+                }
+                if (validator === 'required' && schemaValidators.required) {
+                    formValidators.push(Validators.required);
                 }
             }
         }

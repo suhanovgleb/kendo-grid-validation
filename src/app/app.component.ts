@@ -83,10 +83,9 @@ export class AppComponent implements OnInit {
 
     public cellCloseHandler(args: any) {
         const { formGroup, dataItem } = args;
-
         if (!formGroup.valid) {
             // prevent closing the edited cell if there are invalid values.
-            args.preventDefault();
+            // args.preventDefault();
         } else if (formGroup.dirty) {
             this.editService.assignValues(dataItem, formGroup.value);
             this.editService.update(dataItem);
@@ -170,14 +169,18 @@ export class AppComponent implements OnInit {
         
         if (this.validationErrors.length === 0) {
             this.editService.saveChanges();
-            this.notificationService.saveSuccessfully();
+            this.notificationService.saveSuccessfullyNotification();
             this.idGeneratorService.reset();
+        } else {
+            this.notificationService.savePreventedNotification();
         }
     }
 
     public cancelChanges(grid: GridComponent): void {
         grid.cancelCell();
         this.editService.cancelChanges();
+
+        this.notificationService.cancelChangesNotification();
 
         this.validationErrors = [];
         this.idGeneratorService.reset();
@@ -234,7 +237,7 @@ export class AppComponent implements OnInit {
         });
 
         for (const field of editableFields) {
-            const validators = this.schema.getFormValidators(field);
+            const validators = this.schema.getFieldFormValidators(field);
             const control = new FormControl(currentData[field.name], Validators.compose(validators));
             formGroup.addControl(field.name, control);
         }
@@ -254,11 +257,6 @@ export class AppComponent implements OnInit {
             const control = new FormControl(currentData[field.name]);
             formGroup.addControl(field.name, control);
         }
-
-        // if (!formGroup.controls.hasOwnProperty('ProductID')) {
-        //     formGroup.addControl('ProductID', new FormControl(currentData.ProductID));
-        //     formGroup.controls.ProductID.setValue(currentData.ProductID);
-        // }
         return formGroup;
     }
 

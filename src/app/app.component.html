@@ -11,7 +11,8 @@
             <button class='k-button' [disabled]="!editService.hasChanges()" (click)="cancelChanges(grid);">Cancel
                 Changes</button>
             <button class='k-button' [disabled]="!numberOfAdditionalItems" (click)="addSomeItems(grid);">Add {{
-                numberOfAdditionalItems !== undefined ? numberOfAdditionalItems : 'some' }} random items</button>
+                numberOfAdditionalItems !== undefined ? numberOfAdditionalItems : 'some' }} random 
+                {{ numberOfAdditionalItems === 1 ? 'item' : 'items' }}</button>
             <button class='k-button' [disabled]="!validationErrors.length" (click)="showErrorsDialog();">Show Errors</button>
         </ng-template>
         <kendo-grid-column field="ProductID" title="HIDDEN" [hidden]=true></kendo-grid-column>

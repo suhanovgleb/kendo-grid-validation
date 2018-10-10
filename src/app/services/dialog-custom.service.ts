@@ -4,6 +4,7 @@ import { ValidationError } from '../validation';
 
 import { ErrrosListComponent } from '../components/errros-list/errros-list.component';
 import { ISchema } from '../schemes/schema';
+import { IErrorListComponent } from '../components/errros-list/interface-errors-list-component';
 
 @Injectable({
   providedIn: 'root'
@@ -38,9 +39,9 @@ export class DialogCustomService {
         this.showDialog('Error!', content);
   }
 
-  public showErrorsList(validationErrors: ValidationError[], schema: ISchema, numberErrorsToTake: number = 5) {
+  public showErrorsList(validationErrors: ValidationError[], schema: ISchema, numberErrorsToDisplay: number = 5) {
     if (validationErrors.length) {
-      const dialogRef = this.dialogService.open({
+      const dialogRef: DialogRef = this.dialogService.open({
         title: 'Error!',
         content: ErrrosListComponent,
         actions: [
@@ -48,9 +49,10 @@ export class DialogCustomService {
         ]
       });
 
-      const errorsInfo = dialogRef.content.instance;
+      const errorsInfo: IErrorListComponent = dialogRef.content.instance;
+      
       errorsInfo.validationErrors = validationErrors;
-      errorsInfo.numberErrorsToTake = numberErrorsToTake;
+      errorsInfo.numberErrorsToDisplay = numberErrorsToDisplay;
     } else {
       return;
     }
