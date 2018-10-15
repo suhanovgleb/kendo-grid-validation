@@ -46,13 +46,17 @@ export class AppComponent implements OnInit {
 
     private numberOfAdditionalItems = 1;
 
+    public listOfUnits: number[] = [10, 100, 1000, 10000];
+
     public changes: any = {};
     private schema = new ProductSchema();
     private idField = this.schema.idField;
 
     private validationErrors: ValidationError[] = [];
 
-    public ಠ_ಠ = 'ಠ_ಠ';    
+    public formGroup: FormGroup;
+
+    public ಠ_ಠ = 'ಠ_ಠ';
 
     constructor(
         private editService: EditService,
@@ -77,7 +81,8 @@ export class AppComponent implements OnInit {
 
     public cellClickHandler({ sender, rowIndex, columnIndex, dataItem, isEdited }) {
         if (!isEdited) {
-            sender.editCell(rowIndex, columnIndex, this.createFormGroup(dataItem));
+            this.formGroup = this.createFormGroup(dataItem);
+            sender.editCell(rowIndex, columnIndex, this.formGroup);
         }
     }
 
@@ -89,9 +94,8 @@ export class AppComponent implements OnInit {
         } else if (formGroup.dirty) {
             this.editService.assignValues(dataItem, formGroup.value);
             this.editService.update(dataItem);
-
             
-            // if any field of row with error has changed we repaint it
+            // if any field of row with error was changed we repaint it
             for (const error of this.validationErrors) {
                 if (error.item[this.idField] === dataItem[this.idField]) {
                     for (const field in dataItem) {
@@ -126,7 +130,8 @@ export class AppComponent implements OnInit {
     }
     
     public addHandler({ sender }) {
-        sender.addRow(this.createFormGroup(new Product(this.idGeneratorService.getId())));
+        this.formGroup = this.createFormGroup(new Product(this.idGeneratorService.getId()));
+        sender.addRow(this.formGroup);
     }
 
     public cancelHandler({ sender, rowIndex }) {
@@ -229,7 +234,7 @@ export class AppComponent implements OnInit {
     }
 
     // Main FormGroup validation with in-form validaton
-    public MAINcreateFormGroup(currentData): FormGroup {
+    public MAINcreateFormGroup(dataItem): FormGroup {
         const formGroup: FormGroup = new FormGroup({});
 
         const editableFields = this.schema.fields.filter(field => {
@@ -238,14 +243,14 @@ export class AppComponent implements OnInit {
 
         for (const field of editableFields) {
             const validators = this.schema.getFieldFormValidators(field);
-            const control = new FormControl(currentData[field.name], Validators.compose(validators));
+            const control = new FormControl(dataItem[field.name], Validators.compose(validators));
             formGroup.addControl(field.name, control);
         }
         return formGroup;
     }
 
     // FormGroup without form validation, (!!!) USE ONLY FOR VALIDATION SERVICE TESTING
-    public createFormGroup(currentData): FormGroup {
+    public createFormGroup(dataItem): FormGroup {
         const formGroup: FormGroup = new FormGroup({});
 
         const editableFields = this.schema.fields.filter(field => {
@@ -254,7 +259,7 @@ export class AppComponent implements OnInit {
 
         for (const field of editableFields) {
             // const validators = this.schema.getFieldFormValidators(field);
-            const control = new FormControl(currentData[field.name]);
+            const control = new FormControl(dataItem[field.name]);
             formGroup.addControl(field.name, control);
         }
         return formGroup;

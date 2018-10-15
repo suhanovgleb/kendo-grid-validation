@@ -9,6 +9,9 @@ import { DialogsModule } from '@progress/kendo-angular-dialog';
 import { ErrrosListComponent } from './components/errros-list/errros-list.component';
 import { TooltipModule } from '@progress/kendo-angular-tooltip';
 import { NotificationModule } from '@progress/kendo-angular-notification';
+import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 
 
 
@@ -28,7 +31,10 @@ import { NotificationModule } from '@progress/kendo-angular-notification';
     HttpClientJsonpModule,
     DialogsModule,
     TooltipModule,
-    NotificationModule
+    NotificationModule,
+    DropDownsModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent],
