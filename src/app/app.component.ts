@@ -46,7 +46,14 @@ export class AppComponent implements OnInit {
 
     private numberOfAdditionalItems = 1;
 
-    public listOfUnits: number[] = [10, 100, 1000, 10000];
+    // public listOfUnits: number[] = [10, 100, 1000, 10000];
+
+    public listOfUnits: Array<{ meta: string, value: number }> = [
+        { meta: 'something', value: 1},
+        { meta: 'something else', value: 2},
+        { meta: 'another thing', value: 3},
+        { meta: 'last thing', value: 4}
+    ];
 
     public changes: any = {};
     private schema = new ProductSchema();

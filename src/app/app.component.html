@@ -37,14 +37,14 @@
                 </span>
             </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="UnitsInStock" editor="numeric" title="Units In Stock" class="no-padding">
+        <kendo-grid-column field="UnitsInStock" title="Units In Stock" class="no-padding">
             <ng-template kendoGridCellTemplate let-dataItem let-columnInfo="column">
                 <span [style.backgroundColor]="markup(dataItem, columnInfo)" class="whole-cell" [title]="tooltipHandler(validationErrors, columnInfo, dataItem)">
                     {{ dataItem.UnitsInStock }}
                 </span>
             </ng-template>
             <ng-template kendoGridEditTemplate let-dataItem="dataItem" let-formGroup="formGroup">
-                <kendo-dropdownlist [data]='listOfUnits' [formControl]="formGroup.get('UnitsInStock')"></kendo-dropdownlist>
+                <kendo-dropdownlist [data]='listOfUnits' [textField]="'meta'" [valueField]="'value'" [valuePrimitive]="true" [formControl]="formGroup.get('UnitsInStock')"></kendo-dropdownlist>
             </ng-template>
         </kendo-grid-column>
         <kendo-grid-command-column title="command" width="220">
