@@ -1,3 +1,5 @@
+import { ProductType } from './../models/product';
+import { Chance } from 'chance';
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -33,9 +35,20 @@ export class EditService extends BehaviorSubject<any[]> {
   public updatedItems: any[] = [];
   public deletedItems: any[] = [];
 
+  public productTypes: ProductType[];
+
   constructor(private http: HttpClient) {
       super([]);
   }
+  
+   public readProductTypes(): ProductType[] {
+        return [
+            new ProductType(1, 'Type 1'),
+            new ProductType(2, 'Type 2'),
+            new ProductType(3, 'Type 3'),
+            new ProductType(4, 'Type 4')
+        ];
+   }
 
   public read() {
       if (this.data.length) {
@@ -44,6 +57,24 @@ export class EditService extends BehaviorSubject<any[]> {
 
       this.fetch()
           .subscribe(data => {
+              this.productTypes =  this.readProductTypes();
+              // foreach(data, iten) => item.ProductType = productTypeDataSource.GetOne(id ==item.ProductTypeId)
+
+
+
+              const chance = new Chance();
+              for (const item of data) {
+                  item.ProductTypeId = chance.integer({ min: 1, max: 4 });
+              }
+
+              this.productTypes = this.readProductTypes();
+              for (const item of data) {
+                  item.ProductType = this.productTypes.find(productType => {
+                      return productType.Id === item.ProductTypeId;
+                  });
+              }
+
+
               this.data = data;
               this.originalData = cloneData(data);
               super.next(data);
@@ -101,6 +132,11 @@ export class EditService extends BehaviorSubject<any[]> {
       if (!this.hasChanges()) {
           return;
       }
+
+      //debug mode
+      //check if Product Data type object is existed
+      //item.ProducType = {id:4, 'Last thing'}
+
 
       const completed = [];
       if (this.deletedItems.length) {

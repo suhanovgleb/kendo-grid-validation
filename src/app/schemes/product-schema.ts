@@ -57,6 +57,14 @@ export class ProductSchema implements ISchema {
                 required: true,
                 max: 9999
             }
+        }),
+        new Field({
+            name: 'ProductType',
+            editable: true,
+            type: 'string',
+            validators: {
+                required: false
+            }
         })
     ];
 
