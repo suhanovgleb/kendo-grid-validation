@@ -44,7 +44,7 @@
                 </span>
             </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="ProductType" title="Product Type" class="no-padding">
+        <kendo-grid-column field="ProductType.Name" title="Product Type" class="no-padding">
             <ng-template kendoGridCellTemplate let-dataItem let-columnInfo="column">
                 <span [style.backgroundColor]="markup(dataItem, columnInfo)" class="whole-cell" [title]="tooltipHandler(validationErrors, columnInfo, dataItem)">
                     {{ dataItem.ProductType.Name }}
