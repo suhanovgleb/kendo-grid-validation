@@ -133,9 +133,9 @@ export class EditService extends BehaviorSubject<any[]> {
           return;
       }
 
-      //debug mode
-      //check if Product Data type object is existed
-      //item.ProducType = {id:4, 'Last thing'}
+      // debug mode
+      // check if Product Data type object is existed
+      // item.ProducType = {id:4, 'Last thing'}
 
 
       const completed = [];

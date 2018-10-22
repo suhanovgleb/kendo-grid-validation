@@ -5,8 +5,9 @@ export class Product {
     public Discontinued = false;
     public UnitsInStock = 0;
     public UnitPrice = 0;
-    // public ProductTypeId: number; // get from Server side
-    // public ProductName: number; // get from Server side //turn in obj below
+    public ProductTypeId: number; // get from Server side
+    public ProductTypeName: number; // get from Server side //turn in obj below
+    
     public ProductType: ProductType;
 
     constructor(Id: number) {

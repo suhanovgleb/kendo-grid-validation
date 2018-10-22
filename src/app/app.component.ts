@@ -5,7 +5,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 
 import { GridDataResult, GridComponent, ColumnComponent } from '@progress/kendo-angular-grid';
-import { State, process } from '@progress/kendo-data-query';
+import { State, process, SortDescriptor, GroupDescriptor } from '@progress/kendo-data-query';
 
 import { Product, ProductType } from './models/product';
 import { EditService } from './services/edit.service';
@@ -37,11 +37,12 @@ import { NotificationCustomService } from './services/notification-custom.servic
 export class AppComponent implements OnInit {
 
     public view: Observable<GridDataResult>;
-    
+
     public gridState: State = {
         sort: [],
         skip: 0,
-        take: 10
+        take: 30,
+        group: []
     };
 
     private numberOfAdditionalItems = 1;
@@ -234,6 +235,16 @@ export class AppComponent implements OnInit {
         return tooltipMessage;
     }
 
+    // public groupChange(groups: GroupDescriptor[]): void {
+    //     this.gridState.group = groups;
+    //     this.loadData();
+    // }
+
+    // public loadData(): void {
+    //     this.view = this.editService.pipe(map(data => process(data, this.gridState)));
+    //     this.editService.read();
+    // }
+
     // Main FormGroup validation with in-form validaton
     public MAINcreateFormGroup(dataItem): FormGroup {
         const formGroup: FormGroup = new FormGroup({});
@@ -266,4 +277,7 @@ export class AppComponent implements OnInit {
         return formGroup;
     }
 
+    public sortChange(sort: SortDescriptor[]) {
+
+    }
 }

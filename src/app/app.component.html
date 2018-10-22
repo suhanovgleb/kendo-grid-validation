@@ -1,7 +1,7 @@
 <div kendoDialogContainer></div>
 <div kendoTooltip #tooltip="kendoTooltip" [showOn]="'hover'" filter='td span' position="right">
-    <kendo-grid #grid [data]="view | async" [height]="800" [pageSize]="gridState.take" [skip]="gridState.skip" [sort]="gridState.sort"
-        [pageable]="true" [sortable]="true" [navigable]="true" [reorderable]="true" (dataStateChange)="onStateChange($event)"
+    <kendo-grid #grid [data]="view | async" [height]="800" [pageable]="true" [pageSize]="gridState.take" [skip]="gridState.skip" [sort]="gridState.sort"
+        [sortable]="true" [navigable]="true" [reorderable]="true" [groupable]="true" [group]="gridState.group" [scrollable]="virtual" (dataStateChange)="onStateChange($event)"
         (cellClick)="cellClickHandler($event)" (cellClose)="cellCloseHandler($event)" (cancel)="cancelHandler($event)"
         (save)="saveHandler($event)" (remove)="removeHandler($event)" (add)="addHandler($event)">
         <ng-template kendoGridToolbarTemplate>
@@ -51,7 +51,7 @@
                 </span>
             </ng-template>
             <ng-template kendoGridEditTemplate let-dataItem="dataItem" let-formGroup="formGroup">
-                <kendo-dropdownlist [data]='productTypes' [textField]="'Name'" [valueField]="'Id'" [(ngModel)]="dataItem.ProductType" [formControl]="formGroup.get('ProductType')"></kendo-dropdownlist>
+                <kendo-dropdownlist [data]='productTypes' [textField]="'Name'" [valueField]="'Id'" [formControl]="formGroup.get('ProductType')"></kendo-dropdownlist>
             </ng-template>
         </kendo-grid-column>
         <kendo-grid-command-column title="command" width="220">
