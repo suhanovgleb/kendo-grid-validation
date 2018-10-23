@@ -1,5 +1,4 @@
 
-
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
@@ -47,6 +46,9 @@ export class AppComponent implements OnInit {
 
     private numberOfAdditionalItems = 1;
 
+    // Do we need default item?
+    public defaultItem: ProductType = { Name: 'Select item...', Id: null }; // Maybe null isnt best decision
+
     public productTypes: ProductType[];
 
     public changes: any = {};
@@ -89,11 +91,16 @@ export class AppComponent implements OnInit {
     }
 
     public cellCloseHandler(args: any) {
-        const { formGroup, dataItem } = args;
+        const formGroup: FormGroup = args.formGroup;
+        const dataItem: any = args.dataItem;
+        // const { formGroup, dataItem } = args;
         if (!formGroup.valid) {
             // prevent closing the edited cell if there are invalid values.
             // args.preventDefault();
         } else if (formGroup.dirty) {
+            if (formGroup.controls.ProductType.dirty) {
+                dataItem.ProductTypeId = formGroup.controls.ProductType.value.Id; 
+            }
             this.editService.assignValues(dataItem, formGroup.value);
             this.editService.update(dataItem);
             

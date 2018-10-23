@@ -51,7 +51,7 @@
                 </span>
             </ng-template>
             <ng-template kendoGridEditTemplate let-dataItem="dataItem" let-formGroup="formGroup">
-                <kendo-dropdownlist [data]='productTypes' [textField]="'Name'" [valueField]="'Id'" [formControl]="formGroup.get('ProductType')"></kendo-dropdownlist>
+                <kendo-dropdownlist [data]='productTypes' [defaultItem]='defaultItem' [textField]="'Name'" [valueField]="'Id'" [formControl]="formGroup.get('ProductType')"></kendo-dropdownlist>
             </ng-template>
         </kendo-grid-column>
         <kendo-grid-command-column title="command" width="220">
