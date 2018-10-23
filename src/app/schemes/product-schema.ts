@@ -1,5 +1,5 @@
 
-import { ISchema, Field, RowValidators, RowValidator } from './schema';
+import { ISchema, RowValidators, RowValidator, Field } from './schema';
 import { Validators } from '@angular/forms';
 import {
     MaxValidator, 
