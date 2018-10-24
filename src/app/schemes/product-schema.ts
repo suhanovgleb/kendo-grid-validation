@@ -9,11 +9,39 @@ import {
     PriceToUnitValidator,
     IValidator
 } from '../validation';
+import { ProductType } from '../models/product';
 
 
 export class ProductSchema implements ISchema {
 
     public idField = 'ProductID';
+    
+    public testFields = [
+        /*new Field(*/{
+            name: 'ProductType',
+            viewSettings: {
+                field: 'ProductType.Name', // Or maybe ProductTypeName somehow
+                type: 'string',
+                editable: true,
+                validators: {
+                    required: true
+                }
+            },
+            type: ProductType,
+            dbFields: [
+                /*new dbField(*/{
+                    name: 'ProductTypeId',
+                    asPropertyName: 'Id',
+                    type: 'number'
+                }/*)*/,
+                /*new dbField(*/{
+                    name: 'ProductTypeName',
+                    asPropertyName: 'Name',
+                    type: 'string'
+                }/*)*/
+            ]
+        }/*)*/
+    ];
 
     public fields = [
         new Field({

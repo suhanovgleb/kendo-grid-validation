@@ -1,3 +1,4 @@
+import { ProductSchema } from './../schemes/product-schema';
 import { ProductType } from './../models/product';
 import { Chance } from 'chance';
 
@@ -8,6 +9,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { zip } from 'rxjs/observable/zip';
 import { map } from 'rxjs/operators';
+import { scheduleMicroTask } from '@angular/core/src/util';
 
 const CREATE_ACTION = 'create';
 const UPDATE_ACTION = 'update';
@@ -65,14 +67,44 @@ export class EditService extends BehaviorSubject<any[]> {
               const chance = new Chance();
               for (const item of data) {
                   item.ProductTypeId = chance.integer({ min: 1, max: 4 });
+                  item.ProductTypeName = 'Type ' + item.ProductTypeId;
               }
 
-              this.productTypes = this.readProductTypes();
-              for (const item of data) {
-                  item.ProductType = this.productTypes.find(productType => {
-                      return productType.Id === item.ProductTypeId;
-                  });
+              const schema = new ProductSchema();
+
+              for (const i in data) {
+                  // tslint:disable-next-line:forin
+                  for (const field of schema.testFields) {
+                      if (field.dbFields.length !== 0) {
+                          data[i][field.name] = {};
+                          for (const dbField of field.dbFields) {
+                              data[i][field.name][dbField.asPropertyName] = data[i][dbField.name];
+                          }
+                      }
+                  }
               }
+
+
+
+            //   for (const dataItem of data) {
+            //       // tslint:disable-next-line:forin
+            //       for (const prop in dataItem) {
+            //           for (const field of schema.testFields) {
+            //               if (field.name === prop && field.dbFields.length !== 0) {
+            //                   for (const dbField of field.dbFields) {
+            //                       data[prop][field.name][dbField.asPropertyName] = data[prop][dbField.name];
+            //                   }
+            //               }
+            //           }
+            //       }
+            //   }
+
+            //   this.productTypes = this.readProductTypes();
+            //   for (const item of data) {
+            //       item.ProductType = this.productTypes.find(productType => {
+            //           return productType.Id === item.ProductTypeId;
+            //       });
+            //   }
 
 
               this.data = data;

@@ -102,5 +102,18 @@ class TestSchemas {
             ]
         }/*)*/
     ];
+
+    public dbItem = {
+        Id: 1,
+        Name: 'Chai',
+        ProductTypeId: 1,
+        ProductTypeName: 'Type 1'
+    };
+
+    getObjectFromField(dbItem) {
+        for (const prop in dbItem) {
+            
+        }
+    }
 }
 
