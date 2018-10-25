@@ -72,8 +72,8 @@ export class EditService extends BehaviorSubject<any[]> {
 
               const schema = new ProductSchema();
 
+              // tslint:disable-next-line:forin
               for (const i in data) {
-                  // tslint:disable-next-line:forin
                   for (const field of schema.testFields) {
                       if (field.dbFields.length !== 0) {
                           data[i][field.name] = {};

@@ -7,6 +7,7 @@ import {
     RequiredValidator, 
     UniqueConstraintsValidator, 
     PriceToUnitValidator,
+    PriceToTypeValidator,
     IValidator
 } from '../validation';
 import { ProductType } from '../models/product';
@@ -15,7 +16,7 @@ import { ProductType } from '../models/product';
 export class ProductSchema implements ISchema {
 
     public idField = 'ProductID';
-    
+
     public testFields = [
         /*new Field(*/{
             name: 'ProductType',
@@ -122,7 +123,8 @@ export class ProductSchema implements ISchema {
             new MaxValidator(),
             new MinValidator(),
             new UniqueConstraintsValidator(),
-            new PriceToUnitValidator()
+            new PriceToUnitValidator(),
+            new PriceToTypeValidator()
         ];
     }
 

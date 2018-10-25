@@ -98,9 +98,9 @@ export class AppComponent implements OnInit {
             // prevent closing the edited cell if there are invalid values.
             // args.preventDefault();
         } else if (formGroup.dirty) {
-            if (formGroup.controls.ProductType.dirty) {
-                dataItem.ProductTypeId = formGroup.controls.ProductType.value.Id; 
-            }
+            // if (formGroup.controls.ProductType.dirty) {
+            //     dataItem.ProductTypeId = formGroup.controls.ProductType.value.Id; 
+            // }
             this.editService.assignValues(dataItem, formGroup.value);
             this.editService.update(dataItem);
             
