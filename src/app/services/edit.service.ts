@@ -165,6 +165,19 @@ export class EditService extends BehaviorSubject<any[]> {
           return;
       }
 
+      const data = this.data;
+      const schema = new ProductSchema();
+
+      // tslint:disable-next-line:forin
+      for (const i in data) {
+        for (const field of schema.testFields) {
+            if (field.dbFields.length !== 0) {
+                for (const dbField of field.dbFields) {
+                    data[i][dbField.name] = data[i][field.name][dbField.asPropertyName];
+                }
+            }
+        }
+    }
       // debug mode
       // check if Product Data type object is existed
       // item.ProducType = {id:4, 'Last thing'}

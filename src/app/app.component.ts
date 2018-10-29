@@ -210,6 +210,11 @@ export class AppComponent implements OnInit {
             item.UnitPrice = chance.floating({ fixed: 2, min: 4, max: 200 });
             item.Discontinued = chance.integer() % 3 === 0 ? true : false;
             item.UnitsInStock = chance.integer({ min: 0, max: 9999 });
+            const productTypeId = chance.integer({ min: 1, max: 4 });
+            item.ProductType = new ProductType(productTypeId, 'Type ' + productTypeId);
+            item.ProductTypeId = productTypeId;
+            item.ProductTypeName = 'Type ' + productTypeId;
+
             this.editService.create(item);
         }
     }
