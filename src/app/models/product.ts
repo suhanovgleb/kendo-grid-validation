@@ -6,7 +6,7 @@ export class Product {
     public UnitsInStock = 0;
     public UnitPrice = 0;
     public ProductTypeId: number; // get from Server side
-    public ProductTypeName: number; // get from Server side //turn in obj below
+    public ProductTypeName: string; // get from Server side //turn in obj below
     
     public ProductType: ProductType;
 
