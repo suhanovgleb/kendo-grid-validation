@@ -1,31 +1,29 @@
 
 import { Observable } from 'rxjs/Observable';
+
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
-
-import { GridDataResult, GridComponent, ColumnComponent } from '@progress/kendo-angular-grid';
-import { State, process, SortDescriptor, GroupDescriptor } from '@progress/kendo-data-query';
-
-import { Product, ProductType } from './models/product';
-import { EditService } from './services/edit.service';
-import { ValidationService } from './services/validation.service';
-
-import { map } from 'rxjs/operators/map';
-
-import { ProductSchema } from './schemes/product-schema';
-import { MarkupService } from './services/markup.service';
-import { ValidationError } from './validation';
-
-import { Chance } from 'chance';
 import { SafeStyle } from '@angular/platform-browser';
 
+import { GridDataResult, GridComponent, ColumnComponent } from '@progress/kendo-angular-grid';
+import { State, process, SortDescriptor } from '@progress/kendo-data-query';
+
+import { Product, ProductType } from './models/product';
+import { ProductSchema } from './schemes/product-schema';
+
+import { EditService } from './services/edit.service';
+import { ValidationService } from './services/validation.service';
+import { MarkupService } from './services/markup.service';
 import { IdGeneratorService } from './services/id-generator.service';
 import { DialogCustomService } from './services/dialog-custom.service';
-import { ValidatorType } from './validation/validator-type';
-
-import { union } from 'lodash';
 import { NotificationCustomService } from './services/notification-custom.service';
 
+import { ValidationError } from './validation';
+import { ValidatorType } from './validation/validator-type';
+
+import { map } from 'rxjs/operators/map';
+import { Chance } from 'chance';
+import { union } from 'lodash';
 
 @Component({
   selector: 'app-root',
