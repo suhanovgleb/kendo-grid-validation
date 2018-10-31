@@ -1,3 +1,4 @@
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
@@ -11,17 +12,30 @@ import { TooltipModule } from '@progress/kendo-angular-tooltip';
 import { NotificationModule } from '@progress/kendo-angular-notification';
 import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ProductGridComponent } from './components/product-grid/product-grid.component';
+import { MainPageComponent } from './components/main-page/main-page.component';
+import { HeaderComponent } from './components/header/header.component';
+import { RouterModule, Routes } from '@angular/router';
 
-
-
-
-
-
+const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'products',
+    pathMatch: 'full'
+  },
+  {
+    path: 'products',
+    component: ProductGridComponent
+  }
+];
 
 @NgModule({
   declarations: [
     AppComponent,
-    ErrrosListComponent
+    ErrrosListComponent,
+    ProductGridComponent,
+    MainPageComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +48,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     NotificationModule,
     DropDownsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterModule.forRoot(routes)
   ],
   providers: [],
   bootstrap: [AppComponent],
