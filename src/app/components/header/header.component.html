@@ -1,3 +1,34 @@
-<p>
-  header works!
-</p>
+<mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark red lighten-1">
+
+  <!-- Navbar brand -->
+  <mdb-navbar-brand><a class="navbar-brand" routerLink="/main">(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧</a></mdb-navbar-brand>
+
+  <!-- Collapsible content -->
+  <links>
+
+      <!-- Links -->
+      <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+              <a class="nav-link waves-light" routerLink="/main" mdbWavesEffect>Home</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link waves-light" routerLink="/products" mdbWavesEffect>Products</a>
+          </li>
+
+          <!-- Dropdown -->
+          <li class="nav-item dropdown" dropdown>
+              <a dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light" mdbWavesEffect>
+              Basic dropdown<span class="caret"></span></a>
+              <div *dropdownMenu class="dropdown-menu dropdown dropdown-primary" role="menu">
+                  <a class="dropdown-item waves-light" mdbWavesEffect routerLink="/main">Main</a>
+                  <div class="divider dropdown-divider"></div>
+                  <a class="dropdown-item waves-light" mdbWavesEffect routerLink="/products">Products</a>
+              </div>
+          </li>
+
+      </ul>
+      <!-- Links -->
+  </links>
+  <!-- Collapsible content -->
+
+</mdb-navbar>

@@ -2,11 +2,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { ProductGridComponent } from './components/product-grid/product-grid.component';
+import { MainPageComponent } from './components/main-page/main-page.component';
 
 const routes: Routes = [
     {
         path: '',
-        redirectTo: 'products',
+        redirectTo: 'main',
         pathMatch: 'full'
     },
     {
@@ -14,8 +15,12 @@ const routes: Routes = [
         component: ProductGridComponent
     },
     {
+        path: 'main',
+        component: MainPageComponent
+    },
+    {
         path: '**',
-        redirectTo: 'products'
+        redirectTo: 'main'
     }
 ];
 
