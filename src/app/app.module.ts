@@ -16,18 +16,9 @@ import { ProductGridComponent } from './components/product-grid/product-grid.com
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { HeaderComponent } from './components/header/header.component';
 import { RouterModule, Routes } from '@angular/router';
+import { RouterInitializer } from '@angular/router/src/router_module';
+import { RoutingModule } from './routing.module';
 
-const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'products',
-    pathMatch: 'full'
-  },
-  {
-    path: 'products',
-    component: ProductGridComponent
-  }
-];
 
 @NgModule({
   declarations: [
@@ -49,7 +40,7 @@ const routes: Routes = [
     DropDownsModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forRoot(routes)
+    RoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent],
