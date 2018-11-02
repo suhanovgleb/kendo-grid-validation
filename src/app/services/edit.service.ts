@@ -1,3 +1,4 @@
+
 import { ProductSchema } from './../schemes/product-schema';
 import { ProductType } from './../models/product';
 import { Chance } from 'chance';
@@ -9,7 +10,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { zip } from 'rxjs/observable/zip';
 import { map } from 'rxjs/operators';
-import { scheduleMicroTask } from '@angular/core/src/util';
+import { of } from 'rxjs';
+import { localStorage } from '../localStorage';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 const CREATE_ACTION = 'create';
 const UPDATE_ACTION = 'update';
@@ -64,11 +67,11 @@ export class EditService extends BehaviorSubject<any[]> {
 
 
 
-              const chance = new Chance();
-              for (const item of data) {
-                  item.ProductTypeId = chance.integer({ min: 1, max: 4 });
-                  item.ProductTypeName = 'Type ' + item.ProductTypeId;
-              }
+            //   const chance = new Chance();
+            //   for (const item of data) {
+            //       item.ProductTypeId = chance.integer({ min: 1, max: 4 });
+            //       item.ProductTypeName = 'Type ' + item.ProductTypeId;
+            //   }
 
               const schema = new ProductSchema();
 
@@ -220,9 +223,35 @@ export class EditService extends BehaviorSubject<any[]> {
   }
 
   private fetch(action: string = '', data?: any): Observable<any[]> {
-      return this.http
-          .jsonp(`https://demos.telerik.com/kendo-ui/service/Products/${action}?${this.serializeModels(data)}`, 'callback')
-          .pipe(map(res => <any[]>res));
+    if (action === CREATE_ACTION) {
+        for (const createdItem of data) {
+            this.data.push(createdItem);
+        }
+    }
+    if (action === UPDATE_ACTION) {
+        for (const updatedItem of data) {
+            const index = this.data.findIndex(dataItem => {
+                if (updatedItem.ProductId === dataItem.ProductId) {
+                    return true;
+                }
+            });
+            this.data[index] = updatedItem;
+        }
+    }
+    if (action === REMOVE_ACTION) {
+        for (const deletedItem of data) {
+            const index = this.data.findIndex(dataItem => {
+                if (deletedItem.ProductId === dataItem.ProductId) {
+                    return true;
+                }
+            });
+            this.data.splice(index, 1);
+        }
+    }
+    //   return this.http
+    //       .jsonp(`https://demos.telerik.com/kendo-ui/service/Products/${action}?${this.serializeModels(data)}`, 'callback')
+    //       .pipe(map(res => <any[]>res));
+    return of(localStorage);
   }
 
   private serializeModels(data?: any): string {

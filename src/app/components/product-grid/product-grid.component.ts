@@ -37,7 +37,7 @@ export class ProductGridComponent implements OnInit {
     public gridState: State = {
         sort: [],
         skip: 0,
-        take: 30,
+        take: 10,
         group: []
     };
 
