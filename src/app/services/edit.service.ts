@@ -37,19 +37,8 @@ export class EditService extends BehaviorSubject<any[]> {
     public updatedItems: any[] = [];
     public deletedItems: any[] = [];
 
-    public productTypes: ProductType[];
-
     constructor(private http: HttpClient) {
         super([]);
-    }
-
-    public readProductTypes(): ProductType[] {
-        return [
-            new ProductType(1, 'Type 1'),
-            new ProductType(2, 'Type 2'),
-            new ProductType(3, 'Type 3'),
-            new ProductType(4, 'Type 4')
-        ];
     }
 
     public read() {
@@ -59,53 +48,20 @@ export class EditService extends BehaviorSubject<any[]> {
 
         this.fetch()
             .subscribe(data => {
-                this.productTypes = this.readProductTypes();
-                // foreach(data, iten) => item.ProductType = productTypeDataSource.GetOne(id ==item.ProductTypeId)
-
-
-
-                //   const chance = new Chance();
-                //   for (const item of data) {
-                //       item.ProductTypeId = chance.integer({ min: 1, max: 4 });
-                //       item.ProductTypeName = 'Type ' + item.ProductTypeId;
-                //   }
-
                 const schema = new ProductSchema();
 
-                // tslint:disable-next-line:forin
                 for (const i in data) {
-                    for (const field of schema.testFields) {
-                        if (field.dbFields.length !== 0) {
-                            data[i][field.name] = {};
-                            for (const dbField of field.dbFields) {
-                                data[i][field.name][dbField.asPropertyName] = data[i][dbField.name];
+                    if (data.hasOwnProperty(i)) {
+                        for (const field of schema.testFields) {
+                            if (field.dbFields.length !== 0) {
+                                data[i][field.name] = {};
+                                for (const dbField of field.dbFields) {
+                                    data[i][field.name][dbField.asPropertyName] = data[i][dbField.name];
+                                }
                             }
                         }
                     }
                 }
-
-
-
-                //   for (const dataItem of data) {
-                //       // tslint:disable-next-line:forin
-                //       for (const prop in dataItem) {
-                //           for (const field of schema.testFields) {
-                //               if (field.name === prop && field.dbFields.length !== 0) {
-                //                   for (const dbField of field.dbFields) {
-                //                       data[prop][field.name][dbField.asPropertyName] = data[prop][dbField.name];
-                //                   }
-                //               }
-                //           }
-                //       }
-                //   }
-
-                //   this.productTypes = this.readProductTypes();
-                //   for (const item of data) {
-                //       item.ProductType = this.productTypes.find(productType => {
-                //           return productType.Id === item.ProductTypeId;
-                //       });
-                //   }
-
 
                 this.data = data;
                 this.originalData = cloneData(data);
@@ -168,20 +124,17 @@ export class EditService extends BehaviorSubject<any[]> {
         const data = this.data;
         const schema = new ProductSchema();
 
-        // tslint:disable-next-line:forin
         for (const i in data) {
-            for (const field of schema.testFields) {
-                if (field.dbFields.length !== 0) {
-                    for (const dbField of field.dbFields) {
-                        data[i][dbField.name] = data[i][field.name][dbField.asPropertyName];
+            if (data.hasOwnProperty(i)) {
+                for (const field of schema.testFields) {
+                    if (field.dbFields.length !== 0) {
+                        for (const dbField of field.dbFields) {
+                            data[i][dbField.name] = data[i][field.name][dbField.asPropertyName];
+                        }
                     }
                 }
             }
         }
-        // debug mode
-        // check if Product Data type object is existed
-        // item.ProducType = {id:4, 'Last thing'}
-
 
         const completed = [];
         if (this.deletedItems.length) {
@@ -220,43 +173,11 @@ export class EditService extends BehaviorSubject<any[]> {
     }
 
     private fetch(action: string = '', data?: any): Observable<any[]> {
-        /*Начало кода, который стоит переписать (делает не то, что нужно)*/
-        if (action === CREATE_ACTION) {
-            // for (const createdItem of data) {
-            //     // TODO: Добавлять item в data не нужно, т.к. он уже там. Нужно придумать что-то другое.
-            //     // this.data.push(createdItem);
-            // }
-            this.http.post('http://localhost:3000/products', JSON.stringify(data));
-        }
-        if (action === UPDATE_ACTION) {
-            for (const updatedItem of data) {
-                const index = this.data.findIndex(dataItem => {
-                    if (updatedItem.ProductId === dataItem.ProductId) {
-                        return true;
-                    }
-                });
-                this.data[index] = updatedItem;
-            }
-        }
-        if (action === REMOVE_ACTION) {
-            for (const deletedItem of data) {
-                const index = this.data.findIndex(dataItem => {
-                    if (deletedItem.ProductId === dataItem.ProductId) {
-                        return true;
-                    }
-                });
-                this.data.splice(index, 1);
-            }
-        }
-        /*Конец кода, который стоит переписать (делает не то, что нужно)*/
+
         return this.http.get('http://localhost:3000/products')
             .pipe(map(res => <any[]>res));
         //   return this.http
         //       .jsonp(`https://demos.telerik.com/kendo-ui/service/Products/${action}?${this.serializeModels(data)}`, 'callback')
         //       .pipe(map(res => <any[]>res));
-    }
-
-    private serializeModels(data?: any): string {
-        return data ? `&models=${JSON.stringify(data)}` : '';
     }
 }

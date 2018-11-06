@@ -46,8 +46,6 @@ export class ProductGridComponent implements OnInit {
     // Do we need default item?
     public defaultItem: ProductType = { Name: 'Select item...', Id: null }; // Maybe null isnt best decision
 
-    public productTypes: ProductType[];
-
     public changes: any = {};
     private schema = new ProductSchema();
     private idField = this.schema.idField;
@@ -68,11 +66,10 @@ export class ProductGridComponent implements OnInit {
     ) {
         console.log(this.ಠ_ಠ);
     }
-    
+
     public ngOnInit(): void {
         this.view = this.editService.pipe(map(data => process(data, this.gridState)));
         this.editService.read();
-        this.productTypes = this.editService.readProductTypes();
     }
 
     public onStateChange(state: State) {
@@ -95,9 +92,6 @@ export class ProductGridComponent implements OnInit {
             // prevent closing the edited cell if there are invalid values.
             // args.preventDefault();
         } else if (formGroup.dirty) {
-            // if (formGroup.controls.ProductType.dirty) {
-            //     dataItem.ProductTypeId = formGroup.controls.ProductType.value.Id; 
-            // }
             this.editService.assignValues(dataItem, formGroup.value);
             this.editService.update(dataItem);
             
