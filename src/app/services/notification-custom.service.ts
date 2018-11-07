@@ -11,46 +11,45 @@ export class NotificationCustomService {
     private notificationService: NotificationService
   ) { }
 
-  // private baseSettings: NotificationSettings = {
-  //   content: 'This is base notification',
-  //   hideAfter: 2500,
-  //   animation: { type: 'fade', duration: 500 },
-  //   position: { horizontal: 'right', vertical: 'top' },
-  //   type: { style: 'none', icon: true }
-  // };
+  private baseSettings: NotificationSettings = {
+    content: 'This is a basic notice. It should not be displayed in the user interface.',
+    hideAfter: 2500,
+    animation: { type: 'fade', duration: 500 },
+    position: { horizontal: 'right', vertical: 'top' },
+    type: { style: 'none', icon: true }
+  };
 
-  public show(showContent: NotificationSettings) {
-    this.notificationService.show(showContent);
+  public show(passedSettings: NotificationSettings) {
+    const ntfSettings = this.baseSettings;
+
+    for (const setting in passedSettings) {
+      if (passedSettings.hasOwnProperty(setting)) {
+        ntfSettings[setting] = passedSettings[setting];
+      }
+    }
+
+    this.notificationService.show(ntfSettings);
   }
 
-  public saveSuccessfullyNotification() {
+  public successNotification(content: string) {
     const showContent: NotificationSettings = {
-      content: 'Saving data completed successfully.',
-      hideAfter: 2500,
-      animation: { type: 'fade', duration: 500 },
-      position: { horizontal: 'right', vertical: 'top' },
+      content: content,
       type: { style: 'success', icon: true }
     };
     this.show(showContent);
   }
 
-  public cancelChangesNotification() {
+  public infoNotification(content: string) {
     const showContent: NotificationSettings = {
-      content: 'Changed data has been reset.',
-      hideAfter: 2500,
-      animation: { type: 'fade', duration: 500 },
-      position: { horizontal: 'right', vertical: 'top' },
+      content: content,
       type: { style: 'info', icon: true }
     };
     this.show(showContent);
   }
 
-  public savePreventedNotification() {
+  public errorNotification(content: string) {
     const showContent: NotificationSettings = {
-      content: 'There are some errors. Saving is not possible.',
-      hideAfter: 2500,
-      animation: { type: 'fade', duration: 500 },
-      position: { horizontal: 'right', vertical: 'top' },
+      content: content,
       type: { style: 'error', icon: true }
     };
     this.show(showContent);

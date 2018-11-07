@@ -155,6 +155,9 @@ export class ProductGridComponent implements OnInit {
     }  
 
     public saveChanges(grid: GridComponent): void {
+        const SAVE_SUCCES_MESSAGE = 'Saving data completed successfully.';
+        const SAVE_PREVENDED_MESSAGE = 'There are some errors. Saving is not possible.';
+
         grid.closeCell();
         grid.cancelCell();
         
@@ -174,18 +177,20 @@ export class ProductGridComponent implements OnInit {
         
         if (this.validationErrors.length === 0) {
             this.editService.saveChanges();
-            this.notificationService.saveSuccessfullyNotification();
+            this.notificationService.successNotification(SAVE_SUCCES_MESSAGE);
             this.idGeneratorService.reset();
         } else {
-            this.notificationService.savePreventedNotification();
+            this.notificationService.errorNotification(SAVE_PREVENDED_MESSAGE);
         }
     }
 
     public cancelChanges(grid: GridComponent): void {
+        const SAVE_CANCEL_MESSAGE = 'Changed data has been reset.';
+
         grid.cancelCell();
         this.editService.cancelChanges();
 
-        this.notificationService.cancelChangesNotification();
+        this.notificationService.infoNotification(SAVE_CANCEL_MESSAGE);
 
         this.validationErrors = [];
         this.idGeneratorService.reset();
@@ -198,7 +203,7 @@ export class ProductGridComponent implements OnInit {
         for (let i = 0; i < this.numberOfAdditionalItems; i++) {
             const item = new Product(this.idGeneratorService.getId());
             item.ProductName = chance.street();
-            item.UnitPrice = chance.floating({ fixed: 2, min: 4, max: 200 });
+            item.UnitPrice = chance.floating({ fixed: 2, min: 100, max: 9999 });
             item.Discontinued = chance.integer() % 3 === 0 ? true : false;
             item.UnitsInStock = chance.integer({ min: 0, max: 9999 });
             const productTypeId = chance.integer({ min: 1, max: 4 });
