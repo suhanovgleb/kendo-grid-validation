@@ -1,3 +1,4 @@
+import { PriceToUnitValidator } from './../validation/product-validators/price_to_unit-validator';
 
 import { ProductSchema } from './../schemes/product-schema';
 import { ProductType } from './../models/product';
@@ -10,6 +11,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { zip } from 'rxjs/observable/zip';
 import { map } from 'rxjs/operators';
+import { TouchSequence } from 'selenium-webdriver';
 
 const CREATE_ACTION = 'create';
 const UPDATE_ACTION = 'update';
@@ -39,6 +41,16 @@ export class EditService extends BehaviorSubject<any[]> {
 
     constructor(private http: HttpClient) {
         super([]);
+    }
+
+    public getFreeID() {
+        let maxID = -1;
+        for (const item of this.data) {
+            if (item.ProductID > maxID) {
+                maxID = item.ProductID;
+            }
+        }
+        return maxID + 1;
     }
 
     public read() {
@@ -109,7 +121,8 @@ export class EditService extends BehaviorSubject<any[]> {
     }
 
     public isNew(item: any): boolean {
-        return !item.ProductID;
+        return item.ProductID < 0;
+        // return !item.ProductID;
     }
 
     public hasChanges(): boolean {
@@ -136,17 +149,30 @@ export class EditService extends BehaviorSubject<any[]> {
             }
         }
 
+        // for (const i in this.updatedItems) {
+        //     if (this.updatedItems[i].ProductID < 0) {
+        //         this.createdItems.push(this.updatedItems.splice(<number><any>i, 1));
+        //     }
+        // }
+        // const idList = this.originalData.map(item => item.ProductID);
+
+        // for (const i in this.updatedItems) {
+        //     if (!idList.includes(this.updatedItems[i].ProductID)) {
+        //         this.createdItems.push(this.updatedItems.splice(<number><any>i, 1));
+        //     }
+        // }
+
         const completed = [];
         if (this.deletedItems.length) {
-            completed.push(this.fetch(REMOVE_ACTION, this.deletedItems));
+            completed.push(this.sendChanges(REMOVE_ACTION, this.deletedItems));
         }
 
         if (this.updatedItems.length) {
-            completed.push(this.fetch(UPDATE_ACTION, this.updatedItems));
+            completed.push(this.sendChanges(UPDATE_ACTION, this.updatedItems));
         }
 
         if (this.createdItems.length) {
-            completed.push(this.fetch(CREATE_ACTION, this.createdItems));
+            completed.push(this.sendChanges(CREATE_ACTION, this.createdItems));
         }
 
         this.reset();
@@ -170,6 +196,36 @@ export class EditService extends BehaviorSubject<any[]> {
         this.deletedItems = [];
         this.updatedItems = [];
         this.createdItems = [];
+    }
+
+    // addProduct() {
+    //     const w = this.http.get('http://localhost:3000/products').subscribe(data => console.log(data));
+    //     const e = this.http.post('http://localhost:3000/products', {}).subscribe(data => console.log(data));
+    //     const q = 5;
+    //     return null;
+    // }
+    private sendChanges(action: string = '', data?: any) {
+        if (action === CREATE_ACTION) {
+            for (const item of this.createdItems) {
+                delete item.ProductType;
+                if (item.ProductID < 0) {
+                    item.ProductID = this.getFreeID();
+                }
+                this.http.post('http://localhost:3000/products', item).subscribe();
+            }
+        }
+        if (action === REMOVE_ACTION) {
+            for (const item of this.deletedItems) {
+                delete item.ProductType;
+                this.http.delete('http://localhost:3000/products' + '/' + item.ProductID).subscribe();
+            }
+        }
+        if (action === UPDATE_ACTION) {
+            for (const item of this.createdItems) {
+                delete item.ProductType;
+                this.http.patch('http://localhost:3000/products' + '/' + item.ProductID, item).subscribe();
+            }
+        }
     }
 
     private fetch(action: string = '', data?: any): Observable<any[]> {
