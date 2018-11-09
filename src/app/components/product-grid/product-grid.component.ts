@@ -46,7 +46,6 @@ export class ProductGridComponent implements OnInit {
     // Do we need default item?
     public defaultItem: ProductType = { Name: 'Select item...', Id: null }; // Maybe null isnt best decision
 
-    public changes: any = {};
     private schema = new ProductSchema();
     private idField = this.schema.idField;
 

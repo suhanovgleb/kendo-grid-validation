@@ -64,8 +64,8 @@ export class EditService extends BehaviorSubject<any[]> {
             .subscribe(data => {
                 const schema = new ProductSchema();
 
-                // Transforming flat data into grid dataItems
-                for (const i in data) {
+                // Transforming flat data into grid data
+                for (let i = 0; i < data.length; i++) {
                     if (data.hasOwnProperty(i)) {
                         for (const field of schema.testFields) {
                             if (field.dbFields.length !== 0) {
@@ -77,6 +77,19 @@ export class EditService extends BehaviorSubject<any[]> {
                         }
                     }
                 }
+
+                // for (const i in data) {
+                //     if (data.hasOwnProperty(i)) {
+                //         for (const field of schema.testFields) {
+                //             if (field.dbFields.length !== 0) {
+                //                 data[i][field.name] = {};
+                //                 for (const dbField of field.dbFields) {
+                //                     data[i][field.name][dbField.asPropertyName] = data[i][dbField.name];
+                //                 }
+                //             }
+                //         }
+                //     }
+                // }
 
                 this.isDataLoaded = true;
 
@@ -147,7 +160,8 @@ export class EditService extends BehaviorSubject<any[]> {
         const data = this.data;
         const schema = new ProductSchema();
 
-        for (const i in data) {
+        // Updating flat data according to changes in grid data
+        for (let i = 0; i < data.length; i++) {
             if (data.hasOwnProperty(i)) {
                 for (const field of schema.testFields) {
                     if (field.dbFields.length !== 0) {
@@ -158,6 +172,17 @@ export class EditService extends BehaviorSubject<any[]> {
                 }
             }
         }
+        // for (const i in data) {
+        //     if (data.hasOwnProperty(i)) {
+        //         for (const field of schema.testFields) {
+        //             if (field.dbFields.length !== 0) {
+        //                 for (const dbField of field.dbFields) {
+        //                     data[i][dbField.name] = data[i][field.name][dbField.asPropertyName];
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         // for (const i in this.updatedItems) {
         //     if (this.updatedItems[i].ProductID < 0) {
@@ -173,6 +198,7 @@ export class EditService extends BehaviorSubject<any[]> {
         // }
 
         const completed = [];
+
         if (this.deletedItems.length) {
             completed.push(this.sendChanges(REMOVE_ACTION, this.deletedItems));
         }
@@ -206,6 +232,7 @@ export class EditService extends BehaviorSubject<any[]> {
         this.deletedItems = [];
         this.updatedItems = [];
         this.createdItems = [];
+        this.isDataLoaded = false;
     }
 
     // addProduct() {
@@ -214,6 +241,7 @@ export class EditService extends BehaviorSubject<any[]> {
     //     const q = 5;
     //     return null;
     // }
+
     private sendChanges(action: string = '', data?: any) {
         if (action === CREATE_ACTION) {
             for (const item of this.createdItems) {
@@ -231,14 +259,14 @@ export class EditService extends BehaviorSubject<any[]> {
             }
         }
         if (action === UPDATE_ACTION) {
-            for (const item of this.createdItems) {
+            for (const item of this.updatedItems) {
                 delete item.ProductType;
                 this.http.patch('http://localhost:3000/products' + '/' + item.ProductID, item).subscribe();
             }
         }
     }
 
-    private fetch(action: string = '', data?: any): Observable<any[]> {
+    private fetch(): Observable<any[]> {
 
         return this.http.get('http://localhost:3000/products')
             .pipe(map(res => <any[]>res));
