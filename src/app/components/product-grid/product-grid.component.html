@@ -5,13 +5,14 @@
         (cellClick)="cellClickHandler($event)" (cellClose)="cellCloseHandler($event)" (cancel)="cancelHandler($event)"
         (save)="saveHandler($event)" (remove)="removeHandler($event)" (add)="addHandler($event)">
         <ng-template kendoGridToolbarTemplate>
-            <button kendoGridAddCommand>Add new</button>
+            <button class='k-button' (click)="loadData();">Refresh</button>
+            <button kendoGridAddCommand [disabled]="!editService.isDataLoaded">Add item</button>
             <button class='k-button' [disabled]="!editService.hasChanges()" (click)="saveChanges(grid); showErrorsDialog();">Save
-                Changes</button>
-            <button class='k-button' [disabled]="!editService.hasChanges()" (click)="cancelChanges(grid);">Cancel
-                Changes</button>
-            <button class='k-button' [disabled]="!numberOfAdditionalItems" (click)="addSomeItems(grid);">Add {{
-                numberOfAdditionalItems !== undefined ? numberOfAdditionalItems : 'some' }} random 
+                changes</button>
+            <button class='k-button' [disabled]="!editService.hasChanges()" (click)="cancelChanges(grid);">Discard
+                changes</button>
+            <button class='k-button' [disabled]="!numberOfAdditionalItems || !editService.isDataLoaded" (click)="addSomeItems(grid);">Add {{
+                numberOfAdditionalItems !== undefined ? numberOfAdditionalItems : 'some' }} random
                 {{ numberOfAdditionalItems === 1 ? 'item' : 'items' }}</button>
             <button class='k-button' [disabled]="!validationErrors.length" (click)="showErrorsDialog();">Show Errors</button>
         </ng-template>
@@ -54,7 +55,7 @@
                 <kendo-dropdownlist [data]='productTypes' [defaultItem]='defaultItem' [textField]="'Name'" [valueField]="'Id'" [formControl]="formGroup.get('ProductType')"></kendo-dropdownlist>
             </ng-template>
         </kendo-grid-column>
-        <kendo-grid-command-column title="command" width="220">
+        <kendo-grid-command-column title="Command bar" width="220">
             <ng-template kendoGridCellTemplate let-isNew="isNew">
                 <button kendoGridRemoveCommand>Remove</button>
                 <button kendoGridSaveCommand>Add</button>

@@ -19,7 +19,7 @@ export class NotificationCustomService {
     type: { style: 'none', icon: true }
   };
 
-  public show(passedSettings: NotificationSettings) {
+  private show(passedSettings: NotificationSettings) {
     const ntfSettings = this.baseSettings;
 
     for (const setting in passedSettings) {

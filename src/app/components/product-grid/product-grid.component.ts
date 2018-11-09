@@ -67,14 +67,17 @@ export class ProductGridComponent implements OnInit {
         console.log(this.ಠ_ಠ);
     }
 
-    public ngOnInit(): void {
-        this.view = this.editService.pipe(map(data => process(data, this.gridState)));
-        this.editService.read();
-    }
+    public ngOnInit(): void {}
 
     public onStateChange(state: State) {
         this.gridState = state;
         this.editService.read();
+    }
+
+    public loadData() {
+        this.editService.read();
+        this.view = this.editService.pipe(map(data => process(data, this.gridState)));
+        this.notificationService.infoNotification('Data has been reloaded.');
     }
 
     public cellClickHandler({ sender, rowIndex, columnIndex, dataItem, isEdited }) {

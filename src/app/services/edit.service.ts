@@ -1,8 +1,5 @@
-import { PriceToUnitValidator } from './../validation/product-validators/price_to_unit-validator';
 
 import { ProductSchema } from './../schemes/product-schema';
-import { ProductType } from './../models/product';
-import { Chance } from 'chance';
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -11,19 +8,20 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { zip } from 'rxjs/observable/zip';
 import { map } from 'rxjs/operators';
-import { TouchSequence } from 'selenium-webdriver';
 
 const CREATE_ACTION = 'create';
 const UPDATE_ACTION = 'update';
 const REMOVE_ACTION = 'destroy';
 
+const INDEX_NOT_FOUND = -1;
+
+// Returns index of item in data OR if nothing found -1
 const itemIndex = (item: any, data: any[]): number => {
     for (let idx = 0; idx < data.length; idx++) {
         if (data[idx].ProductID === item.ProductID) {
             return idx;
         }
     }
-
     return -1;
 };
 
@@ -33,11 +31,15 @@ const cloneData = (data: any[]) => data.map(item => Object.assign({}, item));
     providedIn: 'root'
 })
 export class EditService extends BehaviorSubject<any[]> {
-    public data: any[] = [];
-    public originalData: any[] = [];
+    public data: any[] = []; // Data in it's current state
+    public originalData: any[] = []; // Last data that came from server
+    /* Items that has been created locally 
+    (they can be changed locally and they will still marked as created) */
     public createdItems: any[] = [];
-    public updatedItems: any[] = [];
-    public deletedItems: any[] = [];
+    public updatedItems: any[] = []; // Items that has been updated locally
+    public deletedItems: any[] = []; // Items that has been deleted locally
+
+    public isDataLoaded = false;
 
     constructor(private http: HttpClient) {
         super([]);
@@ -62,6 +64,7 @@ export class EditService extends BehaviorSubject<any[]> {
             .subscribe(data => {
                 const schema = new ProductSchema();
 
+                // Transforming flat data into grid dataItems
                 for (const i in data) {
                     if (data.hasOwnProperty(i)) {
                         for (const field of schema.testFields) {
@@ -74,6 +77,8 @@ export class EditService extends BehaviorSubject<any[]> {
                         }
                     }
                 }
+
+                this.isDataLoaded = true;
 
                 this.data = data;
                 this.originalData = cloneData(data);
@@ -90,10 +95,10 @@ export class EditService extends BehaviorSubject<any[]> {
     public update(item: any): void {
         if (!this.isNew(item)) {
             const index = itemIndex(item, this.updatedItems);
-            if (index !== -1) {
-                this.updatedItems.splice(index, 1, item);
-            } else {
+            if (index === INDEX_NOT_FOUND) {
                 this.updatedItems.push(item);
+            } else {
+                this.updatedItems.splice(index, 1, item);
             }
         } else {
             const index = this.createdItems.indexOf(item);
@@ -106,27 +111,32 @@ export class EditService extends BehaviorSubject<any[]> {
         this.data.splice(index, 1);
 
         index = itemIndex(item, this.createdItems);
-        if (index >= 0) {
-            this.createdItems.splice(index, 1);
-        } else {
+        if (index === INDEX_NOT_FOUND) {
             this.deletedItems.push(item);
+        } else {
+            this.createdItems.splice(index, 1);
         }
 
         index = itemIndex(item, this.updatedItems);
-        if (index >= 0) {
+        if (index !== INDEX_NOT_FOUND) {
             this.updatedItems.splice(index, 1);
         }
 
         super.next(this.data);
     }
 
+    // Is this item got from server
     public isNew(item: any): boolean {
         return item.ProductID < 0;
         // return !item.ProductID;
     }
 
+    
     public hasChanges(): boolean {
         return Boolean(this.deletedItems.length || this.updatedItems.length || this.createdItems.length);
+        // Or we can write it like this:
+        // /* Comparing this.data with this.original data */ 
+        // This will improve the quality of result, but it will cost us a lot of performance
     }
 
     public saveChanges(): void {
