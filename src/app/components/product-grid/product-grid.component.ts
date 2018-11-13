@@ -1,29 +1,24 @@
-
-import { Observable } from 'rxjs/Observable';
-
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Validators, FormGroup, FormControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SafeStyle } from '@angular/platform-browser';
-
-import { GridDataResult, GridComponent, ColumnComponent } from '@progress/kendo-angular-grid';
-import { State, process, SortDescriptor } from '@progress/kendo-data-query';
+import { ColumnComponent, GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
+import { process, SortDescriptor, State } from '@progress/kendo-data-query';
+import { Chance } from 'chance';
+import { union } from 'lodash';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators/map';
 
 import { Product, ProductType } from '../../models/product';
 import { ProductSchema } from '../../schemes/product-schema';
-
-import { EditService } from '../../services/edit.service';
-import { ValidationService } from '../../services/validation.service';
-import { MarkupService } from '../../services/markup.service';
-import { IdGeneratorService } from '../../services/id-generator.service';
 import { DialogCustomService } from '../../services/dialog-custom.service';
+import { EditService } from '../../services/edit.service';
+import { IdGeneratorService } from '../../services/id-generator.service';
+import { MarkupService } from '../../services/markup.service';
 import { NotificationCustomService } from '../../services/notification-custom.service';
-
+import { ValidationService } from '../../services/validation.service';
 import { ValidationError } from '../../validation';
 import { ValidatorType } from '../../validation/validator-type';
 
-import { map } from 'rxjs/operators/map';
-import { Chance } from 'chance';
-import { union } from 'lodash';
 
 @Component({
   selector: 'app-product-grid',
@@ -43,8 +38,10 @@ export class ProductGridComponent implements OnInit {
 
     private numberOfAdditionalItems = 1;
 
+    public isDataLoaded = false;
     // Do we need default item?
-    public defaultItem: ProductType = { Name: 'Select item...', Id: null }; // Maybe null isnt best decision
+    public defaultItem: ProductType = { Name: 'Select item...', Id: 0 }; // Maybe null isnt best decision
+    public productTypes: ProductType[];
 
     private schema = new ProductSchema();
     private idField = this.schema.idField;
@@ -66,7 +63,9 @@ export class ProductGridComponent implements OnInit {
         console.log(this.ಠ_ಠ);
     }
 
-    public ngOnInit(): void {}
+    public ngOnInit(): void {
+        this.productTypes = this.editService.readProductTypes();
+    }
 
     public onStateChange(state: State) {
         this.gridState = state;
@@ -76,6 +75,7 @@ export class ProductGridComponent implements OnInit {
     public loadData() {
         this.editService.read();
         this.view = this.editService.pipe(map(data => process(data, this.gridState)));
+        this.isDataLoaded = true;
         this.notificationService.infoNotification('Data has been reloaded.');
     }
 
@@ -204,7 +204,10 @@ export class ProductGridComponent implements OnInit {
         const chance = new Chance();
         for (let i = 0; i < this.numberOfAdditionalItems; i++) {
             const item = new Product(this.idGeneratorService.getId());
-            item.ProductName = chance.street();
+            // const item = { ProudctID: this.idGeneratorService
+            //     .getId(), ProductName: '', UnitPrice: 0, Discontinued: false, UnitsInStock: 0, 
+            //     ProductType: null, ProductTypeId: -1, ProductTypeName: '' };
+            item.ProductName = 'Name' + chance.integer({ min: 0, max: 10000 });
             item.UnitPrice = chance.floating({ fixed: 2, min: 100, max: 9999 });
             item.Discontinued = chance.integer() % 3 === 0 ? true : false;
             item.UnitsInStock = chance.integer({ min: 0, max: 9999 });

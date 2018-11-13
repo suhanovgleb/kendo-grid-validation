@@ -1,13 +1,13 @@
-
-import { ProductSchema } from './../schemes/product-schema';
-
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
 import { Observable } from 'rxjs/Observable';
 import { zip } from 'rxjs/observable/zip';
 import { map } from 'rxjs/operators';
+
+import { ProductType } from '../models/product';
+import { ProductSchema } from './../schemes/product-schema';
+
 
 const CREATE_ACTION = 'create';
 const UPDATE_ACTION = 'update';
@@ -39,11 +39,20 @@ export class EditService extends BehaviorSubject<any[]> {
     public updatedItems: any[] = []; // Items that has been updated locally
     public deletedItems: any[] = []; // Items that has been deleted locally
 
-    public isDataLoaded = false;
+    // public isDataLoaded = false;
 
     constructor(private http: HttpClient) {
         super([]);
     }
+
+    public readProductTypes(): ProductType[] {
+        return [
+            new ProductType(1, 'Type 1'),
+            new ProductType(2, 'Type 2'),
+            new ProductType(3, 'Type 3'),
+            new ProductType(4, 'Type 4')
+        ];
+   }
 
     public getFreeID() {
         let maxID = -1;
@@ -91,7 +100,7 @@ export class EditService extends BehaviorSubject<any[]> {
                 //     }
                 // }
 
-                this.isDataLoaded = true;
+                // this.isDataLoaded = true;
 
                 this.data = data;
                 this.originalData = cloneData(data);
@@ -231,8 +240,7 @@ export class EditService extends BehaviorSubject<any[]> {
         this.data = [];
         this.deletedItems = [];
         this.updatedItems = [];
-        this.createdItems = [];
-        this.isDataLoaded = false;
+        this.createdItems = []; 
     }
 
     // addProduct() {
@@ -271,7 +279,11 @@ export class EditService extends BehaviorSubject<any[]> {
         return this.http.get('http://localhost:3000/products')
             .pipe(map(res => <any[]>res));
         //   return this.http
-        //       .jsonp(`https://demos.telerik.com/kendo-ui/service/Products/${action}?${this.serializeModels(data)}`, 'callback')
+        //       .jsonp(`https://demos.telerik.com/kendo-ui/service/Products/${action}?${this.serializeModels(this.data)}`, 'callback')
         //       .pipe(map(res => <any[]>res));
     }
+
+    // private serializeModels(data?: any): string {
+    //     return data ? `&models=${JSON.stringify(data)}` : '';
+    // }
 }
