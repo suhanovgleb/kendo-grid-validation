@@ -1,19 +1,28 @@
+<!-- [style.height]="'calc(100vh - 96px)'" -->
+<!-- [scrollable]="'virtual'" -->
+<!-- [rowHeight]="35" -->
+<!-- (pageChange)="pageChange($event)" -->
+
+<!-- [scrollable]="'virtual'"
+[rowHeight]="35" -->
 <div kendoDialogContainer></div>
 <div kendoTooltip #tooltip="kendoTooltip" [showOn]="'hover'" filter='td span' position="right">
     <kendo-grid 
-    #grid 
-    [data]="view | async" 
-    
+    #grid
+    [scrollable]="'virtual'"
+    [style.height]="'calc(100vh - 56px)'"
+    [skip]="gridState.skip"
+    [rowHeight]="35"
+    [pageSize]="gridState.take"
+    [data]="view | async"
     [pageable]="true" 
-    [pageSize]="gridState.take" 
-    [skip]="gridState.skip" 
     [sort]="gridState.sort"
     [sortable]="true" 
     [navigable]="true" 
     [reorderable]="true" 
     [groupable]="true" 
     [group]="gridState.group" 
-    [scrollable]="virtual" 
+    
     (dataStateChange)="onStateChange($event)"
     (cellClick)="cellClickHandler($event)" 
     (cellClose)="cellCloseHandler($event)" 
@@ -80,5 +89,6 @@
                 <button kendoGridCancelCommand>Cancel</button>
             </ng-template>
         </kendo-grid-command-column>
+        
     </kendo-grid>
 </div>

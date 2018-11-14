@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SafeStyle } from '@angular/platform-browser';
-import { ColumnComponent, GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
+import { ColumnComponent, GridComponent, GridDataResult, PageChangeEvent } from '@progress/kendo-angular-grid';
 import { process, SortDescriptor, State } from '@progress/kendo-data-query';
 import { Chance } from 'chance';
 import { union } from 'lodash';
@@ -32,7 +32,7 @@ export class ProductGridComponent implements OnInit {
     public gridState: State = {
         sort: [],
         skip: 0,
-        take: 10,
+        take: 50,
         group: []
     };
 
@@ -71,6 +71,11 @@ export class ProductGridComponent implements OnInit {
         this.gridState = state;
         this.editService.read();
     }
+
+    // public pageChange(event: PageChangeEvent): void {
+    //     this.gridState.skip = event.skip;
+    //     // this.loadData();
+    // }
 
     public loadData() {
         this.editService.read();
