@@ -74,12 +74,11 @@ export class EditService extends BehaviorSubject<any[]> {
 
         this.fetch()
             .subscribe(data => {
-                const schema = new ProductSchema();
 
                 // Transforming flat data into grid data
                 for (let i = 0; i < data.length; i++) {
                     if (data.hasOwnProperty(i)) {
-                        for (const field of schema.testFields) {
+                        for (const field of this.schema.testFields) {
                             if (field.dbFields.length !== 0) {
                                 data[i][field.name] = {};
                                 for (const dbField of field.dbFields) {
@@ -170,12 +169,12 @@ export class EditService extends BehaviorSubject<any[]> {
         }
 
         const data = this.data;
-        const schema = new ProductSchema();
+        
 
         // Updating flat data according to changes in grid data
         for (let i = 0; i < data.length; i++) {
             if (data.hasOwnProperty(i)) {
-                for (const field of schema.testFields) {
+                for (const field of this.schema.testFields) {
                     if (field.dbFields.length !== 0) {
                         for (const dbField of field.dbFields) {
                             data[i][dbField.name] = data[i][field.name][dbField.asPropertyName];
