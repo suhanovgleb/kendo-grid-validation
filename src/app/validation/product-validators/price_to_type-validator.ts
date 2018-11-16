@@ -12,11 +12,11 @@ export class PriceToTypeValidator implements IValidator {
 
         const errorName = 'priceToTypeValidator';
         const errorMessage = 'Price must be 100 or more times greater than the type number.';
-        const fieldNames = ['UnitPrice', 'ProductType.Name'];
+        const fieldNames = ['Price', 'ProductType.Name'];
 
         for (const item of items) {
-            if (item.hasOwnProperty('UnitPrice') && item.hasOwnProperty('ProductType')) {
-                if (item.UnitPrice < item.ProductType.Id * 100) {
+            if (item.hasOwnProperty('Price') && item.hasOwnProperty('ProductType')) {
+                if (item.Price < item.ProductType.Id * 100) {
                     const errorInfo = new ErrorInfo(errorName, errorMessage, this.validatorType);
                     errors.push(new ValidationError(errorInfo, item, fieldNames));
                 }

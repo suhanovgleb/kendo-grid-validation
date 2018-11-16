@@ -153,7 +153,7 @@ export class EditService extends BehaviorSubject<any[]> {
     // Is this item got from server
     public isNew(item: any): boolean {
         return item[this.schema.idField] < 0;
-        // return !item.ProductID;
+        // return !item.Id;
     }
 
     
@@ -197,14 +197,14 @@ export class EditService extends BehaviorSubject<any[]> {
         // }
 
         // for (const i in this.updatedItems) {
-        //     if (this.updatedItems[i].ProductID < 0) {
+        //     if (this.updatedItems[i].Id < 0) {
         //         this.createdItems.push(this.updatedItems.splice(<number><any>i, 1));
         //     }
         // }
-        // const idList = this.originalData.map(item => item.ProductID);
+        // const idList = this.originalData.map(item => item.Id);
 
         // for (const i in this.updatedItems) {
-        //     if (!idList.includes(this.updatedItems[i].ProductID)) {
+        //     if (!idList.includes(this.updatedItems[i].Id)) {
         //         this.createdItems.push(this.updatedItems.splice(<number><any>i, 1));
         //     }
         // }

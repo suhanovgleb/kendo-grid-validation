@@ -12,16 +12,16 @@ export class PriceToUnitValidator implements IValidator {
 
         const errorName = 'priceToUnitValidator';
         const errorMessage = 'If units are out of stock then price cannot be higher than 30';
-        const fieldNames = ['UnitPrice', 'UnitsInStock'];
+        const fieldNames = ['Price', 'Quantity'];
 
         for (const item of items) {
-            if (item.hasOwnProperty('UnitPrice') && item.hasOwnProperty('UnitsInStock')) {
-                if (item.UnitPrice > 30 && item.UnitsInStock === 0) {
+            if (item.hasOwnProperty('Price') && item.hasOwnProperty('Quantity')) {
+                if (item.Price > 30 && item.Quantity === 0) {
                     
                     const errorInfo = new ErrorInfo(errorName, errorMessage, this.validatorType);
                     errors.push(new ValidationError(errorInfo, item, fieldNames));
                     // errors.push(new ValidationError(
-                    //     ['UnitPrice', 'UnitsInStock'],
+                    //     ['Price', 'Quantity'],
                     //     item,
                     //     'price_to_units',
                     //     ,

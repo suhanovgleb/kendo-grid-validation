@@ -1,17 +1,17 @@
 
 export class Product {
-    public ProductID: number;
-    public ProductName = '';
+    public Id: number;
+    public Name = '';
     public Discontinued = false;
-    public UnitsInStock = 0;
-    public UnitPrice = 0;
+    public Quantity = 0;
+    public Price = 0;
     public ProductTypeId: number; // get from Server side
     public ProductTypeName: string; // get from Server side //turn in obj below
     
     public ProductType: ProductType;
 
     constructor(Id: number) {
-        this.ProductID = Id;
+        this.Id = Id;
     }
 }
 

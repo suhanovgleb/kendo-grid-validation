@@ -15,7 +15,7 @@ import { ProductType } from '../models/product';
 
 export class ProductSchema implements ISchema {
 
-    public idField = 'ProductID';
+    public idField = 'Id';
 
     public testFields = [
         /*new Field(*/{
@@ -46,7 +46,7 @@ export class ProductSchema implements ISchema {
 
     public fields = [
         new Field({
-            name: 'ProductID',
+            name: 'Id',
             editable: false,
             type: 'number',
             validators: {
@@ -54,7 +54,7 @@ export class ProductSchema implements ISchema {
             }
         }),
         new Field({
-            name: 'ProductName',
+            name: 'Name',
             editable: true,
             type: 'string',
             validators: {
@@ -62,7 +62,7 @@ export class ProductSchema implements ISchema {
             }
         }),
         new Field({
-            name: 'UnitPrice',
+            name: 'Price',
             editable: true,
             type: 'number',
             validators: {
@@ -79,7 +79,7 @@ export class ProductSchema implements ISchema {
             }
         }),
         new Field({
-            name: 'UnitsInStock',
+            name: 'Quantity',
             editable: true,
             type: 'number',
             validators: {
@@ -102,7 +102,7 @@ export class ProductSchema implements ISchema {
         multiRowValidators: [
             new RowValidator({
                 name: 'uniqueConstraints',
-                option: ['ProductName', 'Discontinued'],
+                option: ['Name', 'Discontinued'],
                 validatorRef: new UniqueConstraintsValidator()
             })
         ],

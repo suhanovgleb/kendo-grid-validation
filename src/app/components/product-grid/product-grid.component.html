@@ -43,18 +43,18 @@
                 {{ numberOfAdditionalItems === 1 ? 'item' : 'items' }}</button>
             <button class='k-button' [disabled]="!validationErrors.length" (click)="showErrorsDialog();">Show Errors</button>
         </ng-template>
-        <kendo-grid-column field="ProductID" title="HIDDEN" [hidden]=false></kendo-grid-column>
-        <kendo-grid-column field="ProductName" title="Product Name" class="no-padding">
+        <kendo-grid-column field="Id" title="HIDDEN" [hidden]=false></kendo-grid-column>
+        <kendo-grid-column field="Name" title="Product Name" class="no-padding">
             <ng-template kendoGridCellTemplate let-dataItem let-columnInfo="column" let-errors="validationErrors">
                 <span [style.backgroundColor]="markup(dataItem, columnInfo)" class="whole-cell" [title]="tooltipHandler(validationErrors, columnInfo, dataItem)">
-                    {{ dataItem.ProductName }}
+                    {{ dataItem.Name }}
                 </span>
             </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="UnitPrice" editor="numeric" title="Price" class="no-padding">
+        <kendo-grid-column field="Price" editor="numeric" title="Price" class="no-padding">
             <ng-template kendoGridCellTemplate let-dataItem let-columnInfo="column">
                 <span [style.backgroundColor]="markup(dataItem, columnInfo)" class="whole-cell" [title]="tooltipHandler(validationErrors, columnInfo, dataItem)">
-                    {{ dataItem.UnitPrice }}
+                    {{ dataItem.Price }}
                 </span>
             </ng-template>
         </kendo-grid-column>
@@ -65,10 +65,10 @@
                 </span>
             </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="UnitsInStock" editor="numeric" title="Units In Stock" class="no-padding">
+        <kendo-grid-column field="Quantity" editor="numeric" title="Units In Stock" class="no-padding">
             <ng-template kendoGridCellTemplate let-dataItem let-columnInfo="column">
                 <span [style.backgroundColor]="markup(dataItem, columnInfo)" class="whole-cell" [title]="tooltipHandler(validationErrors, columnInfo, dataItem)">
-                    {{ dataItem.UnitsInStock }}
+                    {{ dataItem.Quantity }}
                 </span>
             </ng-template>
         </kendo-grid-column>

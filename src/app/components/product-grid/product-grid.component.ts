@@ -210,12 +210,12 @@ export class ProductGridComponent implements OnInit {
         for (let i = 0; i < this.numberOfAdditionalItems; i++) {
             const item = new Product(this.idGeneratorService.getId());
             // const item = { ProudctID: this.idGeneratorService
-            //     .getId(), ProductName: '', UnitPrice: 0, Discontinued: false, UnitsInStock: 0, 
+            //     .getId(), Name: '', Price: 0, Discontinued: false, Quantity: 0,
             //     ProductType: null, ProductTypeId: -1, ProductTypeName: '' };
-            item.ProductName = 'Name' + chance.integer({ min: 0, max: 10000 });
-            item.UnitPrice = chance.floating({ fixed: 2, min: 100, max: 9999 });
+            item.Name = 'Name' + chance.integer({ min: 0, max: 10000 });
+            item.Price = chance.floating({ fixed: 2, min: 100, max: 9999 });
             item.Discontinued = chance.integer() % 3 === 0 ? true : false;
-            item.UnitsInStock = chance.integer({ min: 0, max: 9999 });
+            item.Quantity = chance.integer({ min: 0, max: 9999 });
             const productTypeId = chance.integer({ min: 1, max: 4 });
             item.ProductType = new ProductType(productTypeId, 'Type ' + productTypeId);
             item.ProductTypeId = productTypeId;
