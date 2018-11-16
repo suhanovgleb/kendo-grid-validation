@@ -17,8 +17,9 @@ const INDEX_NOT_FOUND = -1;
 
 // Returns index of item in data OR if nothing found -1
 const itemIndex = (item: any, data: any[]): number => {
+    const schema = new ProductSchema();
     for (let idx = 0; idx < data.length; idx++) {
-        if (data[idx].ProductID === item.ProductID) {
+        if (data[idx][schema.idField] === item[schema.idField]) {
             return idx;
         }
     }
@@ -39,6 +40,8 @@ export class EditService extends BehaviorSubject<any[]> {
     public updatedItems: any[] = []; // Items that has been updated locally
     public deletedItems: any[] = []; // Items that has been deleted locally
 
+    public schema = new ProductSchema();
+
     // public isDataLoaded = false;
 
     constructor(private http: HttpClient) {
@@ -57,8 +60,8 @@ export class EditService extends BehaviorSubject<any[]> {
     public getFreeID() {
         let maxID = -1;
         for (const item of this.data) {
-            if (item.ProductID > maxID) {
-                maxID = item.ProductID;
+            if (item[this.schema.idField] > maxID) {
+                maxID = item[this.schema.idField];
             }
         }
         return maxID + 1;
@@ -149,7 +152,7 @@ export class EditService extends BehaviorSubject<any[]> {
 
     // Is this item got from server
     public isNew(item: any): boolean {
-        return item.ProductID < 0;
+        return item[this.schema.idField] < 0;
         // return !item.ProductID;
     }
 
@@ -254,29 +257,29 @@ export class EditService extends BehaviorSubject<any[]> {
         if (action === CREATE_ACTION) {
             for (const item of this.createdItems) {
                 delete item.ProductType;
-                if (item.ProductID < 0) {
-                    item.ProductID = this.getFreeID();
+                if (item[this.schema.idField] < 0) {
+                    item[this.schema.idField] = this.getFreeID();
                 }
-                this.http.post('http://localhost:3000/products', item).subscribe();
+                this.http.post('http://localhost:57144/api/gmsproducts', item).subscribe();
             }
         }
         if (action === REMOVE_ACTION) {
             for (const item of this.deletedItems) {
                 delete item.ProductType;
-                this.http.delete('http://localhost:3000/products' + '/' + item.ProductID).subscribe();
+                this.http.delete('http://localhost:57144/api/gmsproducts' + '/' + item[this.schema.idField]).subscribe();
             }
         }
         if (action === UPDATE_ACTION) {
             for (const item of this.updatedItems) {
                 delete item.ProductType;
-                this.http.patch('http://localhost:3000/products' + '/' + item.ProductID, item).subscribe();
+                this.http.patch('http://localhost:57144/api/gmsproducts' + '/' + item[this.schema.idField], item).subscribe();
             }
         }
     }
 
     private fetch(): Observable<any[]> {
 
-        return this.http.get('http://localhost:3000/products')
+        return this.http.get('http://localhost:57144/api/gmsproducts')
             .pipe(map(res => <any[]>res));
         //   return this.http
         //       .jsonp(`https://demos.telerik.com/kendo-ui/service/Products/${action}?${this.serializeModels(this.data)}`, 'callback')
