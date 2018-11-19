@@ -57,15 +57,15 @@ export class EditService extends BehaviorSubject<any[]> {
         ];
    }
 
-    public getFreeID() {
-        let maxID = -1;
-        for (const item of this.data) {
-            if (item[this.schema.idField] > maxID) {
-                maxID = item[this.schema.idField];
-            }
-        }
-        return maxID + 1;
-    }
+    // public getFreeID() {
+    //     let maxID = -1;
+    //     for (const item of this.data) {
+    //         if (item[this.schema.idField] > maxID) {
+    //             maxID = item[this.schema.idField];
+    //         }
+    //     }
+    //     return maxID + 1;
+    // }
 
     public read() {
         if (this.data.length) {
@@ -208,23 +208,28 @@ export class EditService extends BehaviorSubject<any[]> {
         //     }
         // }
 
-        const completed = [];
+        this.sendChanges(REMOVE_ACTION, this.deletedItems);
+        this.sendChanges(UPDATE_ACTION, this.updatedItems);
+        this.sendChanges(CREATE_ACTION, this.createdItems);
 
-        if (this.deletedItems.length) {
-            completed.push(this.sendChanges(REMOVE_ACTION, this.deletedItems));
-        }
 
-        if (this.updatedItems.length) {
-            completed.push(this.sendChanges(UPDATE_ACTION, this.updatedItems));
-        }
+        // const completed = [];
 
-        if (this.createdItems.length) {
-            completed.push(this.sendChanges(CREATE_ACTION, this.createdItems));
-        }
+        // if (this.deletedItems.length) {
+        //     completed.push(this.sendChanges(REMOVE_ACTION, this.deletedItems));
+        // }
+
+        // if (this.updatedItems.length) {
+        //     completed.push(this.sendChanges(UPDATE_ACTION, this.updatedItems));
+        // }
+
+        // if (this.createdItems.length) {
+        //     completed.push(this.sendChanges(CREATE_ACTION, this.createdItems));
+        // }
 
         this.reset();
 
-        zip(...completed).subscribe(() => this.read());
+        // zip(...completed).subscribe(() => this.read());
     }
 
     public cancelChanges(): void {
@@ -255,23 +260,23 @@ export class EditService extends BehaviorSubject<any[]> {
     private sendChanges(action: string = '', data?: any) {
         if (action === CREATE_ACTION) {
             for (const item of this.createdItems) {
-                delete item.ProductType;
-                if (item[this.schema.idField] < 0) {
-                    item[this.schema.idField] = this.getFreeID();
-                }
+                // delete item.ProductType;
+                // if (item[this.schema.idField] < 0) {
+                //     item[this.schema.idField] = this.getFreeID();
+                // }
                 this.http.post('http://localhost:57144/api/gmsproducts', item).subscribe();
             }
         }
         if (action === REMOVE_ACTION) {
             for (const item of this.deletedItems) {
-                delete item.ProductType;
+                // delete item.ProductType;
                 this.http.delete('http://localhost:57144/api/gmsproducts' + '/' + item[this.schema.idField]).subscribe();
             }
         }
         if (action === UPDATE_ACTION) {
             for (const item of this.updatedItems) {
-                delete item.ProductType;
-                this.http.patch('http://localhost:57144/api/gmsproducts' + '/' + item[this.schema.idField], item).subscribe();
+                // delete item.ProductType;
+                this.http.put('http://localhost:57144/api/gmsproducts' + '/' + item[this.schema.idField], item).subscribe();
             }
         }
     }
