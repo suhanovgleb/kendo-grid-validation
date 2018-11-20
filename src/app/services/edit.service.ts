@@ -6,8 +6,8 @@ import { zip } from 'rxjs/observable/zip';
 import { map } from 'rxjs/operators';
 
 import { ProductType } from '../models/product';
+import { environment } from './../../environments/environment';
 import { ProductSchema } from './../schemes/product-schema';
-
 
 const CREATE_ACTION = 'create';
 const UPDATE_ACTION = 'update';
@@ -67,7 +67,7 @@ export class EditService extends BehaviorSubject<any[]> {
     //     return maxID + 1;
     // }
 
-    public read() {
+    public  read() {
         if (this.data.length) {
             return super.next(this.data);
         }
@@ -213,23 +213,23 @@ export class EditService extends BehaviorSubject<any[]> {
         this.sendChanges(CREATE_ACTION, this.createdItems);
 
 
-        // const completed = [];
+        const completed = [];
 
-        // if (this.deletedItems.length) {
-        //     completed.push(this.sendChanges(REMOVE_ACTION, this.deletedItems));
-        // }
+        if (this.deletedItems.length) {
+            completed.push(this.sendChanges(REMOVE_ACTION, this.deletedItems));
+        }
 
-        // if (this.updatedItems.length) {
-        //     completed.push(this.sendChanges(UPDATE_ACTION, this.updatedItems));
-        // }
+        if (this.updatedItems.length) {
+            completed.push(this.sendChanges(UPDATE_ACTION, this.updatedItems));
+        }
 
-        // if (this.createdItems.length) {
-        //     completed.push(this.sendChanges(CREATE_ACTION, this.createdItems));
-        // }
+        if (this.createdItems.length) {
+            completed.push(this.sendChanges(CREATE_ACTION, this.createdItems));
+        }
 
         this.reset();
 
-        // zip(...completed).subscribe(() => this.read());
+        zip(...completed).subscribe(() => this.read());
     }
 
     public cancelChanges(): void {
@@ -257,33 +257,31 @@ export class EditService extends BehaviorSubject<any[]> {
     //     return null;
     // }
 
-    private sendChanges(action: string = '', data?: any) {
+    private sendChanges(action: string = '', data?: any): Observable<any> {
         if (action === CREATE_ACTION) {
             for (const item of this.createdItems) {
                 // delete item.ProductType;
                 // if (item[this.schema.idField] < 0) {
                 //     item[this.schema.idField] = this.getFreeID();
                 // }
-                this.http.post('http://localhost:57144/api/gmsproducts', item).subscribe();
+                return this.http.post(`${environment.apiURL}`, item);
             }
-        }
-        if (action === REMOVE_ACTION) {
+        } else if (action === REMOVE_ACTION) {
             for (const item of this.deletedItems) {
                 // delete item.ProductType;
-                this.http.delete('http://localhost:57144/api/gmsproducts' + '/' + item[this.schema.idField]).subscribe();
+                return this.http.delete(`${environment.apiURL}/${item[this.schema.idField]}`);
             }
-        }
-        if (action === UPDATE_ACTION) {
+        } else if (action === UPDATE_ACTION) {
             for (const item of this.updatedItems) {
                 // delete item.ProductType;
-                this.http.put('http://localhost:57144/api/gmsproducts' + '/' + item[this.schema.idField], item).subscribe();
+                return this.http.put(`${environment.apiURL}/${item[this.schema.idField]}`, item);
             }
         }
     }
 
     private fetch(): Observable<any[]> {
 
-        return this.http.get('http://localhost:57144/api/gmsproducts')
+        return this.http.get(environment.apiURL)
             .pipe(map(res => <any[]>res));
         //   return this.http
         //       .jsonp(`https://demos.telerik.com/kendo-ui/service/Products/${action}?${this.serializeModels(this.data)}`, 'callback')

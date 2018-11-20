@@ -184,7 +184,7 @@ export class ProductGridComponent implements OnInit {
         
         if (this.validationErrors.length === 0) {
             this.editService.saveChanges();
-            this.editService.read();
+            // this.editService.read();
             this.notificationService.successNotification(SAVE_SUCCES_MESSAGE);
             this.idGeneratorService.reset();
         } else {
