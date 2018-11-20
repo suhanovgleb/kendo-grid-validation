@@ -13,7 +13,7 @@
     [skip]="gridState.skip"
     [rowHeight]="35"
     [pageSize]="gridState.take"
-    [data]="view | async"
+    [data]="view$ | async"
     [pageable]="true" 
     [sort]="gridState.sort"
     [sortable]="true" 

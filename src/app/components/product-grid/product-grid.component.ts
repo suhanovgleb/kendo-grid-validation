@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SafeStyle } from '@angular/platform-browser';
-import { ColumnComponent, GridComponent, GridDataResult, PageChangeEvent } from '@progress/kendo-angular-grid';
+import { ColumnComponent, GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
 import { process, SortDescriptor, State } from '@progress/kendo-data-query';
 import { Chance } from 'chance';
 import { union } from 'lodash';
@@ -27,7 +27,7 @@ import { ValidatorType } from '../../validation/validator-type';
   styleUrls: ['./product-grid.component.css']
 })
 export class ProductGridComponent implements OnInit {
-    public view: Observable<GridDataResult>;
+    public view$: Observable<GridDataResult>;
 
     public gridState: State = {
         sort: [],
@@ -64,6 +64,7 @@ export class ProductGridComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.view$ = this.editService.pipe(map(data => process(data, this.gridState)));
         this.productTypes = this.editService.readProductTypes();
     }
 
@@ -79,7 +80,6 @@ export class ProductGridComponent implements OnInit {
 
     public loadData() {
         this.editService.read();
-        this.view = this.editService.pipe(map(data => process(data, this.gridState)));
         this.isDataLoaded = true;
         this.notificationService.infoNotification('Data has been reloaded.');
     }
@@ -184,6 +184,7 @@ export class ProductGridComponent implements OnInit {
         
         if (this.validationErrors.length === 0) {
             this.editService.saveChanges();
+            this.editService.read();
             this.notificationService.successNotification(SAVE_SUCCES_MESSAGE);
             this.idGeneratorService.reset();
         } else {

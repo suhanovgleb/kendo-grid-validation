@@ -5,6 +5,6 @@ import { Injectable } from '@angular/core';
 })
 export class IdGeneratorService {
   private freeId = -1;
-  getId() { return this.freeId--; }
-  reset() { this.freeId = -1; }
+  getId(): number { return this.freeId--; }
+  reset(): void { this.freeId = -1; }
 }
