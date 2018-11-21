@@ -1,3 +1,5 @@
+import { from, of } from 'rxjs';
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -208,28 +210,28 @@ export class EditService extends BehaviorSubject<any[]> {
         //     }
         // }
 
-        this.sendChanges(REMOVE_ACTION, this.deletedItems);
-        this.sendChanges(UPDATE_ACTION, this.updatedItems);
-        this.sendChanges(CREATE_ACTION, this.createdItems);
+        // this.sendChanges(REMOVE_ACTION, this.deletedItems);
+        // this.sendChanges(UPDATE_ACTION, this.updatedItems);
+        // this.sendChanges(CREATE_ACTION, this.createdItems);
 
 
-        const completed = [];
-
-        if (this.deletedItems.length) {
-            completed.push(this.sendChanges(REMOVE_ACTION, this.deletedItems));
-        }
+        let completed = [];
 
         if (this.updatedItems.length) {
-            completed.push(this.sendChanges(UPDATE_ACTION, this.updatedItems));
+            completed = completed.concat(this.sendChanges(UPDATE_ACTION, this.updatedItems));
+        }
+
+        if (this.deletedItems.length) {
+            completed = completed.concat(this.sendChanges(REMOVE_ACTION, this.deletedItems));
         }
 
         if (this.createdItems.length) {
-            completed.push(this.sendChanges(CREATE_ACTION, this.createdItems));
+            completed = completed.concat(this.sendChanges(CREATE_ACTION, this.createdItems));
         }
 
-        this.reset();
+         this.reset();
 
-        zip(...completed).subscribe(() => this.read());
+         zip(...completed).subscribe(() => this.read());
     }
 
     public cancelChanges(): void {
@@ -257,28 +259,35 @@ export class EditService extends BehaviorSubject<any[]> {
     //     return null;
     // }
 
-    private sendChanges(action: string = '', data?: any): Observable<any> {
+    private sendChanges(action: string = '', data: any): Observable<any[]> {
+        const result = [];
+        // if (action === UPDATE_ACTION) {
+        //     for (const item of data) {
+        //         result.push(this.http.put(`${environment.apiURL}/${item[this.schema.idField]}`, item));
+        //     }
+        // }
         if (action === CREATE_ACTION) {
-            for (const item of this.createdItems) {
-                // delete item.ProductType;
-                // if (item[this.schema.idField] < 0) {
-                //     item[this.schema.idField] = this.getFreeID();
-                // }
-                return this.http.post(`${environment.apiURL}`, item);
+            for (const item of data) {
+                // result.push(this.http.post(`${environment.apiURL}`, item));
+                result.push(this.fetch2(item));
             }
-        } else if (action === REMOVE_ACTION) {
-            for (const item of this.deletedItems) {
-                // delete item.ProductType;
-                return this.http.delete(`${environment.apiURL}/${item[this.schema.idField]}`);
-            }
-        } else if (action === UPDATE_ACTION) {
-            for (const item of this.updatedItems) {
-                // delete item.ProductType;
-                return this.http.put(`${environment.apiURL}/${item[this.schema.idField]}`, item);
-            }
-        }
+        } 
+        // if (action === REMOVE_ACTION) {
+        //     for (const item of data) {
+        //         result.push(this.http.delete(`${environment.apiURL}/${item[this.schema.idField]}`));
+        //     }
+        // }
+
+        this.reset();
+
+        zip(...result).subscribe(() => this.read());
+        return null;
+        // return from(result);
     }
 
+    private fetch2(item): Observable<Object> {
+        return this.http.post(`${environment.apiURL}`, item);
+    }
     private fetch(): Observable<any[]> {
 
         return this.http.get(environment.apiURL)
