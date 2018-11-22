@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SafeStyle } from '@angular/platform-browser';
 import { ColumnComponent, GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
-import { process, SortDescriptor, State } from '@progress/kendo-data-query';
+import { process, State } from '@progress/kendo-data-query';
 import { Chance } from 'chance';
 import { union } from 'lodash';
 import { Observable } from 'rxjs/Observable';
@@ -40,7 +40,7 @@ export class ProductGridComponent implements OnInit {
 
     public isDataLoaded = false;
     // Do we need default item?
-    public defaultItem: ProductType = { Name: 'Select item...', Id: 0 }; // Maybe null isnt best decision
+    public defaultItem: ProductType = { Name: 'Select item...', Id: 0 };
     public productTypes: ProductType[];
 
     private schema = new ProductSchema();
@@ -51,7 +51,6 @@ export class ProductGridComponent implements OnInit {
     public formGroup: FormGroup;
 
     public ಠ_ಠ = 'ಠ_ಠ';
-
     constructor(
         private editService: EditService,
         private validationService: ValidationService,
@@ -72,11 +71,6 @@ export class ProductGridComponent implements OnInit {
         this.gridState = state;
         this.editService.read();
     }
-
-    // public pageChange(event: PageChangeEvent): void {
-    //     this.gridState.skip = event.skip;
-    //     // this.loadData();
-    // }
 
     public loadData() {
         this.editService.read();
@@ -204,15 +198,11 @@ export class ProductGridComponent implements OnInit {
         this.idGeneratorService.reset();
     }
 
-
-
     public addSomeItems(grid: GridComponent) {
         const chance = new Chance();
         for (let i = 0; i < this.numberOfAdditionalItems; i++) {
             const item = new Product(this.idGeneratorService.getId());
-            // const item = { ProudctID: this.idGeneratorService
-            //     .getId(), Name: '', Price: 0, Discontinued: false, Quantity: 0,
-            //     ProductType: null, ProductTypeId: -1, ProductTypeName: '' };
+
             item.Name = 'Name' + chance.integer({ min: 0, max: 10000 });
             item.Price = chance.floating({ fixed: 2, min: 100, max: 9999 });
             item.Discontinued = chance.integer() % 3 === 0 ? true : false;
@@ -237,7 +227,6 @@ export class ProductGridComponent implements OnInit {
     }
 
     public showErrorsDialog() {
-        // this.dialogService.showErrorsCount(this.validationErrors);
         this.dialogService.showErrorsList(this.validationErrors, this.schema);
     }
 
@@ -253,16 +242,6 @@ export class ProductGridComponent implements OnInit {
         });
         return tooltipMessage;
     }
-
-    // public groupChange(groups: GroupDescriptor[]): void {
-    //     this.gridState.group = groups;
-    //     this.loadData();
-    // }
-
-    // public loadData(): void {
-    //     this.view = this.editService.pipe(map(data => process(data, this.gridState)));
-    //     this.editService.read();
-    // }
 
     // Main FormGroup validation with in-form validaton
     public MAINcreateFormGroup(dataItem): FormGroup {
@@ -294,9 +273,5 @@ export class ProductGridComponent implements OnInit {
             formGroup.addControl(field.name, control);
         }
         return formGroup;
-    }
-
-    public sortChange(sort: SortDescriptor[]) {
-
     }
 }

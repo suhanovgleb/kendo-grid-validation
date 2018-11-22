@@ -1,5 +1,3 @@
-import { from, of } from 'rxjs';
-
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -33,18 +31,21 @@ const cloneData = (data: any[]) => data.map(item => Object.assign({}, item));
 @Injectable({
     providedIn: 'root'
 })
+
 export class EditService extends BehaviorSubject<any[]> {
-    public data: any[] = []; // Data in it's current state
-    public originalData: any[] = []; // Last data that came from server
-    /* Items that has been created locally 
-    (they can be changed locally and they will still marked as created) */
+    // Data in it's current state
+    public data: any[] = [];
+    // Last data that came from server
+    public originalData: any[] = [];
+    // Items that has been created locally 
+    // (they can be changed locally and they will still marked as created)
     public createdItems: any[] = [];
-    public updatedItems: any[] = []; // Items that has been updated locally
-    public deletedItems: any[] = []; // Items that has been deleted locally
+    // Items that has been updated locally
+    public updatedItems: any[] = [];
+    // Items that has been deleted locally
+    public deletedItems: any[] = [];
 
     public schema = new ProductSchema();
-
-    // public isDataLoaded = false;
 
     constructor(private http: HttpClient) {
         super([]);
@@ -57,17 +58,7 @@ export class EditService extends BehaviorSubject<any[]> {
             new ProductType(3, 'Type 3'),
             new ProductType(4, 'Type 4')
         ];
-   }
-
-    // public getFreeID() {
-    //     let maxID = -1;
-    //     for (const item of this.data) {
-    //         if (item[this.schema.idField] > maxID) {
-    //             maxID = item[this.schema.idField];
-    //         }
-    //     }
-    //     return maxID + 1;
-    // }
+    }
 
     public  read() {
         if (this.data.length) {
@@ -76,7 +67,6 @@ export class EditService extends BehaviorSubject<any[]> {
 
         this.fetch()
             .subscribe(data => {
-
                 // Transforming flat data into grid data
                 for (let i = 0; i < data.length; i++) {
                     if (data.hasOwnProperty(i)) {
@@ -90,21 +80,6 @@ export class EditService extends BehaviorSubject<any[]> {
                         }
                     }
                 }
-
-                // for (const i in data) {
-                //     if (data.hasOwnProperty(i)) {
-                //         for (const field of schema.testFields) {
-                //             if (field.dbFields.length !== 0) {
-                //                 data[i][field.name] = {};
-                //                 for (const dbField of field.dbFields) {
-                //                     data[i][field.name][dbField.asPropertyName] = data[i][dbField.name];
-                //                 }
-                //             }
-                //         }
-                //     }
-                // }
-
-                // this.isDataLoaded = true;
 
                 this.data = data;
                 this.originalData = cloneData(data);
@@ -151,18 +126,12 @@ export class EditService extends BehaviorSubject<any[]> {
         super.next(this.data);
     }
 
-    // Is this item got from server
     public isNew(item: any): boolean {
         return item[this.schema.idField] < 0;
-        // return !item.Id;
     }
-
     
     public hasChanges(): boolean {
         return Boolean(this.deletedItems.length || this.updatedItems.length || this.createdItems.length);
-        // Or we can write it like this:
-        // /* Comparing this.data with this.original data */ 
-        // This will improve the quality of result, but it will cost us a lot of performance
     }
 
     public saveChanges(): void {
@@ -172,7 +141,6 @@ export class EditService extends BehaviorSubject<any[]> {
 
         const data = this.data;
         
-
         // Updating flat data according to changes in grid data
         for (let i = 0; i < data.length; i++) {
             if (data.hasOwnProperty(i)) {
@@ -185,37 +153,8 @@ export class EditService extends BehaviorSubject<any[]> {
                 }
             }
         }
-        // for (const i in data) {
-        //     if (data.hasOwnProperty(i)) {
-        //         for (const field of schema.testFields) {
-        //             if (field.dbFields.length !== 0) {
-        //                 for (const dbField of field.dbFields) {
-        //                     data[i][dbField.name] = data[i][field.name][dbField.asPropertyName];
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
 
-        // for (const i in this.updatedItems) {
-        //     if (this.updatedItems[i].Id < 0) {
-        //         this.createdItems.push(this.updatedItems.splice(<number><any>i, 1));
-        //     }
-        // }
-        // const idList = this.originalData.map(item => item.Id);
-
-        // for (const i in this.updatedItems) {
-        //     if (!idList.includes(this.updatedItems[i].Id)) {
-        //         this.createdItems.push(this.updatedItems.splice(<number><any>i, 1));
-        //     }
-        // }
-
-        // this.sendChanges(REMOVE_ACTION, this.deletedItems);
-        // this.sendChanges(UPDATE_ACTION, this.updatedItems);
-        // this.sendChanges(CREATE_ACTION, this.createdItems);
-
-
-        let completed = [];
+        let completed: Observable<any[]>[] = [];
 
         if (this.updatedItems.length) {
             completed = completed.concat(this.sendChanges(UPDATE_ACTION, this.updatedItems));
@@ -229,9 +168,10 @@ export class EditService extends BehaviorSubject<any[]> {
             completed = completed.concat(this.sendChanges(CREATE_ACTION, this.createdItems));
         }
 
-         this.reset();
+        this.reset();
 
-         zip(...completed).subscribe(() => this.read());
+        // When all updates, removes, creates are completed it initiates reading
+        zip(...completed).subscribe(() => this.read());
     }
 
     public cancelChanges(): void {
@@ -252,52 +192,31 @@ export class EditService extends BehaviorSubject<any[]> {
         this.createdItems = []; 
     }
 
-    // addProduct() {
-    //     const w = this.http.get('http://localhost:3000/products').subscribe(data => console.log(data));
-    //     const e = this.http.post('http://localhost:3000/products', {}).subscribe(data => console.log(data));
-    //     const q = 5;
-    //     return null;
-    // }
-
-    private sendChanges(action: string = '', data: any): Observable<any[]> {
+    private sendChanges(action: string = '', data: any): Observable<any[]>[] {
         const result = [];
-        // if (action === UPDATE_ACTION) {
-        //     for (const item of data) {
-        //         result.push(this.http.put(`${environment.apiURL}/${item[this.schema.idField]}`, item));
-        //     }
-        // }
+
+        if (action === UPDATE_ACTION) {
+            for (const item of data) {
+                result.push(this.http.put(`${environment.apiURL}/${item[this.schema.idField]}`, item).pipe(map(res => <any[]>res)));
+            }
+        }
+
         if (action === CREATE_ACTION) {
             for (const item of data) {
-                // result.push(this.http.post(`${environment.apiURL}`, item));
-                result.push(this.fetch2(item));
+                result.push(this.http.post(`${environment.apiURL}`, item).pipe(map(res => <any[]>res)));
             }
-        } 
-        // if (action === REMOVE_ACTION) {
-        //     for (const item of data) {
-        //         result.push(this.http.delete(`${environment.apiURL}/${item[this.schema.idField]}`));
-        //     }
-        // }
+        }
 
-        this.reset();
+        if (action === REMOVE_ACTION) {
+            for (const item of data) {
+                result.push(this.http.delete(`${environment.apiURL}/${item[this.schema.idField]}`).pipe(map(res => <any[]>res)));
+            }
+        }
 
-        zip(...result).subscribe(() => this.read());
-        return null;
-        // return from(result);
+        return result;
     }
 
-    private fetch2(item): Observable<Object> {
-        return this.http.post(`${environment.apiURL}`, item);
-    }
     private fetch(): Observable<any[]> {
-
-        return this.http.get(environment.apiURL)
-            .pipe(map(res => <any[]>res));
-        //   return this.http
-        //       .jsonp(`https://demos.telerik.com/kendo-ui/service/Products/${action}?${this.serializeModels(this.data)}`, 'callback')
-        //       .pipe(map(res => <any[]>res));
+        return this.http.get(environment.apiURL).pipe(map(res => <any[]>res));
     }
-
-    // private serializeModels(data?: any): string {
-    //     return data ? `&models=${JSON.stringify(data)}` : '';
-    // }
 }
