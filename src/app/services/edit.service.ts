@@ -26,6 +26,16 @@ const itemIndex = (item: any, data: any[]): number => {
     return -1;
 };
 
+const itemIndexById = (Id: number, data: any[]): number => {
+    const schema = new ProductSchema();
+    for (let idx = 0; idx < data.length; idx++) {
+        if (data[idx][schema.idField] === Id) {
+            return idx;
+        }
+    }
+    return -1;
+};
+
 const cloneData = (data: any[]) => data.map(item => Object.assign({}, item));
 
 @Injectable({
@@ -154,24 +164,72 @@ export class EditService extends BehaviorSubject<any[]> {
             }
         }
 
-        let completed: Observable<any[]>[] = [];
+        let completed: Observable<any>[] = [];
+
+        // let returnedUpdated: Observable<any>[] = [];
+        // let returnedCreated: Observable<any>[] = [];
+        // let returnedDeleted: Observable<any>[] = [];
 
         if (this.updatedItems.length) {
             completed = completed.concat(this.sendChanges(UPDATE_ACTION, this.updatedItems));
+            // returnedUpdated = this.sendChanges(UPDATE_ACTION, this.updatedItems);
         }
 
         if (this.deletedItems.length) {
             completed = completed.concat(this.sendChanges(REMOVE_ACTION, this.deletedItems));
+            // returnedDeleted = this.sendChanges(REMOVE_ACTION, this.deletedItems);
         }
 
         if (this.createdItems.length) {
             completed = completed.concat(this.sendChanges(CREATE_ACTION, this.createdItems));
+            // returnedCreated = this.sendChanges(CREATE_ACTION, this.createdItems);
         }
 
-        this.reset();
+        this.resetTempStorages();
+
+
+        // for (const response of completed) {
+        //     response.subscribe(responseItems => {
+        //         for (const item of responseItems) {
+        //             const idx = itemIndexById(item.OldId, data);
+        //             this.data.splice(idx, 1, item.SavedProduct);
+        //         }
+        //     });
+        // }
 
         // When all updates, removes, creates are completed it initiates reading
-        zip(...completed).subscribe(() => this.read());
+        zip(...completed).subscribe((returnedItemData) => {
+            for (const itemData of returnedItemData) {
+                const idx = itemIndexById(itemData.OldId, data);
+                if (idx !== INDEX_NOT_FOUND) {
+                    if (itemData.OldId > 0) {
+                        this.data.splice(idx, 1, itemData.SavedProduct);
+                    } else {
+                        this.data.splice(idx, 1);
+                        this.data.push(itemData.SavedProduct);
+                    }
+                }
+            }
+
+            // Quick fix, must think how to simplify this
+            for (let i = 0; i < this.data.length; i++) {
+                if (this.data.hasOwnProperty(i)) {
+                    for (const field of this.schema.testFields) {
+                        if (field.dbFields.length !== 0) {
+                            this.data[i][field.name] = {};
+                            for (const dbField of field.dbFields) {
+                                this.data[i][field.name][dbField.asPropertyName] = data[i][dbField.name];
+                            }
+                        }
+                    }
+                }
+            }
+
+            this.read();
+        });
+        // zip(...returnedCreated).subscribe(() => console.log('wop-wop'));
+        // zip(returnedUpdated, returnedDeleted, returnedCreated).subscribe((returned) => 
+        // console.log(returned));
     }
 
     public cancelChanges(): void {
@@ -192,7 +250,13 @@ export class EditService extends BehaviorSubject<any[]> {
         this.createdItems = []; 
     }
 
-    private sendChanges(action: string = '', data: any): Observable<any[]>[] {
+    private resetTempStorages() {
+        this.deletedItems = [];
+        this.updatedItems = [];
+        this.createdItems = []; 
+    }
+
+    private sendChanges(action: string = '', data: any): Observable<any>[] {
         const result = [];
 
         if (action === UPDATE_ACTION) {
