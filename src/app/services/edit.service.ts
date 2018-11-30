@@ -78,18 +78,19 @@ export class EditService extends BehaviorSubject<any[]> {
         this.fetch()
             .subscribe(data => {
                 // Transforming flat data into grid data
-                for (let i = 0; i < data.length; i++) {
-                    if (data.hasOwnProperty(i)) {
-                        for (const field of this.schema.testFields) {
-                            if (field.dbFields.length !== 0) {
-                                data[i][field.name] = {};
-                                for (const dbField of field.dbFields) {
-                                    data[i][field.name][dbField.asPropertyName] = data[i][dbField.name];
-                                }
-                            }
-                        }
-                    }
-                }
+                // for (let i = 0; i < data.length; i++) {
+                //     if (data.hasOwnProperty(i)) {
+                //         for (const field of this.schema.testFields) {
+                //             if (field.dbFields.length !== 0) {
+                //                 data[i][field.name] = {};
+                //                 for (const dbField of field.dbFields) {
+                //                     data[i][field.name][dbField.asPropertyName] = data[i][dbField.name];
+                //                 }
+                //             }
+                //         }
+                //     }
+                // }
+                this.transformFlatToGridData(data);
 
                 this.data = data;
                 this.originalData = cloneData(data);
@@ -152,17 +153,20 @@ export class EditService extends BehaviorSubject<any[]> {
         const data = this.data;
         
         // Updating flat data according to changes in grid data
-        for (let i = 0; i < data.length; i++) {
-            if (data.hasOwnProperty(i)) {
-                for (const field of this.schema.testFields) {
-                    if (field.dbFields.length !== 0) {
-                        for (const dbField of field.dbFields) {
-                            data[i][dbField.name] = data[i][field.name][dbField.asPropertyName];
-                        }
-                    }
-                }
-            }
-        }
+        // for (let i = 0; i < data.length; i++) {
+        //     if (data.hasOwnProperty(i)) {
+        //         for (const field of this.schema.testFields) {
+        //             if (field.dbFields.length !== 0) {
+        //                 for (const dbField of field.dbFields) {
+        //                     data[i][dbField.name] = data[i][field.name][dbField.asPropertyName];
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+        this.transformGridToFlatData(data);
+
 
         let completed: Observable<any>[] = [];
 
@@ -212,24 +216,57 @@ export class EditService extends BehaviorSubject<any[]> {
             }
 
             // Quick fix, must think how to simplify this
-            for (let i = 0; i < this.data.length; i++) {
-                if (this.data.hasOwnProperty(i)) {
-                    for (const field of this.schema.testFields) {
-                        if (field.dbFields.length !== 0) {
-                            this.data[i][field.name] = {};
-                            for (const dbField of field.dbFields) {
-                                this.data[i][field.name][dbField.asPropertyName] = data[i][dbField.name];
-                            }
-                        }
-                    }
-                }
-            }
+            // for (let i = 0; i < this.data.length; i++) {
+            //     if (this.data.hasOwnProperty(i)) {
+            //         for (const field of this.schema.testFields) {
+            //             if (field.dbFields.length !== 0) {
+            //                 this.data[i][field.name] = {};
+            //                 for (const dbField of field.dbFields) {
+            //                     this.data[i][field.name][dbField.asPropertyName] = data[i][dbField.name];
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
+            this.transformFlatToGridData(data);
 
+            this.originalData = cloneData(this.data);
             this.read();
         });
         // zip(...returnedCreated).subscribe(() => console.log('wop-wop'));
         // zip(returnedUpdated, returnedDeleted, returnedCreated).subscribe((returned) => 
         // console.log(returned));
+    }
+
+    private transformFlatToGridData(dataSource: any[]) {
+        for (let i = 0; i < dataSource.length; i++) {
+            // Seems like unessesary condition check
+            if (dataSource.hasOwnProperty(i)) {
+                for (const field of this.schema.testFields) {
+                    if (field.dbFields.length !== 0) {
+                        dataSource[i][field.name] = {};
+                        for (const dbField of field.dbFields) {
+                            dataSource[i][field.name][dbField.asPropertyName] = dataSource[i][dbField.name];
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private transformGridToFlatData(dataSource: any[]) {
+        for (let i = 0; i < dataSource.length; i++) {
+            // Seems like unessesary condition check
+            if (dataSource.hasOwnProperty(i)) {
+                for (const field of this.schema.testFields) {
+                    if (field.dbFields.length !== 0) {
+                        for (const dbField of field.dbFields) {
+                            dataSource[i][dbField.name] = dataSource[i][field.name][dbField.asPropertyName];
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public cancelChanges(): void {
