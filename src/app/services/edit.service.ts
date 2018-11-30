@@ -242,7 +242,7 @@ export class EditService extends BehaviorSubject<any[]> {
         for (let i = 0; i < dataSource.length; i++) {
             // Seems like unessesary condition check
             if (dataSource.hasOwnProperty(i)) {
-                for (const field of this.schema.testFields) {
+                for (const field of this.schema.fields) {
                     if (field.dbFields.length !== 0) {
                         dataSource[i][field.name] = {};
                         for (const dbField of field.dbFields) {
@@ -258,7 +258,7 @@ export class EditService extends BehaviorSubject<any[]> {
         for (let i = 0; i < dataSource.length; i++) {
             // Seems like unessesary condition check
             if (dataSource.hasOwnProperty(i)) {
-                for (const field of this.schema.testFields) {
+                for (const field of this.schema.fields) {
                     if (field.dbFields.length !== 0) {
                         for (const dbField of field.dbFields) {
                             dataSource[i][dbField.name] = dataSource[i][field.name][dbField.asPropertyName];

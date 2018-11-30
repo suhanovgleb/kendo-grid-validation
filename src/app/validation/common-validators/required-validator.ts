@@ -16,8 +16,8 @@ export class RequiredValidator implements IValidator {
 
         for (const item of items) {
             for (const field of schema.fields) {
-                if (field.validators.hasOwnProperty('required')) {
-                    if (field.validators.required) {
+                if (field.viewSettings.validators.hasOwnProperty('required')) {
+                    if (field.viewSettings.validators.required) {
                         if (
                             item[field.name] === '' ||
                             item[field.name] === null ||

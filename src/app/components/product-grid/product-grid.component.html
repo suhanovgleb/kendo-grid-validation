@@ -31,7 +31,7 @@
     (add)="addHandler($event)"
     >
         <ng-template kendoGridToolbarTemplate>
-            <button class='k-button' (click)="refreshClickHandler(grid);">Refresh</button>
+            <button class='k-button' (click)="refreshButtonHandler();">Refresh</button>
             <button kendoGridAddCommand [disabled]="!isDataLoaded">Add item</button>
             <button class='k-button' [disabled]="!editService.hasChanges()" (click)="saveChanges(grid); showErrorsDialog();">Save
                 changes</button>
@@ -42,7 +42,7 @@
                 {{ numberOfAdditionalItems === 1 ? 'item' : 'items' }}</button>
             <button class='k-button' [disabled]="!validationErrors.length" (click)="showErrorsDialog();">Show Errors</button>
         </ng-template>
-        <kendo-grid-column field="Id" title="HIDDEN" [hidden]=false></kendo-grid-column>
+        <kendo-grid-column field="Id" title="Id" [hidden]=false></kendo-grid-column>
         <kendo-grid-column field="Name" title="Product Name" class="no-padding">
             <ng-template kendoGridCellTemplate let-dataItem let-columnInfo="column" let-errors="validationErrors">
                 <span [style.backgroundColor]="markup(dataItem, columnInfo)" class="whole-cell" [title]="tooltipHandler(validationErrors, columnInfo, dataItem)">

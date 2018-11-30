@@ -1,5 +1,5 @@
 
-import { ISchema, RowValidators, RowValidator, Field } from './schema';
+import { ISchema, RowValidators, RowValidator, Field, DbField } from './schema';
 import { Validators } from '@angular/forms';
 import {
     MaxValidator, 
@@ -10,92 +10,148 @@ import {
     PriceToTypeValidator,
     IValidator
 } from '../validation';
-import { ProductType } from '../models/product';
 
 
 export class ProductSchema implements ISchema {
 
     public idField = 'Id';
 
-    public testFields = [
-        /*new Field(*/{
+    public fields: Field[] = [
+        new Field({
+            name: 'Id',
+            viewSettings: {
+                field: 'Id',
+                type: 'number',
+                editable: false,
+                validators: {
+                    required: true
+                }
+            } 
+        }),
+        new Field({
+            name: 'Name',
+            viewSettings: {
+                field: 'Name',
+                type: 'number',
+                editable: true,
+                validators: {
+                    required: true
+                }
+            } 
+        }),
+        new Field({
+            name: 'Price',
+            viewSettings: {
+                field: 'Price',
+                type: 'number',
+                editable: true,
+                validators: {
+                    required: true,
+                    min: 3
+                }
+            } 
+        }),
+        new Field({
+            name: 'Discontinued',
+            viewSettings: {
+                field: 'Discontinued',
+                type: 'boolean',
+                editable: true,
+                validators: {
+                    required: false
+                }
+            } 
+        }),
+        new Field({
+            name: 'Quantity',
+            viewSettings: {
+                field: 'Quantity',
+                type: 'number',
+                editable: true,
+                validators: {
+                    required: true,
+                    max: 9999
+                }
+            } 
+        }),
+        new Field({
             name: 'ProductType',
             viewSettings: {
-                field: 'ProductType.Name', // Or maybe ProductTypeName somehow
+                field: 'ProductType.Name',
                 type: 'string',
                 editable: true,
                 validators: {
                     required: true
                 }
             },
-            type: ProductType,
+            // type: 'ProductType',
             dbFields: [
-                /*new dbField(*/{
+                new DbField({
                     name: 'ProductTypeId',
                     asPropertyName: 'Id',
                     type: 'number'
-                }/*)*/,
-                /*new dbField(*/{
+                }),
+                new DbField({
                     name: 'ProductTypeName',
                     asPropertyName: 'Name',
                     type: 'string'
-                }/*)*/
+                })
             ]
-        }/*)*/
-    ];
-
-    public fields = [
-        new Field({
-            name: 'Id',
-            editable: false,
-            type: 'number',
-            validators: {
-                required: false
-            }
-        }),
-        new Field({
-            name: 'Name',
-            editable: true,
-            type: 'string',
-            validators: {
-                required: true
-            }
-        }),
-        new Field({
-            name: 'Price',
-            editable: true,
-            type: 'number',
-            validators: {
-                required: true,
-                min: 3
-            }
-        }),
-        new Field({
-            name: 'Discontinued',
-            editable: true,
-            type: 'boolean',
-            validators: {
-                required: false
-            }
-        }),
-        new Field({
-            name: 'Quantity',
-            editable: true,
-            type: 'number',
-            validators: {
-                required: true,
-                max: 9999
-            }
-        }),
-        new Field({
-            name: 'ProductType',
-            editable: true,
-            type: 'string',
-            validators: {
-                required: false
-            }
         })
     ];
+
+    // public fields = [
+    //     new Field({
+    //         name: 'Id',
+    //         editable: false,
+    //         type: 'number',
+    //         validators: {
+    //             required: false
+    //         }
+    //     }),
+    //     new Field({
+    //         name: 'Name',
+    //         editable: true,
+    //         type: 'string',
+    //         validators: {
+    //             required: true
+    //         }
+    //     }),
+    //     new Field({
+    //         name: 'Price',
+    //         editable: true,
+    //         type: 'number',
+    //         validators: {
+    //             required: true,
+    //             min: 3
+    //         }
+    //     }),
+    //     new Field({
+    //         name: 'Discontinued',
+    //         editable: true,
+    //         type: 'boolean',
+    //         validators: {
+    //             required: false
+    //         }
+    //     }),
+    //     new Field({
+    //         name: 'Quantity',
+    //         editable: true,
+    //         type: 'number',
+    //         validators: {
+    //             required: true,
+    //             max: 9999
+    //         }
+    //     }),
+    //     new Field({
+    //         name: 'ProductType',
+    //         editable: true,
+    //         type: 'string',
+    //         validators: {
+    //             required: false
+    //         }
+    //     })
+    // ];
 
     public rowValidators: RowValidators = {
         // Validators that depend on more than one row, e.g. unique constraint validator
@@ -130,7 +186,7 @@ export class ProductSchema implements ISchema {
 
     // Get Angular on-form validators for one field 
     public getFieldFormValidators(field: Field) {
-        const schemaValidators = field.validators;
+        const schemaValidators = field.viewSettings.validators;
 
         const formValidators: any[] = [];
 

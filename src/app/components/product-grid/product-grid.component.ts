@@ -73,8 +73,7 @@ export class ProductGridComponent implements OnInit {
         this.editService.updateView();
     }
 
-    public refreshClickHandler({ sender, rowIndex }) {
-        sender.closeRow(rowIndex);
+    public refreshButtonHandler() {
         this.editService.reloadData();
         this.isDataLoaded = true;
         this.notificationService.infoNotification('Data has been reloaded.');
@@ -250,7 +249,7 @@ export class ProductGridComponent implements OnInit {
         const formGroup: FormGroup = new FormGroup({});
 
         const editableFields = this.schema.fields.filter(field => {
-            if (field.editable) { return field; }
+            if (field.viewSettings.editable) { return field; }
         });
 
         for (const field of editableFields) {
@@ -266,7 +265,7 @@ export class ProductGridComponent implements OnInit {
         const formGroup: FormGroup = new FormGroup({});
 
         const editableFields = this.schema.fields.filter(field => {
-            if (field.editable) { return field; }
+            if (field.viewSettings.editable) { return field; }
         });
 
         for (const field of editableFields) {

@@ -66,11 +66,34 @@ export class RowValidatorParams implements IRowValidator {
 
 export class Field {
     name: string;
-    editable: boolean;
+
+    viewSettings: ViewSettings;
     type: string;
-    validators: any;
+    dbFields: DbField[] = [];
+
+    // editable: boolean;
+    
+    // validators: any;
 
     public constructor(init?: Partial<Field>) {
+        Object.assign(this, init);
+    }
+}
+
+export class ViewSettings {
+    // Field by what data will shown and SORTED
+    field: string;
+    type: string;
+    editable: boolean;
+    validators: any;
+}
+
+export class DbField {
+    name: string;
+    asPropertyName: string;
+    type: string;
+
+    public constructor(init?: Partial<DbField>) {
         Object.assign(this, init);
     }
 }
