@@ -1,3 +1,4 @@
+import { productTypeDefaultItem } from '../default-items';
 
 export class Product {
     public Id: number;
@@ -5,10 +6,10 @@ export class Product {
     public Discontinued = false;
     public Quantity = 0;
     public Price = 0;
-    public ProductTypeId: number; // get from Server side
-    public ProductTypeName: string; // get from Server side //turn in obj below
+    public ProductTypeId = productTypeDefaultItem.Id; // get from Server side
+    public ProductTypeName = productTypeDefaultItem.Name; // get from Server side //turn in obj below
     
-    public ProductType: ProductType;
+    public ProductType: ProductType = productTypeDefaultItem;
 
     constructor(Id: number) {
         this.Id = Id;

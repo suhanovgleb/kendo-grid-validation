@@ -18,6 +18,7 @@ import { NotificationCustomService } from '../../services/notification-custom.se
 import { ValidationService } from '../../services/validation.service';
 import { ValidationError } from '../../validation';
 import { ValidatorType } from '../../validation/validator-type';
+import { productTypeDefaultItem } from 'src/app/default-items';
 
 
 @Component({
@@ -40,7 +41,7 @@ export class ProductGridComponent implements OnInit {
 
     public isDataLoaded = false;
     // Do we need default item?
-    public defaultItem: ProductType = { Name: 'Select item...', Id: 0 };
+    public defaultItem: ProductType = productTypeDefaultItem;
     public productTypes: ProductType[];
 
     private schema = new ProductSchema();
@@ -69,11 +70,12 @@ export class ProductGridComponent implements OnInit {
 
     public onStateChange(state: State) {
         this.gridState = state;
-        this.editService.read();
+        this.editService.updateView();
     }
 
-    public loadData() {
-        this.editService.read();
+    public refreshClickHandler({ sender, rowIndex }) {
+        sender.closeRow(rowIndex);
+        this.editService.reloadData();
         this.isDataLoaded = true;
         this.notificationService.infoNotification('Data has been reloaded.');
     }
@@ -178,7 +180,7 @@ export class ProductGridComponent implements OnInit {
         
         if (this.validationErrors.length === 0) {
             this.editService.saveChanges();
-            // this.editService.read();
+            // this.editService.updateView();
             this.notificationService.successNotification(SAVE_SUCCES_MESSAGE);
             this.idGeneratorService.reset();
         } else {

@@ -70,12 +70,12 @@ export class EditService extends BehaviorSubject<any[]> {
         ];
     }
 
-    public  read() {
+    public updateView() {
         if (this.data.length) {
             return super.next(this.data);
         }
 
-        this.fetch()
+        this.read()
             .subscribe(data => {
                 // Transforming flat data into grid data
                 // for (let i = 0; i < data.length; i++) {
@@ -231,7 +231,7 @@ export class EditService extends BehaviorSubject<any[]> {
             this.transformFlatToGridData(data);
 
             this.originalData = cloneData(this.data);
-            this.read();
+            this.updateView();
         });
         // zip(...returnedCreated).subscribe(() => console.log('wop-wop'));
         // zip(returnedUpdated, returnedDeleted, returnedCreated).subscribe((returned) => 
@@ -280,6 +280,11 @@ export class EditService extends BehaviorSubject<any[]> {
         Object.assign(target, source);
     }
 
+    public reloadData() {
+        this.reset();
+        this.updateView();
+    }
+
     private reset() {
         this.data = [];
         this.deletedItems = [];
@@ -317,7 +322,7 @@ export class EditService extends BehaviorSubject<any[]> {
         return result;
     }
 
-    private fetch(): Observable<any[]> {
+    private read(): Observable<any[]> {
         return this.http.get(environment.apiURL).pipe(map(res => <any[]>res));
     }
 }
