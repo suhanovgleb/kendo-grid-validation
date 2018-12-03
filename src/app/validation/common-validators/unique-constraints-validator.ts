@@ -5,7 +5,6 @@ import { IValidator } from '..';
 import { ValidatorType } from '../validator-type';
 
 
-// Вот тут спорно, валидатор проверяет на уникальность только среди изменённых, это неправильно
 export class UniqueConstraintsValidator implements IValidator {
     validatorType = ValidatorType.UniqueConstraint;
 
@@ -35,7 +34,6 @@ export class UniqueConstraintsValidator implements IValidator {
 
         for (const key in hashTable) {
             if (hashTable.hasOwnProperty(key)) {
-
                 if (!(hashTable[key] === 1)) {
                     tempHashTable[key] = hashTable[key];
                 }
@@ -52,14 +50,6 @@ export class UniqueConstraintsValidator implements IValidator {
                 errorMessage = 'This entry must be unique in the following fields: ' + errMessageConstraints + '.';
                 const errorInfo = new ErrorInfo(errorName, errorMessage, this.validatorType);
                 errors.push(new ValidationError(errorInfo, item, uniqueConstraints));
-                // errors.push(
-                //     new ValidationError(
-                //         uniqueConstraints,
-                //         item,
-                //         'unique',
-                //         'This entry must be unique in the following fields: ' + errMessageConstraints + '.',
-                //     )
-                // );
                 hashTable[hashName]--;
             }
         }

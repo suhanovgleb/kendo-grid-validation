@@ -1,5 +1,4 @@
 import { ErrorInfo } from './../validation-error';
-
 import { ValidationError } from '../validation-error';
 import { IValidator } from '../interface-validator';
 import { ValidatorType } from '../validator-type';
@@ -17,15 +16,8 @@ export class PriceToUnitValidator implements IValidator {
         for (const item of items) {
             if (item.hasOwnProperty('Price') && item.hasOwnProperty('Quantity')) {
                 if (item.Price > 30 && item.Quantity === 0) {
-                    
                     const errorInfo = new ErrorInfo(errorName, errorMessage, this.validatorType);
                     errors.push(new ValidationError(errorInfo, item, fieldNames));
-                    // errors.push(new ValidationError(
-                    //     ['Price', 'Quantity'],
-                    //     item,
-                    //     'price_to_units',
-                    //     ,
-                    // ));
                 }
             }
         }

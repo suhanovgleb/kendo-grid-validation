@@ -77,21 +77,7 @@ export class EditService extends BehaviorSubject<any[]> {
 
         this.read()
             .subscribe(data => {
-                // Transforming flat data into grid data
-                // for (let i = 0; i < data.length; i++) {
-                //     if (data.hasOwnProperty(i)) {
-                //         for (const field of this.schema.testFields) {
-                //             if (field.dbFields.length !== 0) {
-                //                 data[i][field.name] = {};
-                //                 for (const dbField of field.dbFields) {
-                //                     data[i][field.name][dbField.asPropertyName] = data[i][dbField.name];
-                //                 }
-                //             }
-                //         }
-                //     }
-                // }
                 this.transformFlatToGridData(data);
-
                 this.data = data;
                 this.originalData = cloneData(data);
                 super.next(data);
@@ -151,57 +137,26 @@ export class EditService extends BehaviorSubject<any[]> {
         }
 
         const data = this.data;
-        
-        // Updating flat data according to changes in grid data
-        // for (let i = 0; i < data.length; i++) {
-        //     if (data.hasOwnProperty(i)) {
-        //         for (const field of this.schema.testFields) {
-        //             if (field.dbFields.length !== 0) {
-        //                 for (const dbField of field.dbFields) {
-        //                     data[i][dbField.name] = data[i][field.name][dbField.asPropertyName];
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
 
         this.transformGridToFlatData(data);
 
-
         let completed: Observable<any>[] = [];
-
-        // let returnedUpdated: Observable<any>[] = [];
-        // let returnedCreated: Observable<any>[] = [];
-        // let returnedDeleted: Observable<any>[] = [];
 
         if (this.updatedItems.length) {
             completed = completed.concat(this.sendChanges(UPDATE_ACTION, this.updatedItems));
-            // returnedUpdated = this.sendChanges(UPDATE_ACTION, this.updatedItems);
         }
 
         if (this.deletedItems.length) {
             completed = completed.concat(this.sendChanges(REMOVE_ACTION, this.deletedItems));
-            // returnedDeleted = this.sendChanges(REMOVE_ACTION, this.deletedItems);
         }
 
         if (this.createdItems.length) {
             completed = completed.concat(this.sendChanges(CREATE_ACTION, this.createdItems));
-            // returnedCreated = this.sendChanges(CREATE_ACTION, this.createdItems);
         }
 
         this.resetTempStorages();
 
-
-        // for (const response of completed) {
-        //     response.subscribe(responseItems => {
-        //         for (const item of responseItems) {
-        //             const idx = itemIndexById(item.OldId, data);
-        //             this.data.splice(idx, 1, item.SavedProduct);
-        //         }
-        //     });
-        // }
-
-        // When all updates, removes, creates are completed it initiates reading
+        // When it get all responses it initiates reading
         zip(...completed).subscribe((returnedItemData) => {
             for (const itemData of returnedItemData) {
                 const idx = itemIndexById(itemData.OldId, data);
@@ -215,27 +170,11 @@ export class EditService extends BehaviorSubject<any[]> {
                 }
             }
 
-            // Quick fix, must think how to simplify this
-            // for (let i = 0; i < this.data.length; i++) {
-            //     if (this.data.hasOwnProperty(i)) {
-            //         for (const field of this.schema.testFields) {
-            //             if (field.dbFields.length !== 0) {
-            //                 this.data[i][field.name] = {};
-            //                 for (const dbField of field.dbFields) {
-            //                     this.data[i][field.name][dbField.asPropertyName] = data[i][dbField.name];
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
             this.transformFlatToGridData(data);
 
             this.originalData = cloneData(this.data);
             this.updateView();
         });
-        // zip(...returnedCreated).subscribe(() => console.log('wop-wop'));
-        // zip(returnedUpdated, returnedDeleted, returnedCreated).subscribe((returned) => 
-        // console.log(returned));
     }
 
     private transformFlatToGridData(dataSource: any[]) {

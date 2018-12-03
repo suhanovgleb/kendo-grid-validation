@@ -24,4 +24,42 @@ export class ValidationService {
 
     return errors;
   }
+
+  public removePairedErrors(validationErrors: ValidationError[], dataItem: any, idField: string) {
+    for (const error of validationErrors) {
+
+      const hashTable = {};
+
+
+
+      if (error.item[idField] === dataItem[idField]) {
+        for (const field in dataItem) {
+          if (dataItem.hasOwnProperty(field)) {
+            // check if cell was changed then delete error
+            if ((dataItem[field] !== error.item[field]) && (error.fieldNames.includes(field))) {
+              if (error.errorInfo.errorType === ValidatorType.UniqueConstraint) {
+                const sameConstraintErrors = validationErrors.filter((e) => {
+                  if (e.errorInfo.errorType === ValidatorType.UniqueConstraint) {
+                    return e;
+                  }
+                });
+                if (sameConstraintErrors.length === 2) {
+                  for (const err of sameConstraintErrors) {
+                    const idx = validationErrors.indexOf(error);
+                    validationErrors.splice(idx, 1);
+                  }
+                } else {
+                  const index = validationErrors.indexOf(error);
+                  validationErrors.splice(index, 1);
+                }
+              } else {
+                const index = validationErrors.indexOf(error);
+                validationErrors.splice(index, 1);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

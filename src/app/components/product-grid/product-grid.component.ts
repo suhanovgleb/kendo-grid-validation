@@ -86,6 +86,18 @@ export class ProductGridComponent implements OnInit {
         }
     }
 
+    private getNameHash(item, uniqueConstraints): string {
+        let name = '';
+        for (const constraint of uniqueConstraints) {
+            if (uniqueConstraints[0] === constraint) {
+                name = name.concat(item[constraint]);
+            } else {
+                name = name.concat(':', item[constraint]);
+            }
+        }
+        return name;
+    }
+
     public cellCloseHandler(args: any) {
         const formGroup: FormGroup = args.formGroup;
         const dataItem: any = args.dataItem;
@@ -98,36 +110,7 @@ export class ProductGridComponent implements OnInit {
             this.editService.update(dataItem);
             
             // if any field of row with error was changed we repaint it
-            for (const error of this.validationErrors) {
-                if (error.item[this.idField] === dataItem[this.idField]) {
-                    for (const field in dataItem) {
-                        if (dataItem.hasOwnProperty(field)) {
-                            // check if cell was changed then delete error
-                            if ((dataItem[field] !== error.item[field]) && (error.fieldNames.includes(field))) {
-                                if (error.errorInfo.errorType === ValidatorType.UniqueConstraint) {
-                                    const sameConstraintErrors = this.validationErrors.filter((e) => {
-                                        if (e.errorInfo.errorType === ValidatorType.UniqueConstraint) {
-                                            return e;
-                                        }
-                                    });
-                                    if (sameConstraintErrors.length === 2) {
-                                        for (const err of sameConstraintErrors) {
-                                            const idx = this.validationErrors.indexOf(error);
-                                            this.validationErrors.splice(idx, 1);
-                                        }
-                                    } else { 
-                                        const index = this.validationErrors.indexOf(error);
-                                        this.validationErrors.splice(index, 1);
-                                    }
-                                } else {
-                                    const index = this.validationErrors.indexOf(error);
-                                    this.validationErrors.splice(index, 1);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            this.validationService.removePairedErrors(this.validationErrors, dataItem, this.idField);
         }
     }
     
@@ -234,13 +217,22 @@ export class ProductGridComponent implements OnInit {
     public tooltipHandler(validationErrors: ValidationError[], columnInfo: ColumnComponent, dataItem: any) {
         const idField = this.schema.idField;
         let tooltipMessage = '';
-        validationErrors.filter((error) => {
+
+        for (const error of validationErrors) {
             if (error.item[idField] === dataItem[idField]) {
                 if (error.fieldNames.includes(columnInfo.field)) {
                     tooltipMessage += error.errorInfo.errorMessage + '\n';
                 }
             }
-        });
+        }
+
+        // validationErrors.filter((error) => {
+        //     if (error.item[idField] === dataItem[idField]) {
+        //         if (error.fieldNames.includes(columnInfo.field)) {
+        //             tooltipMessage += error.errorInfo.errorMessage + '\n';
+        //         }
+        //     }
+        // });
         return tooltipMessage;
     }
 

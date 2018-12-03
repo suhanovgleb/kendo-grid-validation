@@ -1,6 +1,5 @@
-
-import { ISchema, RowValidators, RowValidator, Field, DbField } from './schema';
 import { Validators } from '@angular/forms';
+import { ISchema, RowValidators, RowValidator, Field, DbField } from './schema';
 import {
     MaxValidator, 
     MinValidator, 
@@ -84,7 +83,6 @@ export class ProductSchema implements ISchema {
                     required: true
                 }
             },
-            // type: 'ProductType',
             dbFields: [
                 new DbField({
                     name: 'ProductTypeId',
@@ -99,59 +97,6 @@ export class ProductSchema implements ISchema {
             ]
         })
     ];
-
-    // public fields = [
-    //     new Field({
-    //         name: 'Id',
-    //         editable: false,
-    //         type: 'number',
-    //         validators: {
-    //             required: false
-    //         }
-    //     }),
-    //     new Field({
-    //         name: 'Name',
-    //         editable: true,
-    //         type: 'string',
-    //         validators: {
-    //             required: true
-    //         }
-    //     }),
-    //     new Field({
-    //         name: 'Price',
-    //         editable: true,
-    //         type: 'number',
-    //         validators: {
-    //             required: true,
-    //             min: 3
-    //         }
-    //     }),
-    //     new Field({
-    //         name: 'Discontinued',
-    //         editable: true,
-    //         type: 'boolean',
-    //         validators: {
-    //             required: false
-    //         }
-    //     }),
-    //     new Field({
-    //         name: 'Quantity',
-    //         editable: true,
-    //         type: 'number',
-    //         validators: {
-    //             required: true,
-    //             max: 9999
-    //         }
-    //     }),
-    //     new Field({
-    //         name: 'ProductType',
-    //         editable: true,
-    //         type: 'string',
-    //         validators: {
-    //             required: false
-    //         }
-    //     })
-    // ];
 
     public rowValidators: RowValidators = {
         // Validators that depend on more than one row, e.g. unique constraint validator

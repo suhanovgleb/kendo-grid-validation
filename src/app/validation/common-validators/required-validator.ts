@@ -26,9 +26,6 @@ export class RequiredValidator implements IValidator {
                             errorMessage = field.name + ' can\'t be empty.';
                             const errorInfo = new ErrorInfo(errorName, errorMessage, this.validatorType);
                             errors.push(new ValidationError(errorInfo, item, [field.name]));
-                            // errors.push(
-                            //     new ValidationError([field.name], item, 'required', field.name + ' can\'t be empty.')
-                            // );
                         }
                     }
                 }

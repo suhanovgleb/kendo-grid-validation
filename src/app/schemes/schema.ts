@@ -1,35 +1,18 @@
-
 import { ValidationErrors, ValidatorFn } from '@angular/forms';
 import { IValidator } from '../validation';
 
 export interface ISchema {
+    // Field that is used as Id
     idField: string;
+    // Data fields with its all information
     fields: Field[];
+    // Description of complex validators
     rowValidators: RowValidators;
     // Get validators for validation service
-    getServiceValidators(/*fieldValidators: IValidator[]*/): IValidator[];
+    getServiceValidators(): IValidator[];
     // Get Angular on-form validators
     getFormValidators?(field: Field): (ValidatorFn | ValidationErrors)[];
 }
-
-// export abstract class Schema implements ISchema {
-//     idField: string;
-//     fields: Field[];
-//     rowValidators: RowValidators;
-//     // Get validators for validation service
-//     getServiceValidators(fieldValidators: IValidator[]): IValidator[] {
-//         const serviceValidators: IValidator[] = [];
-//         const allRowValidators: RowValidator[] = this.rowValidators.multiRowValidators
-//             .concat(this.rowValidators.singleRowValidators);
-//         for (const validator of allRowValidators) {
-//             serviceValidators.push(validator.validatorRef);
-//         }
-//         serviceValidators.push(...fieldValidators);
-//         return serviceValidators;
-//     }
-//     // Get Angular on-form validators
-//     getFormValidators?(field: Field): (ValidatorFn | ValidationErrors)[];
-// }
 
 export interface RowValidators {
     // Validators that depend on more than one row, e.g. unique constraint validator
@@ -39,15 +22,18 @@ export interface RowValidators {
 }
 
 export interface IRowValidator {
+    // Name of the validator
     name: string;
+    // Describes if validator enabled or by what field it checks values
     option: any;
-    validatorRef: any;
+    // Reference to validator class
+    validatorRef: IValidator;
 }
 
 export class RowValidator implements IRowValidator {
     name: string;
     option: any;
-    validatorRef: any;
+    validatorRef: IValidator;
     constructor(
         params: RowValidatorParams
     ) {
@@ -61,19 +47,14 @@ export class RowValidator implements IRowValidator {
 export class RowValidatorParams implements IRowValidator {
     name: string;
     option: any;
-    validatorRef: any;
+    validatorRef: IValidator;
 }
 
 export class Field {
     name: string;
-
     viewSettings: ViewSettings;
     type: string;
     dbFields: DbField[] = [];
-
-    // editable: boolean;
-    
-    // validators: any;
 
     public constructor(init?: Partial<Field>) {
         Object.assign(this, init);
@@ -81,7 +62,7 @@ export class Field {
 }
 
 export class ViewSettings {
-    // Field by what data will shown and SORTED
+    // Field by what data will SHOWN and SORTED
     field: string;
     type: string;
     editable: boolean;
