@@ -36,13 +36,13 @@ export class DialogCustomService {
         } else {
             return;
         }
-        this.showDialog('Error!', content);
+        this.showDialog('Error list', content);
   }
 
   public showErrorsList(validationErrors: ValidationError[], schema: ISchema, numberErrorsToDisplay: number = 5) {
     if (validationErrors.length) {
       const dialogRef: DialogRef = this.dialogService.open({
-        title: 'Error!',
+        title: 'Error list',
         content: ErrrosListComponent,
         actions: [
           { text: 'OK' }

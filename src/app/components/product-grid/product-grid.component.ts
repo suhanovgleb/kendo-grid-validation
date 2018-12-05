@@ -17,7 +17,6 @@ import { MarkupService } from '../../services/markup.service';
 import { NotificationCustomService } from '../../services/notification-custom.service';
 import { ValidationService } from '../../services/validation.service';
 import { ValidationError } from '../../validation';
-import { ValidatorType } from '../../validation/validator-type';
 import { productTypeDefaultItem } from 'src/app/default-items';
 
 
@@ -66,6 +65,8 @@ export class ProductGridComponent implements OnInit {
     public ngOnInit(): void {
         this.view$ = this.editService.pipe(map(data => process(data, this.gridState)));
         this.productTypes = this.editService.readProductTypes();
+        // this.editService.updateView();
+        // this.isDataLoaded = true;
     }
 
     public onStateChange(state: State) {
@@ -76,7 +77,6 @@ export class ProductGridComponent implements OnInit {
     public refreshButtonHandler() {
         this.editService.reloadData();
         this.isDataLoaded = true;
-        this.notificationService.infoNotification('Data has been reloaded.');
     }
 
     public cellClickHandler({ sender, rowIndex, columnIndex, dataItem, isEdited }) {
@@ -162,8 +162,6 @@ export class ProductGridComponent implements OnInit {
         
         if (this.validationErrors.length === 0) {
             this.editService.saveChanges();
-            // this.editService.updateView();
-            this.notificationService.successNotification(SAVE_SUCCES_MESSAGE);
             this.idGeneratorService.reset();
         } else {
             this.notificationService.errorNotification(SAVE_PREVENDED_MESSAGE);
@@ -171,13 +169,8 @@ export class ProductGridComponent implements OnInit {
     }
 
     public cancelChanges(grid: GridComponent): void {
-        const SAVE_CANCEL_MESSAGE = 'Changed data has been reset.';
-
         grid.cancelCell();
         this.editService.cancelChanges();
-
-        this.notificationService.infoNotification(SAVE_CANCEL_MESSAGE);
-
         this.validationErrors = [];
         this.idGeneratorService.reset();
     }
@@ -201,12 +194,6 @@ export class ProductGridComponent implements OnInit {
     }
 
     markup(dataItem: any, columnInfo: ColumnComponent): SafeStyle {
-        // const metadata = { 
-        //     dataItem: dataItem,
-        //     columnInfo: columnInfo,
-        //     validationErrors: this.validationErrors,
-        //     schema: this.schema 
-        // };
         return this.markupService.doMarkup(dataItem, columnInfo, this.validationErrors, this.schema);   
     }
 
@@ -217,7 +204,6 @@ export class ProductGridComponent implements OnInit {
     public tooltipHandler(validationErrors: ValidationError[], columnInfo: ColumnComponent, dataItem: any) {
         const idField = this.schema.idField;
         let tooltipMessage = '';
-
         for (const error of validationErrors) {
             if (error.item[idField] === dataItem[idField]) {
                 if (error.fieldNames.includes(columnInfo.field)) {
@@ -225,14 +211,6 @@ export class ProductGridComponent implements OnInit {
                 }
             }
         }
-
-        // validationErrors.filter((error) => {
-        //     if (error.item[idField] === dataItem[idField]) {
-        //         if (error.fieldNames.includes(columnInfo.field)) {
-        //             tooltipMessage += error.errorInfo.errorMessage + '\n';
-        //         }
-        //     }
-        // });
         return tooltipMessage;
     }
 

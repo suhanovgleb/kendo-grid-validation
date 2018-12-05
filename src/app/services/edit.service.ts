@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { ProductType } from '../models/product';
 import { environment } from './../../environments/environment';
 import { ProductSchema } from './../schemes/product-schema';
+import { NotificationCustomService } from './notification-custom.service';
 
 const CREATE_ACTION = 'create';
 const UPDATE_ACTION = 'update';
@@ -57,7 +58,9 @@ export class EditService extends BehaviorSubject<any[]> {
 
     public schema = new ProductSchema();
 
-    constructor(private http: HttpClient) {
+    constructor(
+        private http: HttpClient,
+        private notificationService: NotificationCustomService) {
         super([]);
     }
 
@@ -81,6 +84,10 @@ export class EditService extends BehaviorSubject<any[]> {
                 this.data = data;
                 this.originalData = cloneData(data);
                 super.next(data);
+                this.notificationService.successNotification('Data has been loaded from server');
+            },
+            (error) => {
+                this.notificationService.errorNotification('An error has occurred. Data hasn\'nt been reloaded from server');
             });
     }
 
@@ -154,10 +161,10 @@ export class EditService extends BehaviorSubject<any[]> {
             completed = completed.concat(this.sendChanges(CREATE_ACTION, this.createdItems));
         }
 
-        this.resetTempStorages();
-
         // When it get all responses it initiates reading
         zip(...completed).subscribe((returnedItemData) => {
+            this.resetTempStorages();
+
             for (const itemData of returnedItemData) {
                 const idx = itemIndexById(itemData.OldId, data);
                 if (idx !== INDEX_NOT_FOUND) {
@@ -174,6 +181,10 @@ export class EditService extends BehaviorSubject<any[]> {
 
             this.originalData = cloneData(this.data);
             this.updateView();
+            this.notificationService.successNotification('Data has been successfully saved');
+        },
+        (error) => {
+            this.notificationService.errorNotification('Server couldn\'t save changes');
         });
     }
 
@@ -213,6 +224,7 @@ export class EditService extends BehaviorSubject<any[]> {
         this.data = this.originalData;
         this.originalData = cloneData(this.originalData);
         super.next(this.data);
+        this.notificationService.infoNotification('Changed data has been reset.');
     }
 
     public assignValues(target: any, source: any): void {
