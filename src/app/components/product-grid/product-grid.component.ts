@@ -43,7 +43,7 @@ export class ProductGridComponent implements OnInit {
         group: []
     };
 
-    private numberOfAdditionalItems = 1;
+    private numberOfAdditionalItems = 10000;
 
     public isDataLoaded = false;
     // Do we need default item?
@@ -176,8 +176,7 @@ export class ProductGridComponent implements OnInit {
         const chance = new Chance();
         for (let i = 0; i < this.numberOfAdditionalItems; i++) {
             const item = new Product(this.idGeneratorService.getId());
-
-            item.Name = chance.unique
+            
             item.Name = chance.animal();
             item.Price = chance.floating({ fixed: 2, min: 100, max: 9999 });
             item.Discontinued = chance.integer() % 3 === 0 ? true : false;

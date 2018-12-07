@@ -73,6 +73,13 @@ export class ProductSchema implements ISchema {
                 }
             } 
         }),
+
+        // poco - dto -  entity - value object - domain object - /db entity/ db object / object entity
+        //
+        // {{dataItem.productName}}
+        // {{dataItem.Product.Name}}
+        // new Field("productName"){getFrom: 'Product.Name'}
+        //
         new Field({
             name: 'ProductType',
             viewSettings: {
@@ -83,6 +90,11 @@ export class ProductSchema implements ISchema {
                     required: true
                 }
             },
+            //
+            // var x= new Field()
+            // x[asPropertyName] = 'Id'
+            //  x[name] = 'PrTypId'
+            //
             dbFields: [
                 new DbField({
                     name: 'ProductTypeId',
