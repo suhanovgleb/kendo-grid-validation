@@ -29,6 +29,13 @@ import { productTypeDefaultItem } from 'src/app/default-items';
 export class ProductGridComponent implements OnInit {
     public view$: Observable<GridDataResult>;
 
+    readonly originalGridState: State = {
+        sort: [],
+        skip: 0,
+        take: 50,
+        group: []
+    };
+
     public gridState: State = {
         sort: [],
         skip: 0,
@@ -74,7 +81,9 @@ export class ProductGridComponent implements OnInit {
         this.editService.updateView();
     }
 
-    public refreshButtonHandler() {
+    public refreshButtonHandler(grid: GridComponent) {
+        grid.closeRow(-1);
+        this.gridState = this.originalGridState;
         this.editService.reloadData();
         this.isDataLoaded = true;
     }
@@ -84,18 +93,6 @@ export class ProductGridComponent implements OnInit {
             this.formGroup = this.createFormGroup(dataItem);
             sender.editCell(rowIndex, columnIndex, this.formGroup);
         }
-    }
-
-    private getNameHash(item, uniqueConstraints): string {
-        let name = '';
-        for (const constraint of uniqueConstraints) {
-            if (uniqueConstraints[0] === constraint) {
-                name = name.concat(item[constraint]);
-            } else {
-                name = name.concat(':', item[constraint]);
-            }
-        }
-        return name;
     }
 
     public cellCloseHandler(args: any) {
@@ -140,7 +137,6 @@ export class ProductGridComponent implements OnInit {
     }  
 
     public saveChanges(grid: GridComponent): void {
-        const SAVE_SUCCES_MESSAGE = 'Saving data completed successfully.';
         const SAVE_PREVENDED_MESSAGE = 'There are some errors. Saving is not possible.';
 
         grid.closeCell();
@@ -170,6 +166,7 @@ export class ProductGridComponent implements OnInit {
 
     public cancelChanges(grid: GridComponent): void {
         grid.cancelCell();
+        this.gridState = this.originalGridState;
         this.editService.cancelChanges();
         this.validationErrors = [];
         this.idGeneratorService.reset();
@@ -180,7 +177,8 @@ export class ProductGridComponent implements OnInit {
         for (let i = 0; i < this.numberOfAdditionalItems; i++) {
             const item = new Product(this.idGeneratorService.getId());
 
-            item.Name = 'Name' + chance.integer({ min: 0, max: 10000 });
+            item.Name = chance.unique
+            item.Name = chance.animal();
             item.Price = chance.floating({ fixed: 2, min: 100, max: 9999 });
             item.Discontinued = chance.integer() % 3 === 0 ? true : false;
             item.Quantity = chance.integer({ min: 0, max: 9999 });

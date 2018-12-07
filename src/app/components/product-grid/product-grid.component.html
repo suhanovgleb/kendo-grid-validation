@@ -24,7 +24,7 @@
     (add)="addHandler($event)"
     >
         <ng-template kendoGridToolbarTemplate>
-            <button class='k-button' (click)="refreshButtonHandler();">{{ isDataLoaded ? 'Refresh' : 'Load' }}</button>
+            <button class='k-button' (click)="refreshButtonHandler(grid);">{{ isDataLoaded ? 'Refresh' : 'Load' }}</button>
             <button kendoGridAddCommand [disabled]="!isDataLoaded">Add item</button>
             <button class='k-button' [disabled]="!editService.hasChanges()" (click)="saveChanges(grid); showErrorsDialog();">Save
                 changes</button>
