@@ -43,7 +43,7 @@ export class ProductGridComponent implements OnInit {
         group: []
     };
 
-    private numberOfAdditionalItems = 10000;
+    private numberOfAdditionalItems = 1;
 
     public isDataLoaded = false;
     // Do we need default item?
@@ -72,6 +72,7 @@ export class ProductGridComponent implements OnInit {
     public ngOnInit(): void {
         this.view$ = this.editService.pipe(map(data => process(data, this.gridState)));
         this.productTypes = this.editService.readProductTypes();
+        //// this.gridState = this.originalGridState;
         // this.editService.updateView();
         // this.isDataLoaded = true;
     }
