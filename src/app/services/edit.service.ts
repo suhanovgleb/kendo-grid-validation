@@ -58,6 +58,8 @@ export class EditService extends BehaviorSubject<any[]> {
 
     public schema = new ProductSchema();
 
+    public isDataProcessing = false;
+
     constructor(
         private http: HttpClient,
         private notificationService: NotificationCustomService) {
@@ -85,9 +87,11 @@ export class EditService extends BehaviorSubject<any[]> {
                 this.originalData = cloneData(data);
                 super.next(data);
                 this.notificationService.successNotification('Data has been loaded from server');
+                this.isDataProcessing = false;
             },
             (error) => {
                 this.notificationService.errorNotification('An error has occurred. Data hasn\'nt been reloaded from server');
+                this.isDataProcessing = false;
             });
     }
 
@@ -182,9 +186,11 @@ export class EditService extends BehaviorSubject<any[]> {
             this.originalData = cloneData(this.data);
             this.updateView();
             this.notificationService.successNotification('Data has been successfully saved');
+            this.isDataProcessing = false;
         },
         (error) => {
             this.notificationService.errorNotification('Server couldn\'t save changes');
+            this.isDataProcessing = false;
         });
     }
 

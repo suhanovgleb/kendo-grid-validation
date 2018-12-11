@@ -12,7 +12,8 @@
     [sortable]="true" 
     [navigable]="true" 
     [reorderable]="true" 
-    [groupable]="true" 
+    [groupable]="true"
+    [filterable]="true"
     [group]="gridState.group" 
     
     (dataStateChange)="onStateChange($event)"
@@ -24,13 +25,13 @@
     (add)="addHandler($event)"
     >
         <ng-template kendoGridToolbarTemplate>
-            <button class='k-button' (click)="refreshButtonHandler(grid);">{{ isDataLoaded ? 'Refresh' : 'Load' }}</button>
-            <button kendoGridAddCommand [disabled]="!isDataLoaded">Add item</button>
-            <button class='k-button' [disabled]="!editService.hasChanges()" (click)="saveChanges(grid); showErrorsDialog();">Save
+            <button class='k-button' [disabled]="editService.isDataProcessing" (click)="refreshButtonHandler(grid);">{{ isDataLoaded ? 'Refresh' : 'Load' }}</button>
+            <button kendoGridAddCommand [disabled]="!isDataLoaded || editService.isDataProcessing">Add item</button>
+            <button class='k-button' [disabled]="!editService.hasChanges() || editService.isDataProcessing" (click)="saveChanges(grid); showErrorsDialog();">Save
                 changes</button>
-            <button class='k-button' [disabled]="!editService.hasChanges()" (click)="cancelChanges(grid);">Discard
+            <button class='k-button' [disabled]="!editService.hasChanges() || editService.isDataProcessing" (click)="cancelChanges(grid);">Discard
                 changes</button>
-            <button class='k-button' [disabled]="!numberOfAdditionalItems || !isDataLoaded" (click)="addSomeItems(grid);">Add {{
+            <button class='k-button' [disabled]="!numberOfAdditionalItems || !isDataLoaded || editService.isDataProcessing" (click)="addSomeItems(grid);">Add {{
                 numberOfAdditionalItems !== undefined ? numberOfAdditionalItems : 'some' }} random
                 {{ numberOfAdditionalItems === 1 ? 'item' : 'items' }}</button>
             <button class='k-button' [disabled]="!validationErrors.length" (click)="showErrorsDialog();">Show Errors</button>

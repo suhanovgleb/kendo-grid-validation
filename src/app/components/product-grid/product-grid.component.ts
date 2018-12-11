@@ -83,6 +83,7 @@ export class ProductGridComponent implements OnInit {
     }
 
     public refreshButtonHandler(grid: GridComponent) {
+        this.editService.isDataProcessing = true;
         grid.closeRow(-1);
         this.gridState = this.originalGridState;
         this.editService.reloadData();
@@ -138,6 +139,7 @@ export class ProductGridComponent implements OnInit {
     }  
 
     public saveChanges(grid: GridComponent): void {
+        this.editService.isDataProcessing = true;
         const SAVE_PREVENDED_MESSAGE = 'There are some errors. Saving is not possible.';
 
         grid.closeCell();
@@ -162,6 +164,7 @@ export class ProductGridComponent implements OnInit {
             this.idGeneratorService.reset();
         } else {
             this.notificationService.errorNotification(SAVE_PREVENDED_MESSAGE);
+            this.editService.isDataProcessing = false;
         }
     }
 
