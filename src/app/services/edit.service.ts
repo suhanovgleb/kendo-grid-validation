@@ -1,8 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { zip } from 'rxjs/observable/zip';
+import { BehaviorSubject ,  Observable ,  zip } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { ProductType } from '../models/product';

@@ -5,8 +5,8 @@ import { ColumnComponent, GridComponent, GridDataResult } from '@progress/kendo-
 import { process, State } from '@progress/kendo-data-query';
 import { Chance } from 'chance';
 import { union } from 'lodash';
-import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators/map';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { Product, ProductType } from '../../models/product';
 import { ProductSchema } from '../../schemes/product-schema';
