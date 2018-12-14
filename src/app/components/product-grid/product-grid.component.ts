@@ -110,6 +110,7 @@ export class ProductGridComponent implements OnInit {
             
             // if any field of row with error was changed we repaint it
             this.validationService.removePairedErrors(this.validationErrors, dataItem, this.idField);
+            this.validationService.removeErrorsFromChangedItems(this.validationErrors, dataItem, this.idField);
         }
     }
     
@@ -220,7 +221,7 @@ export class ProductGridComponent implements OnInit {
         const formGroup: FormGroup = new FormGroup({});
 
         const editableFields = this.schema.fields.filter(field => {
-            if (field.viewSettings.editable) { return field; }
+            if (field.editable) { return field; }
         });
 
         for (const field of editableFields) {
@@ -236,7 +237,7 @@ export class ProductGridComponent implements OnInit {
         const formGroup: FormGroup = new FormGroup({});
 
         const editableFields = this.schema.fields.filter(field => {
-            if (field.viewSettings.editable) { return field; }
+            if (field.editable) { return field; }
         });
 
         for (const field of editableFields) {

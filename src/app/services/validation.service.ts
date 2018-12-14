@@ -70,4 +70,20 @@ export class ValidationService {
     }
 
   }
+
+  public removeErrorsFromChangedItems(validationErrors: ValidationError[], dataItem: any, idField: string) {
+    for (const error of validationErrors) {
+      if (error.item[idField] === dataItem[idField]) {
+        for (const field in dataItem) {
+          if (dataItem.hasOwnProperty(field)) {
+            if ((dataItem[field] !== error.item[field]) && (error.fieldNames.includes(field))) {
+              const idx = validationErrors.indexOf(error);
+              validationErrors.splice(idx, 1);
+            }
+          }
+        }
+      }
+    }
+  }
+
 }

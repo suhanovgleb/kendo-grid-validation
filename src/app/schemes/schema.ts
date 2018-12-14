@@ -52,8 +52,11 @@ export class RowValidatorParams implements IRowValidator {
 
 export class Field {
     name: string;
-    viewSettings: ViewSettings;
+    field: string;
     type: string;
+    editable: boolean;
+    validators: any;
+    viewSettings: ViewSettings;
     dbFields: DbField[] = [];
 
     public constructor(init?: Partial<Field>) {

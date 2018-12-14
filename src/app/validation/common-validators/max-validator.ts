@@ -17,8 +17,8 @@ export class MaxValidator implements IValidator {
         
         for (const item of items) {
             for (const field of schema.fields) {
-                if (field.viewSettings.validators.hasOwnProperty('max')) {
-                    const maxValue = field.viewSettings.validators.max;
+                if (field.validators.hasOwnProperty('max')) {
+                    const maxValue = field.validators.max;
                     if (item[field.name] > maxValue) {
                         errorMessage = field.name + ' can\'t be higher than ' + maxValue + '.';
                         const errorInfo = new ErrorInfo(errorName, errorMessage, this.validatorType);

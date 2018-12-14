@@ -16,8 +16,8 @@ export class MinValidator implements IValidator {
 
         for (const item of items) {
             for (const field of schema.fields) {
-                if (field.viewSettings.validators.hasOwnProperty('min')) {
-                    const minValue = field.viewSettings.validators.min;
+                if (field.validators.hasOwnProperty('min')) {
+                    const minValue = field.validators.min;
                     if (item[field.name] < minValue) {
                         errorMessage = field.name + ' can\'t be less than ' + minValue + '.';
                         const errorInfo = new ErrorInfo(errorName, errorMessage, this.validatorType);
