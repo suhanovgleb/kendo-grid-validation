@@ -1,12 +1,12 @@
-
-import { ISchema } from '../../schemes/schema';
-import { ValidationError, ErrorInfo } from '../validation-error';
 import { IValidator } from '..';
+import { ISchema } from '../../schemes/schema';
+import { ErrorInfo, ValidationError } from '../validation-error';
 import { ValidatorType } from '../validator-type';
 
 
 export class UniqueConstraintsValidator implements IValidator {
     validatorType = ValidatorType.UniqueConstraint;
+    validatorName = 'UniqueConstraintsValidator';
 
     Assert(items: any[], schema: ISchema): ValidationError[] {
         const errors: ValidationError[] = [];

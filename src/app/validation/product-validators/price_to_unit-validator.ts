@@ -1,7 +1,7 @@
-import { ErrorInfo } from './../validation-error';
-import { ValidationError } from '../validation-error';
 import { IValidator } from '../interface-validator';
+import { ValidationError } from '../validation-error';
 import { ValidatorType } from '../validator-type';
+import { ErrorInfo } from './../validation-error';
 
 export class PriceToUnitValidator implements IValidator {
     validatorType = ValidatorType.Custom;
@@ -13,11 +13,17 @@ export class PriceToUnitValidator implements IValidator {
         const errorMessage = 'If units are out of stock then price cannot be higher than 30';
         const fieldNames = ['Price', 'Quantity'];
 
-        for (const item of items) {
-            if (item.hasOwnProperty('Price') && item.hasOwnProperty('Quantity')) {
-                if (item.Price > 30 && item.Quantity === 0) {
-                    const errorInfo = new ErrorInfo(errorName, errorMessage, this.validatorType);
-                    errors.push(new ValidationError(errorInfo, item, fieldNames));
+        const isActivated = schema.rowValidators.multiRowValidators.find(
+            validator => validator.name === 'priceToUnitValidator'
+        ).option;
+
+        if (isActivated) {
+            for (const item of items) {
+                if (item.hasOwnProperty('Price') && item.hasOwnProperty('Quantity')) {
+                    if (item.Price > 30 && item.Quantity === 0) {
+                        const errorInfo = new ErrorInfo(errorName, errorMessage, this.validatorType);
+                        errors.push(new ValidationError(errorInfo, item, fieldNames));
+                    }
                 }
             }
         }

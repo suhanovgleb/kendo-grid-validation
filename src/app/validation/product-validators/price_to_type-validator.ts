@@ -1,8 +1,7 @@
-import { ErrorInfo } from './../validation-error';
-
-import { ValidationError } from '../validation-error';
 import { IValidator } from '../interface-validator';
+import { ValidationError } from '../validation-error';
 import { ValidatorType } from '../validator-type';
+import { ErrorInfo } from './../validation-error';
 
 export class PriceToTypeValidator implements IValidator {
     validatorType = ValidatorType.Custom;
