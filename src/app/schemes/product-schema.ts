@@ -18,7 +18,6 @@ export class ProductSchema implements ISchema {
     public fields: Field[] = [
         new Field({
             name: 'Id',
-            field: 'Id',
             type: 'number',
             editable: false,
             validators: {
@@ -28,7 +27,6 @@ export class ProductSchema implements ISchema {
         }),
         new Field({
             name: 'Name',
-            field: 'Name',
             type: 'number',
             editable: true,
             validators: {
@@ -38,7 +36,6 @@ export class ProductSchema implements ISchema {
         }),
         new Field({
             name: 'Price',
-            field: 'Price',
             type: 'number',
             editable: true,
             validators: {
@@ -49,7 +46,6 @@ export class ProductSchema implements ISchema {
         }),
         new Field({
             name: 'Discontinued',
-            field: 'Discontinued',
             type: 'boolean',
             editable: true,
             validators: {
@@ -59,7 +55,6 @@ export class ProductSchema implements ISchema {
         }),
         new Field({
             name: 'Quantity',
-            field: 'Quantity',
             type: 'number',
             editable: true,
             validators: {
@@ -77,7 +72,6 @@ export class ProductSchema implements ISchema {
         //
         new Field({
             name: 'ProductType',
-            field: 'ProductType.Name',
             type: 'string',
             editable: true,
             validators: {
