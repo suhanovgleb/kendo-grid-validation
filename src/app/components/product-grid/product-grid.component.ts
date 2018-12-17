@@ -18,6 +18,7 @@ import { NotificationCustomService } from '../../services/notification-custom.se
 import { ValidationService } from '../../services/validation.service';
 import { ValidationError } from '../../validation';
 import { productTypeDefaultItem } from 'src/app/default-items';
+import { ISchema } from 'src/app/schemes/schema';
 
 
 @Component({
@@ -51,7 +52,7 @@ export class ProductGridComponent implements OnInit {
     public productTypes: ProductType[];
 
     private schema = new ProductSchema();
-    private idField = this.schema.idField;
+    private idField: string = this.schema.idField;
 
     private validationErrors: ValidationError[] = [];
 
@@ -77,12 +78,12 @@ export class ProductGridComponent implements OnInit {
         // this.isDataLoaded = true;
     }
 
-    public onStateChange(state: State) {
+    public onStateChange(state: State): void {
         this.gridState = state;
         this.editService.updateView();
     }
 
-    public refreshButtonHandler(grid: GridComponent) {
+    public refreshButtonHandler(grid: GridComponent): void {
         this.editService.isDataProcessing = true;
         grid.closeRow(-1);
         this.gridState = this.originalGridState;
@@ -90,14 +91,22 @@ export class ProductGridComponent implements OnInit {
         this.isDataLoaded = true;
     }
 
-    public cellClickHandler({ sender, rowIndex, columnIndex, dataItem, isEdited }) {
+    public cellClickHandler(args: any): void {
+        // TODO: Decide whether leave this args {sender, rowIndex, columnIndex, dataItem, isEdited} or accept new typed style
+        // TODO: args contains more than only this 5 args, how should I show it?
+        const sender: GridComponent = args.sender;
+        const rowIndex: number = args.rowIndex;
+        const columnIndex: number = args.columnIndex;
+        const dataItem: Product = args.dataItem;
+        const isEdited: boolean = args.isEdited;
+        
         if (!isEdited) {
             this.formGroup = this.createFormGroup(dataItem);
             sender.editCell(rowIndex, columnIndex, this.formGroup);
         }
     }
 
-    public cellCloseHandler(args: any) {
+    public cellCloseHandler(args: any): void {
         const formGroup: FormGroup = args.formGroup;
         const dataItem: any = args.dataItem;
         // const { formGroup, dataItem } = args;
@@ -114,16 +123,25 @@ export class ProductGridComponent implements OnInit {
         }
     }
     
-    public addHandler({ sender }) {
+    public addHandler(args: any): void {
+        const sender: GridComponent = args.sender;
+
         this.formGroup = this.createFormGroup(new Product(this.idGeneratorService.getId()));
         sender.addRow(this.formGroup);
     }
 
-    public cancelHandler({ sender, rowIndex }) {
+    public cancelHandler(args: any): void {
+        const sender: GridComponent = args.sender;
+        const rowIndex: number = args.rowIndex;
+
         sender.closeRow(rowIndex);
     }
 
-    public saveHandler({ sender, formGroup, rowIndex }) {
+    public saveHandler(args: any): void {
+        const sender: GridComponent = args.sender;
+        const formGroup: FormGroup = args.formGroup;
+        const rowIndex: number = args.rowIndex;
+
         if (formGroup.valid) {
             const dataItem = formGroup.value;
             if (!dataItem.hasOwnProperty(this.schema.idField)) {
@@ -134,10 +152,13 @@ export class ProductGridComponent implements OnInit {
         }
     }
 
-    public removeHandler({ sender, dataItem }) {
+    public removeHandler(args: any): void {
+        const sender: GridComponent = args.sender;
+        const dataItem: Product = args.dataItem;
+
         this.editService.remove(dataItem);
         sender.cancelCell();
-    }  
+    }
 
     public saveChanges(grid: GridComponent): void {
         this.editService.isDataProcessing = true;
@@ -177,7 +198,7 @@ export class ProductGridComponent implements OnInit {
         this.idGeneratorService.reset();
     }
 
-    public addSomeItems(grid: GridComponent) {
+    public addSomeItems(): void {
         const chance = new Chance();
         for (let i = 0; i < this.numberOfAdditionalItems; i++) {
             const item = new Product(this.idGeneratorService.getId());
@@ -199,11 +220,11 @@ export class ProductGridComponent implements OnInit {
         return this.markupService.doMarkup(dataItem, columnInfo, this.validationErrors, this.schema);   
     }
 
-    public showErrorsDialog() {
+    public showErrorsDialog(): void {
         this.dialogService.showErrorsList(this.validationErrors, this.schema);
     }
 
-    public tooltipHandler(validationErrors: ValidationError[], columnInfo: ColumnComponent, dataItem: any) {
+    public tooltipHandler(validationErrors: ValidationError[], columnInfo: ColumnComponent, dataItem: any): string {
         const idField = this.schema.idField;
         let tooltipMessage = '';
         for (const error of validationErrors) {
@@ -217,7 +238,7 @@ export class ProductGridComponent implements OnInit {
     }
 
     // Main FormGroup validation with in-form validaton
-    public MAINcreateFormGroup(dataItem): FormGroup {
+    public MAINcreateFormGroup(dataItem: any): FormGroup {
         const formGroup: FormGroup = new FormGroup({});
 
         const editableFields = this.schema.fields.filter(field => {
@@ -225,7 +246,7 @@ export class ProductGridComponent implements OnInit {
         });
 
         for (const field of editableFields) {
-            const validators = this.schema.getFieldFormValidators(field);
+            const validators = this.schema.getFormValidators(field);
             const control = new FormControl(dataItem[field.name], Validators.compose(validators));
             formGroup.addControl(field.name, control);
         }
@@ -233,7 +254,7 @@ export class ProductGridComponent implements OnInit {
     }
 
     // FormGroup without form validation, (!!!) USE ONLY FOR VALIDATION SERVICE TESTING
-    public createFormGroup(dataItem): FormGroup {
+    public createFormGroup(dataItem: any): FormGroup {
         const formGroup: FormGroup = new FormGroup({});
 
         const editableFields = this.schema.fields.filter(field => {

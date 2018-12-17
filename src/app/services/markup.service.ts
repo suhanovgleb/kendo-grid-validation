@@ -4,7 +4,7 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { ColumnComponent } from '../../../node_modules/@progress/kendo-angular-grid';
 import { ISchema } from '../schemes/schema';
 
-const isEquivalent = (obj1, obj2) => {
+const isEquivalent = (obj1: any, obj2: any) => {
   if (typeof (obj1) === 'object' || typeof (obj2) === 'object') {
     // Create arrays of property names
     const obj1Props = Object.getOwnPropertyNames(obj1);

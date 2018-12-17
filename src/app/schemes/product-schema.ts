@@ -129,8 +129,8 @@ export class ProductSchema implements ISchema {
     }
 
     // Get Angular on-form validators for one field 
-    public getFieldFormValidators(field: Field) {
-        const schemaValidators = field.validators;
+    public getFormValidators(field: Field) {
+        const schemaValidators: any = field.validators;
 
         const formValidators: any[] = [];
 
@@ -149,4 +149,5 @@ export class ProductSchema implements ISchema {
         }
         return formValidators;
     }
+
 }

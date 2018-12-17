@@ -31,7 +31,7 @@
                 changes</button>
             <button class='k-button' [disabled]="!editService.hasChanges() || editService.isDataProcessing" (click)="cancelChanges(grid);">Discard
                 changes</button>
-            <button class='k-button' [disabled]="!numberOfAdditionalItems || !isDataLoaded || editService.isDataProcessing" (click)="addSomeItems(grid);">Add {{
+            <button class='k-button' [disabled]="!numberOfAdditionalItems || !isDataLoaded || editService.isDataProcessing" (click)="addSomeItems();">Add {{
                 numberOfAdditionalItems !== undefined ? numberOfAdditionalItems : 'some' }} random
                 {{ numberOfAdditionalItems === 1 ? 'item' : 'items' }}</button>
             <button class='k-button' [disabled]="!validationErrors.length" (click)="showErrorsDialog();">Show Errors</button>
