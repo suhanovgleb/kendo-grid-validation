@@ -1,3 +1,4 @@
+import { TabGroupDynamicComponent } from './components/tab-group-dynamic/tab-group-dynamic.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -18,6 +19,11 @@ const routes: Routes = [
         path: 'main',
         component: MainPageComponent
     },
+    {
+        path: 'test',
+        component: TabGroupDynamicComponent
+    },
+    // Path after ** will not work
     {
         path: '**',
         redirectTo: 'main'

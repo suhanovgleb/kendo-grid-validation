@@ -83,7 +83,7 @@
             </ng-template>
         </kendo-grid-command-column>
         <div *kendoGridDetailTemplate="let dataItem">
-            <app-type-details [type]="dataItem"></app-type-details>
+            <app-detail-grid [data]="dataItem"></app-detail-grid>
         </div>
     </kendo-grid>
 </div>
