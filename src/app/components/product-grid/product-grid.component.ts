@@ -7,6 +7,7 @@ import { Chance } from 'chance';
 import { union } from 'lodash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { productTypeDefaultItem } from 'src/app/default-items';
 
 import { Product, ProductType } from '../../models/product';
 import { ProductSchema } from '../../schemes/product-schema';
@@ -17,8 +18,7 @@ import { MarkupService } from '../../services/markup.service';
 import { NotificationCustomService } from '../../services/notification-custom.service';
 import { ValidationService } from '../../services/validation.service';
 import { ValidationError } from '../../validation';
-import { productTypeDefaultItem } from 'src/app/default-items';
-import { ISchema } from 'src/app/schemes/schema';
+
 
 
 @Component({
@@ -40,7 +40,7 @@ export class ProductGridComponent implements OnInit {
     public gridState: State = {
         sort: [],
         skip: 0,
-        take: 50,
+        take: 100,
         group: []
     };
 

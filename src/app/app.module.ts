@@ -15,6 +15,7 @@ import { ErrrosListComponent } from './components/errros-list/errros-list.compon
 import { HeaderComponent } from './components/header/header.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { ProductGridComponent } from './components/product-grid/product-grid.component';
+import { TypeDetailsComponent } from './components/type-details/type-details.component';
 import { RoutingModule } from './routing.module';
 
 
@@ -25,7 +26,8 @@ import { RoutingModule } from './routing.module';
     ErrrosListComponent,
     ProductGridComponent,
     MainPageComponent,
-    HeaderComponent
+    HeaderComponent,
+    TypeDetailsComponent
   ],
   imports: [
     BrowserModule,

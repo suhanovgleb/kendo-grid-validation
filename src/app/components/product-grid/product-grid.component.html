@@ -82,6 +82,8 @@
                 <button kendoGridCancelCommand>Cancel</button>
             </ng-template>
         </kendo-grid-command-column>
-        
+        <div *kendoGridDetailTemplate="let dataItem">
+            <app-type-details [type]="dataItem"></app-type-details>
+        </div>
     </kendo-grid>
 </div>
