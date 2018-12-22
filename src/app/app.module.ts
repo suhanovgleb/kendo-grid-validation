@@ -12,14 +12,13 @@ import { TooltipModule } from '@progress/kendo-angular-tooltip';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 
 import { AppComponent } from './app.component';
+import { DetailGridComponent } from './components/detail-grid/detail-grid.component';
 import { ErrrosListComponent } from './components/errros-list/errros-list.component';
 import { HeaderComponent } from './components/header/header.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { ProductGridComponent } from './components/product-grid/product-grid.component';
+import { TabGroupComponent } from './components/tab-group/tab-group.component';
 import { RoutingModule } from './routing.module';
-import { TabGroupDynamicComponent } from './components/tab-group-dynamic/tab-group-dynamic.component';
-import { DetailGridComponent } from './components/detail-grid/detail-grid.component';
-
 
 
 @NgModule({
@@ -29,8 +28,8 @@ import { DetailGridComponent } from './components/detail-grid/detail-grid.compon
     ProductGridComponent,
     MainPageComponent,
     HeaderComponent,
-    TabGroupDynamicComponent,
-    DetailGridComponent
+    DetailGridComponent,
+    TabGroupComponent
   ],
   imports: [
     BrowserModule,

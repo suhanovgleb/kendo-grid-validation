@@ -44,6 +44,14 @@ export class ProductGridComponent implements OnInit {
         group: []
     };
 
+    public detailGridData = [
+        { Name: '1', Description: 'Desc1'},
+        { Name: '2', Description: 'Desc2'},
+        { Name: '3', Description: 'Desc3'},
+        { Name: '4', Description: 'Desc4'},
+        { Name: '5', Description: 'Desc5'},
+    ];
+
     private numberOfAdditionalItems = 1;
 
     public isDataLoaded = false;

@@ -14,7 +14,9 @@
     [reorderable]="true" 
     [groupable]="true"
     [filterable]="false"
-    [group]="gridState.group" 
+    [group]="gridState.group"
+    [detailRowHeight]="300"
+    
     
     (dataStateChange)="onStateChange($event)"
     (cellClick)="cellClickHandler($event)" 
@@ -83,7 +85,13 @@
             </ng-template>
         </kendo-grid-command-column>
         <div *kendoGridDetailTemplate="let dataItem">
-            <app-detail-grid [data]="dataItem"></app-detail-grid>
+            <mat-tab-group>
+                <mat-tab label="Annotation">
+                    <app-detail-grid [data]="detailGridData"></app-detail-grid>
+                </mat-tab>
+                <mat-tab label="Nothing"> Just Nothing </mat-tab>
+                <mat-tab label="..."> ... </mat-tab>
+            </mat-tab-group>
         </div>
     </kendo-grid>
 </div>

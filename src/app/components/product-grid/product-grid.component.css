@@ -10,3 +10,8 @@
 .k-grid {
     height: calc(100vh - 56px);
 }
+
+/* second level grid header */
+/* .k-grid tbody .k-grid {
+    height: 150px;
+  } */

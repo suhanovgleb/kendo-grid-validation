@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TabGroupDynamicComponent } from './tab-group-dynamic.component';
+import { TabGroupComponent } from './tab-group.component';
 
-describe('TabGroupDynamicComponent', () => {
-  let component: TabGroupDynamicComponent;
-  let fixture: ComponentFixture<TabGroupDynamicComponent>;
+describe('TabGroupComponent', () => {
+  let component: TabGroupComponent;
+  let fixture: ComponentFixture<TabGroupComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TabGroupDynamicComponent ]
+      declarations: [ TabGroupComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TabGroupDynamicComponent);
+    fixture = TestBed.createComponent(TabGroupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,6 +1,0 @@
-<mat-tab-group [selectedIndex]="selected.value"
-               (selectedIndexChange)="selected.setValue($event)">
-  <mat-tab *ngFor="let tab of tabs; let index = index" [label]="tab">
-    <app-detail-grid [data]="index"></app-detail-grid>
-  </mat-tab>
-</mat-tab-group>
