@@ -14,6 +14,7 @@ const REMOVE_ACTION = 'destroy';
 
 const INDEX_NOT_FOUND = -1;
 
+/*
 // Returns index of item in data OR if nothing found -1
 const itemIndex = (item: any, data: any[]): number => {
     const schema = new ProductSchema();
@@ -34,6 +35,7 @@ const itemIndexById = (Id: number, data: any[]): number => {
     }
     return -1;
 };
+*/
 
 const cloneData = (data: any[]) => data.map(item => Object.assign({}, item));
 
@@ -41,13 +43,19 @@ const cloneData = (data: any[]) => data.map(item => Object.assign({}, item));
     providedIn: 'root'
 })
 
-export class EditService extends BehaviorSubject<any[]> {
+export class EditBaseService extends BehaviorSubject<any[]> {
+
+    public apiURL = environment.apiURL;
+
     // Data in it's current state
     public data: any[] = [];
     // Last data that came from server
     public originalData: any[] = [];
+
+    /*
     // Items that has been created locally 
     // (they can be changed locally and they will still marked as created)
+
     public createdItems: any[] = [];
     // Items that has been updated locally
     public updatedItems: any[] = [];
@@ -55,6 +63,7 @@ export class EditService extends BehaviorSubject<any[]> {
     public deletedItems: any[] = [];
 
     public schema = new ProductSchema();
+    */
 
     public isDataProcessing = false;
 
@@ -64,6 +73,7 @@ export class EditService extends BehaviorSubject<any[]> {
         super([]);
     }
 
+    /*
     public readProductTypes(): ProductType[] {
         return [
             new ProductType(1, 'Type 1'),
@@ -72,7 +82,8 @@ export class EditService extends BehaviorSubject<any[]> {
             new ProductType(4, 'Type 4')
         ];
     }
-
+    */
+    
     public updateView() {
         if (this.data.length) {
             return super.next(this.data);
@@ -80,7 +91,9 @@ export class EditService extends BehaviorSubject<any[]> {
 
         this.read()
             .subscribe(data => {
+                /*
                 this.transformFlatToGridData(data);
+                */
                 this.data = data;
                 this.originalData = cloneData(data);
                 super.next(data);
@@ -93,11 +106,13 @@ export class EditService extends BehaviorSubject<any[]> {
             });
     }
 
+    /*
     public create(item: any): void {
         this.createdItems.push(item);
         this.data.unshift(item);
         super.next(this.data);
     }
+    
 
     public update(item: any): void {
         if (!this.isNew(item)) {
@@ -131,14 +146,17 @@ export class EditService extends BehaviorSubject<any[]> {
 
         super.next(this.data);
     }
+    
 
     public isNew(item: any): boolean {
         return item[this.schema.idField] < 0;
     }
     
+    
     public hasChanges(): boolean {
         return Boolean(this.deletedItems.length || this.updatedItems.length || this.createdItems.length);
     }
+    
 
     public saveChanges(): void {
         if (!this.hasChanges()) {
@@ -191,6 +209,7 @@ export class EditService extends BehaviorSubject<any[]> {
             this.isDataProcessing = false;
         });
     }
+    
 
     private transformFlatToGridData(dataSource: any[]) {
         for (let i = 0; i < dataSource.length; i++) {
@@ -222,6 +241,7 @@ export class EditService extends BehaviorSubject<any[]> {
             }
         }
     }
+    
 
     public cancelChanges(): void {
         this.reset();
@@ -230,6 +250,7 @@ export class EditService extends BehaviorSubject<any[]> {
         super.next(this.data);
         this.notificationService.infoNotification('Changed data has been reset.');
     }
+    */
 
     public assignValues(target: any, source: any): void {
         Object.assign(target, source);
@@ -240,13 +261,17 @@ export class EditService extends BehaviorSubject<any[]> {
         this.updateView();
     }
 
+    
     private reset() {
         this.data = [];
+        /*
         this.deletedItems = [];
         this.updatedItems = [];
         this.createdItems = []; 
+        */
     }
 
+    /*
     private resetTempStorages() {
         this.deletedItems = [];
         this.updatedItems = [];
@@ -258,26 +283,27 @@ export class EditService extends BehaviorSubject<any[]> {
 
         if (action === UPDATE_ACTION) {
             for (const item of data) {
-                result.push(this.http.put(`${environment.apiURLgms}/${item[this.schema.idField]}`, item).pipe(map(res => <any[]>res)));
+                result.push(this.http.put(`${environment.apiURL}/${item[this.schema.idField]}`, item).pipe(map(res => <any[]>res)));
             }
         }
 
         if (action === CREATE_ACTION) {
             for (const item of data) {
-                result.push(this.http.post(`${environment.apiURLgms}`, item).pipe(map(res => <any[]>res)));
+                result.push(this.http.post(`${environment.apiURL}`, item).pipe(map(res => <any[]>res)));
             }
         }
 
         if (action === REMOVE_ACTION) {
             for (const item of data) {
-                result.push(this.http.delete(`${environment.apiURLgms}/${item[this.schema.idField]}`).pipe(map(res => <any[]>res)));
+                result.push(this.http.delete(`${environment.apiURL}/${item[this.schema.idField]}`).pipe(map(res => <any[]>res)));
             }
         }
 
         return result;
     }
+    */
 
     private read(): Observable<any[]> {
-        return this.http.get(environment.apiURLgms).pipe(map(res => <any[]>res));
+        return this.http.get(environment.apiURL).pipe(map(res => <any[]>res));
     }
 }

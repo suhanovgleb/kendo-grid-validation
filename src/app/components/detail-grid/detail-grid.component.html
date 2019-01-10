@@ -1,5 +1,5 @@
 <kendo-grid 
-[data]="data"
+[data]="view$ | async"
 [height]="250">
     <kendo-grid-column field="Name"></kendo-grid-column>
     <kendo-grid-column field="Comment"></kendo-grid-column>

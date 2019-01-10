@@ -9,7 +9,8 @@ import { AnnotationDataService } from './../../services/annotation-data.service'
 @Component({
   selector: 'app-detail-grid',
   templateUrl: './detail-grid.component.html',
-  styleUrls: ['./detail-grid.component.scss']
+  styleUrls: ['./detail-grid.component.scss'],
+  providers: [ AnnotationDataService ]
 })
 export class DetailGridComponent implements OnInit {
 
@@ -28,7 +29,7 @@ export class DetailGridComponent implements OnInit {
 
   ngOnInit() {
     this.view$ = this.dataService.pipe(map(data => process(data, this.gridState)));
-
+    this.dataService.getAnnotationsById(this.dataItem.Id);
   }
 
 

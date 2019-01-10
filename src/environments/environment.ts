@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiURL: 'http://localhost:57144/api/gmsproducts'
+  apiURLgms: 'http://localhost:57144/api/gmsproducts',
+  apiURL: 'http://localhost:57144/api'
 };
 
 /*
