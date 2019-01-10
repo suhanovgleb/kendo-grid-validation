@@ -33,14 +33,14 @@ export class ProductGridComponent implements OnInit {
     readonly originalGridState: State = {
         sort: [],
         skip: 0,
-        take: 50,
+        take: 25,
         group: []
     };
 
     public gridState: State = {
         sort: [],
         skip: 0,
-        take: 100,
+        take: 25,
         group: []
     };
 
@@ -49,12 +49,12 @@ export class ProductGridComponent implements OnInit {
         { Name: '2', Description: 'Desc2'},
         { Name: '3', Description: 'Desc3'},
         { Name: '4', Description: 'Desc4'},
-        { Name: '5', Description: 'Desc5'},
+        { Name: '5', Description: 'Desc5'}
     ];
 
     private numberOfAdditionalItems = 1;
 
-    public isDataLoaded = false;
+    public isLoading = false;
     // Do we need default item?
     public defaultItem: ProductType = productTypeDefaultItem;
     public productTypes: ProductType[];
@@ -83,7 +83,7 @@ export class ProductGridComponent implements OnInit {
         this.productTypes = this.editService.readProductTypes();
         //// this.gridState = this.originalGridState;
         // this.editService.updateView();
-        // this.isDataLoaded = true;
+        // this.isLoading = true;
     }
 
     public onStateChange(state: State): void {
@@ -94,9 +94,12 @@ export class ProductGridComponent implements OnInit {
     public refreshButtonHandler(grid: GridComponent): void {
         this.editService.isDataProcessing = true;
         grid.closeRow(-1);
+        for (let i = 0; i < grid.pageSize; i++) {
+            grid.collapseRow(i);
+        }
         this.gridState = this.originalGridState;
         this.editService.reloadData();
-        this.isDataLoaded = true;
+        this.isLoading = true;
     }
 
     public cellClickHandler(args: any): void {
