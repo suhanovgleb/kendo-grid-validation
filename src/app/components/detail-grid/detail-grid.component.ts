@@ -4,7 +4,7 @@ import { process, State } from '@progress/kendo-data-query';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { AnnotationsDataService } from './../../services/annotations-data.service';
+import { AnnotationDataService } from './../../services/annotation-data.service';
 
 @Component({
   selector: 'app-detail-grid',
@@ -24,7 +24,7 @@ export class DetailGridComponent implements OnInit {
     group: []
 };
 
-  constructor(private dataService: AnnotationsDataService) { }
+  constructor(private dataService: AnnotationDataService) { }
 
   ngOnInit() {
     this.view$ = this.dataService.pipe(map(data => process(data, this.gridState)));
